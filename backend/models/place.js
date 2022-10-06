@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const placeSchema = new mongoose.Schema({
-    name: String,
-    city: String,
+    name: { type: String, required: true },
+    city: { type: String, required: true },
     imageURL: String,
     likes: Number,
     favorite: Number,
     visitors: Number,
-    addedByUser: String
+    addedBy: { type: String, required: true }
 })
 
 module.exports = mongoose.model("place", placeSchema);

@@ -11,7 +11,7 @@ const { login, register, logout } = require("./backend/controllers/user");
 
 const app = express();
 app.use(express.json());
-app.use("/places", placesRoutes);
+app.use("/api/places", placesRoutes);
 
 mongoose.connect("mongodb://localhost:27017/travelMemoriesUsersDB").then(() => {
     app.listen(PORT, () => {
