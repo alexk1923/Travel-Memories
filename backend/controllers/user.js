@@ -9,7 +9,7 @@ const login = async (req, res) => {
         const existingUser = await User.findOne({ email });
 
         if (existingUser && (await bcrypt.compare(password, existingUser.password))) {
-            const token = jwt.sign({ user_id: existingUser._id, email }, process.env.TOKEN_KEY, {
+            const token = jwt.sign({ userID: existingUser._id, email }, process.env.TOKEN_KEY, {
                 expiresIn: "1 day"
             });
             existingUser.token = token;
@@ -43,10 +43,6 @@ const register = async (req, res) => {
             password: encryptedPass
         });
 
-        const token = jwt.sign({ user_id: newUser._id, email }, process.env.TOKEN_KEY, { expiresIn: "1h" });
-
-        // save new user token
-        newUser.token = token;
         res.status(201).json(newUser);
 
     } catch (err) {
@@ -64,8 +60,6 @@ const logout = async (req, res) => {
         res.send("Error");
     }
 }
-
-
 
 module.exports = {
     login,
