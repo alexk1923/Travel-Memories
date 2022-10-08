@@ -14,7 +14,7 @@ const login = async (req, res) => {
             });
             existingUser.token = token;
 
-            return res.status(200).json(token);
+            return res.status(200).send({ "token": token });
         }
 
         return res.status(400).send("Wrong credentials");

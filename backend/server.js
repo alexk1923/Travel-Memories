@@ -1,21 +1,21 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const placesRoutes = require("./backend/routes/places")
+const placesRoutes = require("./routes/places")
 
 
 const PORT = process.env.PORT || 8000;
-const auth = require("./backend/middlware/auth");
-const { login, register, logout } = require("./backend/controllers/user");
+const auth = require("./middlware/auth");
+const { login, register, logout } = require("./controllers/user");
 
 
 const app = express();
 app.use(express.json());
 app.use("/api/places", placesRoutes);
 
-mongoose.connect("mongodb://localhost:27017/travelMemoriesUsersDB").then(() => {
+mongoose.connect("mongodb+srv://alexk1923:travel-memories-alexk1923@travel-memories.a8qhq46.mongodb.net/travelMemoriesUsersDB").then(() => {
     app.listen(PORT, () => {
-        console.log("Connected to local database and started server on port: " + PORT);
+        console.log("Connected to the database and started server on port: " + PORT);
     })
 }).catch((err) => {
     console.log(err);
