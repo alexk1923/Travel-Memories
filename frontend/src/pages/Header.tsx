@@ -1,10 +1,18 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import whiteLogo from "../img/logo/default-monochrome-white.svg";
+
+type HeaderProps = {
+	children: React.ReactNode;
+};
 
 export default function Header() {
 	return (
 		<>
+			<Link to='/'>
+				<img src={whiteLogo} alt='logo' className='w-[50%]' />
+			</Link>
 			<nav className='bg-transparent text-white flex justify-center items-center w-full'>
 				<ul className='flex flex-row gap-3 [&>*]:p-4 [&>*]:font-bold'>
 					<li>

@@ -12,13 +12,15 @@ import Body from "./components/Body";
 function App() {
 	return (
 		<Body>
-			<Header />
 			<Container>
 				<Routes>
-					<Route path='/' element={<LandingPage />} />
+					<Route element={<Header />}>
+						<Route path='/' element={<LandingPage />} />
+						<Route path='/places' element={<Places />} />
+					</Route>
 					<Route path='/login' element={<Login />} />
 					<Route path='/register' element={<Register />} />
-					<Route path='/places' element={<Places />} />
+
 					<Route path='*' element={<NotFound />} />
 				</Routes>
 				<Footer />
