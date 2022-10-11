@@ -1,11 +1,7 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
-
-type HeaderProps = {
-	children: React.ReactNode;
-};
 
 export default function Header() {
 	return (
@@ -27,6 +23,7 @@ export default function Header() {
 				</ul>
 			</nav>
 			<SearchBar />
+			<Outlet />
 		</>
 	);
 }

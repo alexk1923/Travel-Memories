@@ -3,5 +3,5 @@ type BodyProps = {
 };
 
 export default function Container({ children }: BodyProps) {
-	return <div className='bg-slate-800 h-screen'>{children}</div>;
+	return <div className='h-screen'>{children}</div>;
 }

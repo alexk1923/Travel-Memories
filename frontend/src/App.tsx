@@ -8,24 +8,28 @@ import NotFound from "./pages/NotFound";
 import Header from "./pages/Header";
 import Container from "./components/Container";
 import Body from "./components/Body";
+import UserProvider from "./contexts/UserContext";
 
 function App() {
 	return (
-		<Body>
-			<Container>
-				<Routes>
-					<Route element={<Header />}>
-						<Route path='/' element={<LandingPage />} />
-						<Route path='/places' element={<Places />} />
-					</Route>
-					<Route path='/login' element={<Login />} />
-					<Route path='/register' element={<Register />} />
+		<UserProvider>
+			<Body>
+				<Container>
+					<Routes>
+						<Route path='/' element={<Header />}>
+							<Route path='/' element={<LandingPage />} />
+							<Route path='/places' element={<Places />} />
+						</Route>
 
-					<Route path='*' element={<NotFound />} />
-				</Routes>
-				<Footer />
-			</Container>
-		</Body>
+						<Route path='/login' element={<Login />} />
+						<Route path='/register' element={<Register />} />
+
+						<Route path='*' element={<NotFound />} />
+					</Routes>
+					<Footer />
+				</Container>
+			</Body>
+		</UserProvider>
 	);
 }
 
