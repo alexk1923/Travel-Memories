@@ -8,3 +8,45 @@
 		font-family: "Roboto", system-ui, sans-serif;
 	}
 }
+
+@layer components {
+	.gradient-background {
+		background: linear-gradient(0deg, #64748b, #475569, #334155);
+		background-size: 600% 600%;
+
+		animation: gradient-animation 5s ease infinite alternate-reverse;
+	}
+
+	.zoom-img {
+		background-size: 100% 100%;
+		animation: background-zoom 25s ease infinite alternate-reverse;
+		animation-delay: 0ms;
+	}
+
+	@keyframes gradient-animation {
+		0% {
+			background-position: 40% 0%;
+		}
+		50% {
+			background-position: 50% 100%;
+		}
+		100% {
+			background-position: 40% 0%;
+		}
+	}
+
+	@keyframes background-zoom {
+		0% {
+			background-position: 0% 50%;
+			background-size: 100%;
+		}
+		50% {
+			background-position: 50% 50%;
+			background-size: 150%;
+		}
+		100% {
+			background-position: 100% 50%;
+			background-size: 100%;
+		}
+	}
+}
