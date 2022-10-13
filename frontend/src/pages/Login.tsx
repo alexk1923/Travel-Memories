@@ -18,7 +18,7 @@ type InputValuesType = {
 
 export default function Login() {
 	const [isPassword, setIsPassword] = useState(true);
-	const [error, setError] = useState(false);
+	const [error, setError] = useState("");
 	const [inputValues, setInputValues] = useState<InputValuesType>({
 		emailInput: "",
 		passwordInput: "",
@@ -104,7 +104,7 @@ export default function Login() {
 		<>
 			<div
 				className="w-full h-screen bg-[url('img/mountain.jpg')] bg-[center_top_60vh] bg-cover flex flex-col 
-			justify-between items-center lg:justify-center lg:bg-center lg:bg-gradient-to-b lg:from-sky-700 lg:to-sky-900
+			justify-between items-center lg:justify-center lg:bg-center lg:bg-gradient-to-b lg:from-sky-700 lg:transparent
 			"
 			>
 				<div className='text-xl w-full flex justify-center'>
@@ -132,7 +132,7 @@ export default function Login() {
 					>
 						<h1 className='text-4xl sm:text-5xl md:text-4xl'>Welcome back!</h1>
 						<h2 className='text-xl sm:text-3xl'>Sign in to continue</h2>
-						{error && (
+						{error !== "" && (
 							<h3 className='text-md text-red-500 bg-red-300 border-2 border-red-500 rounded-lg p-2'>
 								{error}
 							</h3>
@@ -156,7 +156,7 @@ export default function Login() {
 							))}
 						</div>
 
-						<button className='bg-sky-500 hover:bg-sky-600 w-1/2 lg:w-1/4 font-bold text-white rounded-lg m-2'>
+						<button className='bg-sky-500 hover:bg-sky-600 w-[50%] md:w-[40%] lg:w-[25%] font-bold text-white rounded-lg m-2'>
 							Login
 						</button>
 

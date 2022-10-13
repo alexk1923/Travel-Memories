@@ -12,7 +12,7 @@ type FormInputProps = {
 	id: string;
 	errorMessage: string;
 	value: string;
-	error: boolean;
+	error: string;
 	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -21,7 +21,7 @@ export default function FormInput(props: FormInputProps) {
 	const [passwordVisible, setPasswordVisible] = useState(false);
 
 	return (
-		<div className='flex flex-col justify-center w-full lg:w-[60%] px-2'>
+		<div className='flex flex-col justify-center w-full md:w-[50%] lg:w-[60%] px-2'>
 			<label htmlFor={htmlFor} className='relative'>
 				{label}
 				{label === "Password" && (

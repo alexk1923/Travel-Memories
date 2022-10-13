@@ -7,6 +7,10 @@
 	html {
 		font-family: "Raleway", "Roboto", system-ui, sans-serif;
 	}
+
+	* {
+		box-sizing: border-box;
+	}
 }
 
 @layer components {
@@ -32,7 +36,7 @@
 	}
 
 	.custom-hover {
-		background-color: white;
+		@apply bg-white;
 		@apply border-slate-200;
 		@apply text-slate-800;
 	}
