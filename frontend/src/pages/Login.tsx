@@ -3,40 +3,45 @@ import { Link, NavLink, redirect, useNavigate } from "react-router-dom";
 import travelImg from "../img/travel1.jpg";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
 import darkLogo from "../img/logo/default-monochrome-black.svg";
-import openEye from "../img/open-eye.svg";
-import closedEye from "../img/closed-eye.svg";
 import { useUserContext } from "../contexts/UserContext";
 import { UserType } from "../contexts/UserContext";
 import FormInput from "../components/FormInput";
+import LoginCard from "../components/LoginCard";
 
 // bg-[url('img/travel1.jpg')] bg-cover bg-center brightness-10
 
+type InputValuesType = {
+	emailInput: string;
+	passwordInput: string;
+	[key: string]: string;
+};
+
 export default function Login() {
 	const [isPassword, setIsPassword] = useState(true);
-	const [error, setError] = useState("");
-	const emailInputElem = useRef<HTMLInputElement>(null);
-	const passwordInputElem = useRef<HTMLInputElement>(null);
+	const [error, setError] = useState(false);
+	const [inputValues, setInputValues] = useState<InputValuesType>({
+		emailInput: "",
+		passwordInput: "",
+	});
 	const { user, setUser } = useUserContext();
 	const navigate = useNavigate();
-
-	function displayPassword() {
-		setIsPassword((isPassword) => !isPassword);
-	}
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		const data = {
-			email: emailInputElem.current?.value,
-			password: passwordInputElem.current?.value,
+		const dataInput = {
+			email: inputValues.emailInput,
+			password: inputValues.passwordInput,
 		};
+
+		console.log(dataInput);
 
 		const response = await fetch("http://localhost:8000/login", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(data),
+			body: JSON.stringify(dataInput),
 		});
 
 		if (response.ok) {
@@ -55,6 +60,14 @@ export default function Login() {
 			});
 			navigate("/");
 		} else {
+			setInputValues(() => {
+				const newInputValues = {
+					...inputValues,
+					passwordInput: "",
+				};
+				return newInputValues;
+			});
+
 			const err = await response.json();
 			setError(err);
 		}
@@ -64,10 +77,10 @@ export default function Login() {
 		{
 			key: 1,
 			label: "Email",
-			htmlFor: "mailInput",
+			htmlFor: "email",
 			type: "email",
-			name: "mailInput",
-			id: "mailInput",
+			name: "emailInput",
+			id: "email",
 			autoComplete: "email",
 			placeholder: "example@gmail.com",
 			errorMessage: "Input should be a valid email address",
@@ -76,12 +89,12 @@ export default function Login() {
 		{
 			key: 2,
 			label: "Password",
-			htmlFor: "passwordInput",
+			htmlFor: "password",
 			type: "password",
 			name: "passwordInput",
-			id: "passwordInput",
+			id: "password",
 			autoComplete: "password",
-			placeholder: "********",
+			placeholder: "",
 			errorMessage: "Password should be at least 8 characters",
 			minLength: 8,
 		},
@@ -91,7 +104,7 @@ export default function Login() {
 		<>
 			<div
 				className="w-full h-screen bg-[url('img/mountain.jpg')] bg-[center_top_60vh] bg-cover flex flex-col 
-			justify-between items-center lg:justify-center lg:bg-center lg:bg-gradient-to-b lg:from-slate-200 lg:to-slate-500
+			justify-between items-center lg:justify-center lg:bg-center lg:bg-gradient-to-b lg:from-sky-700 lg:to-sky-900
 			"
 			>
 				<div className='text-xl w-full flex justify-center'>
@@ -99,7 +112,7 @@ export default function Login() {
 						to='/'
 						className='mt-5 w-[50%] sm:w-[55%] md:w-[40%] lg:w-[25%]'
 					>
-						<img src={whiteLogo} alt='logo' />
+						<img src={whiteLogo} alt='logo' className='custom-drop-shadow' />
 					</Link>
 				</div>
 
@@ -109,8 +122,7 @@ export default function Login() {
 				lg:flex-row 
 				lg:w-[80%]
 				lg:aspect-square
-				lg:rounded-lg
-			 '
+				lg:rounded-lg'
 				>
 					<form
 						action='/login'
@@ -121,13 +133,26 @@ export default function Login() {
 						<h1 className='text-4xl sm:text-5xl md:text-4xl'>Welcome back!</h1>
 						<h2 className='text-xl sm:text-3xl'>Sign in to continue</h2>
 						{error && (
-							<h3 className='text-md text-red-500 bg-red-300 border-2 border-red-500 rounded-lg'>
+							<h3 className='text-md text-red-500 bg-red-300 border-2 border-red-500 rounded-lg p-2'>
 								{error}
 							</h3>
 						)}
 						<div className='text-slate-400 flex flex-col gap-4 items-center justify-center w-full'>
 							{inputs.map((input) => (
-								<FormInput {...input} />
+								<FormInput
+									{...input}
+									value={inputValues[input.name]}
+									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+										setInputValues((inputValues) => {
+											const newInputValues = {
+												...inputValues,
+												[e.target.name]: e.target.value,
+											};
+											return newInputValues;
+										})
+									}
+									error={error}
+								/>
 							))}
 						</div>
 
@@ -145,17 +170,7 @@ export default function Login() {
 							</NavLink>
 						</p>
 					</form>
-					<div className="zoom-img hidden relative h-full lg:block lg:bg-[url('img/mountain.jpg')] lg:bg-cover lg:bg-center lg:broder- lg:rounded-lg">
-						{/* <img src={travelImg} alt='' className='w-full object-cover'></img> */}
-						<div className='hidden lg:flex flex-col justify-center w-[80%] aspect-square text-center font-bold text-white border-2 md:text-lg backdrop-blur-sm absolute left-[10%] top-1/2 transform -translate-y-1/2'>
-							<h1 className='md:3xl lg:text-5xl  xlg:text-5xl p-3 drop-shadow-xl'>
-								Join the community.
-							</h1>
-							<h2 className='md:text-md lg:text-xl text-slate-50 drop-shadow-2xl'>
-								Add new travel places from all around the world
-							</h2>
-						</div>
-					</div>
+					<LoginCard />
 				</div>
 			</div>
 		</>

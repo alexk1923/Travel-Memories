@@ -14,10 +14,10 @@ const login = async (req, res) => {
             });
             existingUser.token = token;
 
-            return res.status(200).send({ "token": token });
+            return res.status(200).send({ "email": existingUser.email, "username": existingUser.username, "token": token });
         }
 
-        return res.status(400).send("Wrong credentials");
+        return res.status(400).json("Wrong credentials. Please try again");
 
     } catch (err) {
         console.log(err);
@@ -27,15 +27,14 @@ const login = async (req, res) => {
 const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        console.log(existingUser);
 
         if (existingUser) {
             return res.status(409).send("There is already an account using this email address.");
         }
 
         encryptedPass = await bcrypt.hash(password, 10);
-
-        console.log("Tot am trecut de existing user");
 
         const newUser = await User.create({
             username,
@@ -48,7 +47,7 @@ const register = async (req, res) => {
     } catch (err) {
 
         console.log(err);
-        res.send("nu");
+        res.status(400).send(err);
     }
 }
 

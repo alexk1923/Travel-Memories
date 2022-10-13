@@ -16,10 +16,8 @@ function App() {
 			<Body>
 				<Container>
 					<Routes>
-						<Route path='/' element={<Header />}>
-							<Route path='/' element={<LandingPage />} />
-							<Route path='/places' element={<Places />} />
-						</Route>
+						<Route path='/' element={<LandingPage />} />
+						{/* <Route path='/places' element={<Places />} /> */}
 
 						<Route path='/login' element={<Login />} />
 						<Route path='/register' element={<Register />} />

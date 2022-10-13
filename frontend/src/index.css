@@ -1,11 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Roboto:wght@400;700&display=swap");
 
 @layer base {
 	html {
-		font-family: "Roboto", system-ui, sans-serif;
+		font-family: "Raleway", "Roboto", system-ui, sans-serif;
 	}
 }
 
@@ -21,6 +21,20 @@
 		background-size: 100% 100%;
 		animation: background-zoom 25s ease infinite alternate-reverse;
 		animation-delay: 0ms;
+	}
+
+	.custom-drop-shadow {
+		filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+	}
+
+	.btn {
+		transition: ease-out 0.4s;
+	}
+
+	.custom-hover {
+		background-color: white;
+		@apply border-slate-200;
+		@apply text-slate-800;
 	}
 
 	@keyframes gradient-animation {
