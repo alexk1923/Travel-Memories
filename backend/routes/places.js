@@ -1,20 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middlware/auth");
-const { getAllPlaces, getPlacesByUserID, deletePlaceByID, addNewPlace, updatePlace,
+const { getAllPlaces, deletePlaceByID, addNewPlace, updatePlace,
     getSinglePlaceByID } = require("../controllers/places");
+const { getPlacesByUser } = require("../controllers/user")
 
 
-router.get("/all", getAllPlaces);
+router.get("places/all", getAllPlaces);
 
-router.get("/user/:userID", getPlacesByUserID);
+router.get("/users/:username/places", getPlacesByUser);
 
-router.get("/:placeID", getSinglePlaceByID);
+router.get("places/:placeID", getSinglePlaceByID);
 
-router.delete("/:placeID", auth, deletePlaceByID);
+router.delete("places/:placeID", auth, deletePlaceByID);
 
-router.post("/", auth, addNewPlace);
+router.post("places/", auth, addNewPlace);
 
-router.patch("/:placeID", auth, updatePlace);
+router.patch("places/:placeID", auth, updatePlace);
 
 module.exports = router;

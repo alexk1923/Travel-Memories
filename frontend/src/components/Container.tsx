@@ -5,5 +5,6 @@ type ContainerProps = {
 };
 
 export default function Container({ children }: ContainerProps) {
+	return <>{children}</>;
 	return <div className='bg-black'>{children}</div>;
 }

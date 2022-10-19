@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
 import mapMarker from "../img/map-marker.svg";
@@ -8,7 +8,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 export default function LandingPage() {
-	const { user } = useUserContext();
+	const { user, setUser } = useUserContext();
 	const navigate = useNavigate();
 	useEffect(() => {
 		AOS.init();
@@ -24,22 +24,22 @@ export default function LandingPage() {
 				flex justify-center items-start w-full lg:bg-none lg:justify-between lg:items-center lg:flex-none"
 			>
 				<div className='w-[25%]'>
-					<button
-						type='button'
-						className='hidden lg:block text-xl text-sky-900 border-4 border-sky-900 px-8 py-4 m-4'
-					>
-						<b>
-							<a href='/places'>Explore</a>
-						</b>
-					</button>
+					<Link to='/places'>
+						<button
+							type='button'
+							className='hidden lg:block text-xl text-sky-900 border-4 border-sky-900 px-8 py-4 m-4'
+						>
+							<b>Explore</b>
+						</button>
+					</Link>
 				</div>
-				<a href='/' className='w-[50%] mt-5 lg:max-w-[25%] lg:flex-1 lg:m-0'>
+				<Link to='/' className='w-[50%] mt-5 lg:max-w-[25%] lg:flex-1 lg:m-0'>
 					<img
 						src={whiteLogo}
 						alt='next travel'
 						className=' custom-drop-shadow'
 					/>
-				</a>
+				</Link>
 
 				<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%]'>
 					<button
@@ -47,7 +47,7 @@ export default function LandingPage() {
 						className='hidden lg:block text-xl border-2 rounded-2xl border-white px-8 py-2 '
 					>
 						<b>
-							<a href='/login'>Login</a>
+							<Link to='/login'>Login</Link>
 						</b>
 					</button>
 					<button
@@ -55,7 +55,7 @@ export default function LandingPage() {
 						className='hidden lg:block text-xl border-2 rounded-2xl border-white px-8 py-2'
 					>
 						<b>
-							<a href='/register'>Register</a>
+							<Link to='/register'>Register</Link>
 						</b>
 					</button>
 				</div>
@@ -97,7 +97,7 @@ export default function LandingPage() {
 
 			<div className='lg:hidden flex-[2] bg-gradient-to-b from-sky-700 h-[50%] to-sky-900/0 flex flex-col items-center'>
 				<div className='flex flex-col items-center transform -translate-y-[15%]'>
-					<img src={mapMarker} className='w-[50%]' />
+					<img src={mapMarker} className='w-[50%]' alt='map marker' />
 					<div className='text-center w-[75%] [&>*]:py-2'>
 						<h1 className='text-2xl'>
 							<b>Do you know your next trip destination?</b>

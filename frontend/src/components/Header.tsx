@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "./SearchBar";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
 
 export default function Header() {

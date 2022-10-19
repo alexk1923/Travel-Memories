@@ -11,16 +11,7 @@ const getAllPlaces = async (req, res) => {
     }
 }
 
-const getPlacesByUserID = async (req, res) => {
-    Place.find({ addedBy: req.params.userID }, (err, places) => {
-        if (err) {
-            console.log("Error in finding places added by this user.");
-            return res.status(404).send("Finding error");
-        }
 
-        return res.status(200).send(places);
-    });
-}
 
 const deletePlaceByID = async (req, res) => {
     const existingPlace = await Place.findOne({ id: req.params.placeID });
@@ -117,7 +108,6 @@ const getSinglePlaceByID = async (req, res) => {
 
 module.exports = {
     getAllPlaces,
-    getPlacesByUserID,
     deletePlaceByID,
     addNewPlace,
     updatePlace,

@@ -1,30 +1,25 @@
-import React, { useRef, useState } from "react";
-import { Link, NavLink, redirect, useNavigate } from "react-router-dom";
-import travelImg from "../img/travel1.jpg";
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
-import darkLogo from "../img/logo/default-monochrome-black.svg";
-import { useUserContext } from "../contexts/UserContext";
-import { UserType } from "../contexts/UserContext";
 import FormInput from "../components/FormInput";
 import LoginCard from "../components/LoginCard";
+import { useLogin } from "../hooks/useLogin";
 
 // bg-[url('img/travel1.jpg')] bg-cover bg-center brightness-10
 
-type InputValuesType = {
+export type InputValuesType = {
 	emailInput: string;
 	passwordInput: string;
 	[key: string]: string;
 };
 
 export default function Login() {
-	const [isPassword, setIsPassword] = useState(true);
-	const [error, setError] = useState("");
+	const { login, error } = useLogin();
+
 	const [inputValues, setInputValues] = useState<InputValuesType>({
 		emailInput: "",
 		passwordInput: "",
 	});
-	const { user, setUser } = useUserContext();
-	const navigate = useNavigate();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -34,42 +29,15 @@ export default function Login() {
 			password: inputValues.passwordInput,
 		};
 
-		console.log(dataInput);
-
-		const response = await fetch("http://localhost:8000/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(dataInput),
-		});
-
-		if (response.ok) {
-			const data = await response.json();
-			console.log(data);
-
-			setUser((user) => {
-				{
-					const newUser: UserType = {
-						...user,
-						username: data.username,
-						email: data.email,
-					};
-					return newUser;
-				}
-			});
-			navigate("/");
-		} else {
+		await login(dataInput);
+		if (error) {
+			// reset form fields
 			setInputValues(() => {
-				const newInputValues = {
+				return {
 					...inputValues,
 					passwordInput: "",
 				};
-				return newInputValues;
 			});
-
-			const err = await response.json();
-			setError(err);
 		}
 	}
 

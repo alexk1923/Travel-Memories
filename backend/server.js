@@ -4,17 +4,14 @@ const mongoose = require("mongoose");
 const placesRoutes = require("./routes/places")
 const cors = require("cors");
 
-
-
 const PORT = process.env.PORT || 8000;
 const auth = require("./middlware/auth");
 const { login, register, logout } = require("./controllers/user");
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use("/api/places", placesRoutes);
+app.use("/api/", placesRoutes);
 
 
 mongoose.connect("mongodb+srv://alexk1923:travel-memories-alexk1923@travel-memories.a8qhq46.mongodb.net/travelMemoriesUsersDB").then(() => {

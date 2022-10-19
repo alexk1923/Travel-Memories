@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Place = require("../models/place");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -60,8 +61,20 @@ const logout = async (req, res) => {
     }
 }
 
+const getPlacesByUser = async (req, res) => {
+    Place.find({ addedBy: req.params.username }, (err, places) => {
+        if (err) {
+            console.log("Error in finding places added by this user.");
+            return res.status(404).send("Finding error");
+        }
+
+        return res.status(200).send(places);
+    });
+}
+
 module.exports = {
     login,
     register,
-    logout
+    logout,
+    getPlacesByUser
 }
