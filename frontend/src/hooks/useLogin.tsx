@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 
-type DataInput = {
+type DataInputLogin = {
 	email: string;
 	password: string;
 };
@@ -12,7 +12,7 @@ export const useLogin = () => {
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 
-	const login = async (dataInput: DataInput) => {
+	const login = async (dataInput: DataInputLogin) => {
 		console.log("Form data:");
 		console.log(dataInput);
 

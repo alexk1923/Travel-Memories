@@ -14,12 +14,12 @@ export type InputValuesType = {
 };
 
 export default function Login() {
-	const { login, error } = useLogin();
-
 	const [inputValues, setInputValues] = useState<InputValuesType>({
 		emailInput: "",
 		passwordInput: "",
 	});
+
+	const { login, error } = useLogin();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -85,7 +85,7 @@ export default function Login() {
 				</div>
 
 				<div
-					className='w-full h-[60%] sm:h-[80%] md:h-[65%] lg:h-[70%] bg-gradient-to-b from-slate-50 to-slate-300 rounded-t-lg  mt-5 text-slate-600
+					className='w-full h-[75%] sm:h-[80%] md:h-[65%] lg:h-[70%] bg-gradient-to-b from-slate-50 to-slate-300 rounded-t-lg  mt-5 text-slate-600
 				 rounded-xl flex flex-col justify-center items-center drop-shadow-md [&>*]:flex-1
 				lg:flex-row 
 				lg:w-[80%]
@@ -94,11 +94,10 @@ export default function Login() {
 				>
 					<form
 						action='/login'
-						method='get'
 						className='w-[90%] text-sky-800 flex flex-col items-center justify-center gap-4 '
 						onSubmit={handleLogin}
 					>
-						<h1 className='text-4xl sm:text-5xl md:text-4xl'>Welcome back!</h1>
+						<h1 className='text-3xl sm:text-5xl md:text-4xl'>Welcome back!</h1>
 						<h2 className='text-xl sm:text-3xl'>Sign in to continue</h2>
 						{error !== "" && (
 							<h3 className='text-md text-red-500 bg-red-300 border-2 border-red-500 rounded-lg p-2'>
@@ -111,12 +110,11 @@ export default function Login() {
 									{...input}
 									value={inputValues[input.name]}
 									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-										setInputValues((inputValues) => {
-											const newInputValues = {
+										setInputValues(() => {
+											return {
 												...inputValues,
 												[e.target.name]: e.target.value,
 											};
-											return newInputValues;
 										})
 									}
 									error={error}

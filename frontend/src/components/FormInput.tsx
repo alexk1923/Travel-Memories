@@ -7,12 +7,13 @@ type FormInputProps = {
 	htmlFor: string;
 	type: string;
 	placeholder: string;
-	autoComplete: string;
+	autoComplete?: string;
 	name: string;
 	id: string;
 	errorMessage: string;
 	value: string;
 	error: string;
+	pattern?: string;
 	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -24,7 +25,7 @@ export default function FormInput(props: FormInputProps) {
 		<div className='flex flex-col justify-center w-full md:w-[50%] lg:w-[60%] px-2'>
 			<label htmlFor={htmlFor} className='relative'>
 				{label}
-				{label === "Password" && (
+				{inputProps.id === "password" && (
 					<img
 						src={passwordVisible ? closedEye : openEye}
 						className='w-6 h-6 absolute right-3 top-1/2 transform -translate-y-1/2'
@@ -44,7 +45,7 @@ export default function FormInput(props: FormInputProps) {
 						? passwordVisible
 							? "text"
 							: "password"
-						: "email"
+						: inputProps.type
 				}
 				className={
 					`outline-none outline-offset-0 focus-visible:outline focus-visible:outline-sky-300 
