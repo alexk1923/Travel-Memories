@@ -10,6 +10,7 @@ import Body from "./components/Body";
 import UserProvider, { useUserContext } from "./contexts/UserContext";
 import Profile from "./pages/Profile";
 import { useEffect } from "react";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
 	const { user, setUser } = useUserContext();
@@ -17,7 +18,6 @@ function App() {
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
 		if (storageUser) {
-			console.log("S-a incarcat userul");
 			setUser(JSON.parse(storageUser));
 		}
 	}, []);
@@ -29,11 +29,11 @@ function App() {
 					<Route
 						path='/'
 						element={
-							user.username === undefined ? <LandingPage /> : <Profile />
+							user.username === undefined ? <LandingPage /> : <Dashboard />
 						}
 					/>
 					<Route path='/login' element={<Login />} />
-					<Route path='/places' element={<Places />} />
+					<Route path='/user/:username' element={<Profile />} />
 					<Route path='/register' element={<Register />} />
 					<Route path='*' element={<NotFound />} />
 				</Routes>

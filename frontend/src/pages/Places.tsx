@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 
-import { useUserContext } from "../contexts/UserContext";
 import { PlaceType } from "../components/Place";
 import Place from "../components/Place";
+import { UserType } from "../contexts/UserContext";
 
-export default function Places() {
-	const { user } = useUserContext();
+type PlacesPropsType = {
+	user: UserType;
+};
+
+export default function Places({ user }: PlacesPropsType) {
 	const [places, setPlaces] = useState<PlaceType[]>([]);
 
 	useEffect(() => {
-		console.log("-----------------USEEFFECT-----------------");
-		console.log(user);
-		console.log("----------------------------------");
-
 		if (user.username === undefined) {
 			return;
 		}

@@ -40,7 +40,8 @@ const register = async (req, res) => {
         const newUser = await User.create({
             username,
             email,
-            password: encryptedPass
+            password: encryptedPass,
+            profilePhoto: "img/defaultUser.png"
         });
 
         res.status(201).json(newUser);
@@ -72,9 +73,23 @@ const getPlacesByUser = async (req, res) => {
     });
 }
 
+const getUserData = async (req, res) => {
+    console.log("aiciiiiiiiiiiaaaaaaadwqdssssssssssssssssssssssssssssssssssssssssssssssssssa");
+    User.findOne({ username: req.params.username }, (err, user) => {
+        if (err) {
+            console.log("Error in finding a user that has this username");
+            return res.status(404).json({ err: "Finding error" });
+        }
+
+
+        return res.status(200).send({ id: user.id, username: user.username, profilePhoto: user.profilePhoto });
+    });
+}
+
 module.exports = {
     login,
     register,
     logout,
-    getPlacesByUser
+    getPlacesByUser,
+    getUserData
 }
