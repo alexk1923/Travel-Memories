@@ -17,10 +17,13 @@ export default function Places({ user }: PlacesPropsType) {
 			return;
 		}
 
-		fetch(`http://localhost:8000/api/users/${user.username}/places`)
+		fetch(`http://localhost:8000/api/user/${user.username}/places`, {
+			method: "GET",
+			headers: { Authorization: `Bearer ${user.token}` },
+		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("Data given by the API:");
+				console.log("Data given by the API places:");
 				console.log(data);
 				setPlaces(data);
 			})
@@ -32,7 +35,6 @@ export default function Places({ user }: PlacesPropsType) {
 
 	return (
 		<div className='text-white'>
-			{user.username}
 			{places.map((place) => (
 				<Place {...place} key={uuid()} />
 			))}

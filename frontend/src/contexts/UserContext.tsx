@@ -5,10 +5,10 @@ type UserProps = {
 };
 
 export type UserType = {
-	username: String;
-	email: String;
-	token: String;
-	profilePhoto: String;
+	username: string;
+	email: string;
+	token: string;
+	profilePhoto: string;
 	places: [];
 };
 

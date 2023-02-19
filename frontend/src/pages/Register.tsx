@@ -115,7 +115,7 @@ export default function Register() {
 				</div>
 
 				<div
-					className='w-full h-[75%] sm:h-[80%] md:h-[65%] lg:h-[70%] bg-gradient-to-b from-slate-50 to-slate-300 rounded-t-lg  mt-5 text-slate-600
+					className='w-full h-[75%] sm:h-[80%] md:h-[65%] lg:h-auto bg-gradient-to-b from-slate-50 to-slate-300 rounded-t-lg mt-5 text-slate-600
 				 rounded-xl flex flex-col justify-center items-center drop-shadow-md [&>*]:flex-1
 				lg:flex-row 
 				lg:w-[80%]
@@ -124,7 +124,7 @@ export default function Register() {
 				>
 					<form
 						action='/login'
-						className='w-[90%] text-sky-800 flex flex-col items-center justify-center gap-4 '
+						className='w-[90%] text-sky-800 flex flex-col items-center justify-center'
 						onSubmit={handleRegister}
 					>
 						<h1 className='text-3xl sm:text-5xl md:text-4xl'>Welcome back!</h1>

@@ -8,7 +8,7 @@ type DataInputLogin = {
 };
 
 export const useLogin = () => {
-	const { user, setUser } = useUserContext();
+	const { setUser } = useUserContext();
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 
