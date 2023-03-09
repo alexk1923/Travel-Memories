@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
+import Header from "../components/Header";
 import mapMarker from "../img/map-marker.svg";
 import { FaUserAlt, FaGlobeAmericas } from "react-icons/fa";
 import AOS from "aos";
@@ -19,48 +20,7 @@ export default function LandingPage() {
 			className="text-white flex flex-col justify-stretch h-screen
 		lg:bg-[url('./img/landing-bg.jpg')] lg:bg-center lg:bg-cover"
 		>
-			<div
-				className="flex-1 min-h-fit bg-[url('./img/landing-bg.jpg')] bg-center bg-cover
-				flex justify-center items-start w-full lg:bg-none lg:justify-between lg:items-center lg:flex-none"
-			>
-				<div className='w-[25%]'>
-					<Link to='/places'>
-						<button
-							type='button'
-							className='hidden lg:block text-xl text-sky-900 border-4 border-sky-900 px-8 py-4 m-4'
-						>
-							<b>Explore</b>
-						</button>
-					</Link>
-				</div>
-				<Link to='/' className='w-[50%] mt-5 lg:max-w-[25%] lg:flex-1 lg:m-0'>
-					<img
-						src={whiteLogo}
-						alt='next travel'
-						className=' custom-drop-shadow'
-					/>
-				</Link>
-
-				<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%]'>
-					<button
-						type='button'
-						className='hidden lg:block text-xl border-2 rounded-2xl border-white px-8 py-2 '
-					>
-						<b>
-							<Link to='/login'>Login</Link>
-						</b>
-					</button>
-					<button
-						type='button'
-						className='hidden lg:block text-xl border-2 rounded-2xl border-white px-8 py-2'
-					>
-						<b>
-							<Link to='/register'>Register</Link>
-						</b>
-					</button>
-				</div>
-			</div>
-
+			<Header />
 			<div className='hidden lg:flex flex-1 justify-between items-center'>
 				<div
 					data-aos='fade-left'

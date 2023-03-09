@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { PlaceType } from "../components/Place";
 
 type UserProps = {
 	children: React.ReactNode;
@@ -9,7 +10,7 @@ export type UserType = {
 	email: string;
 	token: string;
 	profilePhoto: string;
-	places: [];
+	places: PlaceType[];
 };
 
 type ContextValue = {

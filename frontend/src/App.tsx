@@ -17,10 +17,27 @@ function App() {
 
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
-		if (storageUser) {
+
+		if (user.username == undefined && storageUser) {
 			setUser(JSON.parse(storageUser));
+			console.log("S-a setat userul global si se va face un API request");
 		}
-	}, []);
+
+		if (user.username != undefined) {
+			fetch(`http://localhost:8000/api/user/${user.username}/places`, {
+				method: "GET",
+				headers: { Authorization: `Bearer ${user.token}` },
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					console.log("Data given by the MAIN API places:");
+					user.places = data;
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	}, [user]);
 
 	return (
 		<Body>

@@ -2,28 +2,58 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
+import { useUserContext } from "../contexts/UserContext";
 
 export default function Header() {
+	const { user } = useUserContext();
 	return (
 		<>
-			<Link to='/'>
-				<img src={whiteLogo} alt='logo' className='w-[50%]' />
-			</Link>
-			<nav className='bg-transparent text-white flex justify-center items-center w-full'>
-				<ul className='flex flex-row gap-3 [&>*]:p-4 [&>*]:font-bold'>
-					<li>
-						<NavLink to='/'>HOME</NavLink>
-					</li>
-					<li>
-						<NavLink to='/login'>LOGIN</NavLink>
-					</li>
-					<li>
-						<NavLink to='/register'>REGISTER</NavLink>
-					</li>
-				</ul>
-			</nav>
-			<SearchBar />
-			<Outlet />
+			<div
+				className="flex-1 min-h-fit bg-[url('./img/landing-bg.jpg')] bg-center bg-cover
+				flex justify-center items-start w-full lg:bg-none lg:justify-between lg:items-center lg:flex-none"
+			>
+				<div className='w-[25%]'>
+					<Link to='/places'>
+						<button
+							type='button'
+							className='hidden lg:block text-xl text-sky-900 border-4 border-sky-900 px-8 py-4 m-4'
+						>
+							<b>Explore</b>
+						</button>
+					</Link>
+				</div>
+				<Link to='/' className='w-[50%] mt-5 lg:max-w-[25%] lg:flex-1 lg:m-0'>
+					<img
+						src={whiteLogo}
+						alt='next travel'
+						className=' custom-drop-shadow'
+					/>
+				</Link>
+				{user.username == undefined ? (
+					<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%]'>
+						<button
+							type='button'
+							className='hidden text-white lg:block text-xl border-2 rounded-2xl border-white px-8 py-2 '
+						>
+							<b>
+								<Link to='/login'>Login</Link>
+							</b>
+						</button>
+						<button
+							type='button'
+							className='hidden text-white lg:block text-xl border-2 rounded-2xl border-white px-8 py-2'
+						>
+							<b>
+								<Link to='/register'>Register</Link>
+							</b>
+						</button>
+					</div>
+				) : (
+					<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%] text-white'>
+						{user.username}
+					</div>
+				)}
+			</div>
 		</>
 	);
 }
