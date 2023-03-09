@@ -140,11 +140,9 @@ export default function Register() {
 									{...input}
 									value={inputValues[input.name]}
 									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-										setInputValues(() => {
-											return {
-												...inputValues,
-												[e.target.name]: e.target.value,
-											};
+										setInputValues({
+											...inputValues,
+											[e.target.name]: e.target.value,
 										})
 									}
 									error={error}

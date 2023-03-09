@@ -33,6 +33,7 @@
 
 	.btn {
 		transition: ease-out 0.4s;
+		font-weight: bold;
 	}
 
 	.custom-hover {
