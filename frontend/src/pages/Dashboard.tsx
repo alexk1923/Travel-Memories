@@ -22,9 +22,14 @@ export default function Dashboard() {
 			imageURL: inputValues.imgURL,
 		};
 
+		console.log(dataInput);
+
 		fetch(`http://localhost:8000/api/places`, {
 			method: "POST",
-			headers: { Authorization: `Bearer ${user.token}` },
+			headers: {
+				Authorization: `Bearer ${user.token}`,
+				"Content-Type": "application/json",
+			},
 			body: JSON.stringify(dataInput),
 		})
 			.then((res) => res.json())
@@ -78,7 +83,15 @@ export default function Dashboard() {
 					{inputs.map((inputElem) => {
 						return (
 							<React.Fragment key={inputElem.key}>
-								<input {...inputElem}></input>
+								<input
+									{...inputElem}
+									onChange={(e) =>
+										setInputValues({
+											...inputValues,
+											[inputElem.name]: e.target.value,
+										})
+									}
+								></input>
 							</React.Fragment>
 						);
 					})}

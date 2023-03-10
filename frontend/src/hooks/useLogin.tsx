@@ -13,9 +13,6 @@ export const useLogin = () => {
 	const navigate = useNavigate();
 
 	const login = async (dataInput: DataInputLogin) => {
-		console.log("Form data:");
-		console.log(dataInput);
-
 		const response = await fetch("http://localhost:8000/login", {
 			method: "POST",
 			headers: {
@@ -34,6 +31,7 @@ export const useLogin = () => {
 					...user,
 					username: authenticatedUser.username,
 					email: authenticatedUser.email,
+					token: authenticatedUser.token,
 				};
 			});
 

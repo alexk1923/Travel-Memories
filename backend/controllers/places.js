@@ -30,6 +30,7 @@ const deletePlaceByID = async (req, res) => {
 
 const addNewPlace = async (req, res) => {
     try {
+        console.log(req);
         const place = await Place.findOne({ name: req.body.name });
 
         if (place) {

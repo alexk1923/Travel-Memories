@@ -11,9 +11,11 @@ import UserProvider, { useUserContext } from "./contexts/UserContext";
 import Profile from "./pages/Profile";
 import { useEffect } from "react";
 import Dashboard from "./pages/Dashboard";
+import { useLogout } from "./hooks/useLogout";
 
 function App() {
 	const { user, setUser } = useUserContext();
+	const logout = useLogout();
 
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
@@ -24,18 +26,32 @@ function App() {
 		}
 
 		if (user.username != undefined) {
-			fetch(`http://localhost:8000/api/user/${user.username}/places`, {
+			console.log("My user is: ");
+			console.log(user);
+			// Check if the token is still valid
+			fetch(`http://localhost:8000/api/user/${user.username}`, {
 				method: "GET",
 				headers: { Authorization: `Bearer ${user.token}` },
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					console.log("Data given by the MAIN API places:");
-					user.places = data;
-				})
-				.catch((err) => {
-					console.log(err);
-				});
+			}).then((res) => {
+				if (res.status == 401) {
+					logout();
+				} else if (user.username != undefined) {
+					console.log("My user second requesst is: ");
+					console.log(user);
+					fetch(`http://localhost:8000/api/user/${user.username}/places`, {
+						method: "GET",
+						headers: { Authorization: `Bearer ${user.token}` },
+					})
+						.then((res) => res.json())
+						.then((data) => {
+							console.log("Data given by the MAIN API places:");
+							user.places = data;
+						})
+						.catch((err) => {
+							console.log(err);
+						});
+				}
+			});
 		}
 	}, [user]);
 

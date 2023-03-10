@@ -10,7 +10,7 @@ router.get("places/:placeID", getSinglePlaceByID);
 
 router.delete("places/:placeID", auth, deletePlaceByID);
 
-router.post("places/", auth, addNewPlace);
+router.post("/places", auth, addNewPlace);
 
 router.patch("places/:placeID", auth, updatePlace);
 
