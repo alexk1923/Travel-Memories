@@ -38,18 +38,6 @@ function App() {
 				} else if (user.username != undefined) {
 					console.log("My user second requesst is: ");
 					console.log(user);
-					fetch(`http://localhost:8000/api/user/${user.username}/places`, {
-						method: "GET",
-						headers: { Authorization: `Bearer ${user.token}` },
-					})
-						.then((res) => res.json())
-						.then((data) => {
-							console.log("Data given by the MAIN API places:");
-							user.places = data;
-						})
-						.catch((err) => {
-							console.log(err);
-						});
 				}
 			});
 		}
@@ -70,7 +58,6 @@ function App() {
 					<Route path='/register' element={<Register />} />
 					<Route path='*' element={<NotFound />} />
 				</Routes>
-
 				<Footer />
 			</Container>
 		</Body>

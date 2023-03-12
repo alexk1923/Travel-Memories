@@ -14,13 +14,13 @@ const getAllPlaces = async (req, res) => {
 
 
 const deletePlaceByID = async (req, res) => {
-    const existingPlace = await Place.findOne({ id: req.params.placeID });
 
+    const existingPlace = await Place.findOne({ _id: req.params.placeID });
     if (!existingPlace) {
         return res.status(404).send("The place with this id doesn't exists");
     }
 
-    if (req.authUserID.userID !== existingPlace.addedBy) {
+    if (req.authUserID.userID != existingPlace.addedBy) {
         return res.status(401).send("You are not allowed to delete this place");
     }
 

@@ -3,15 +3,45 @@ import defaultUserImg from "../img/defaultUser.svg";
 import Header from "../components/Header";
 import { v4 as uuid } from "uuid";
 import Place from "../components/Place";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { PlaceType } from "../components/Place";
+
+type inputValuesAddPlace = {
+	placeName: string;
+	city: string;
+	imgURL: string;
+	[key: string]: string;
+};
 
 export default function Dashboard() {
-	const { user, setUser } = useUserContext();
-	const [inputValues, setInputValues] = useState({
+	const { user } = useUserContext();
+	const [inputValues, setInputValues] = useState<inputValuesAddPlace>({
 		placeName: "",
 		city: "",
 		imgURL: "",
 	});
+	const [places, setPlaces] = useState<PlaceType[]>([]);
+
+	function getUserPlaces() {
+		fetch(`http://localhost:8000/api/user/${user.username}/places`, {
+			method: "GET",
+			headers: { Authorization: `Bearer ${user.token}` },
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log("Data given by the MAIN API places:");
+				console.log(data);
+				setPlaces(data);
+				user.places = data;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
+
+	useEffect(() => {
+		getUserPlaces();
+	}, [user]);
 
 	function handleAddPlace(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -33,10 +63,18 @@ export default function Dashboard() {
 			body: JSON.stringify(dataInput),
 		})
 			.then((res) => res.json())
-			.then((data) => console.log(data))
+			.then((data) => {
+				console.log(`Added ${data} to the database`);
+				getUserPlaces();
+			})
 			.catch((err) => {
 				console.log(err);
 			});
+		setInputValues({
+			placeName: "",
+			city: "",
+			imgURL: "",
+		});
 	}
 
 	const inputs = [
@@ -84,6 +122,7 @@ export default function Dashboard() {
 						return (
 							<React.Fragment key={inputElem.key}>
 								<input
+									value={inputValues[inputElem.name]}
 									{...inputElem}
 									onChange={(e) =>
 										setInputValues({
@@ -98,8 +137,11 @@ export default function Dashboard() {
 					<textarea placeholder='Place description'></textarea>
 					<button className='btn w-[15%]'>Add new place</button>
 				</form>
-				{user.places != undefined &&
-					user.places.map((place) => <Place {...place} key={uuid()} />)}
+
+				<div className='text-black flex flex-col items-center gap-3'>
+					{places.length > 0 &&
+						places.map((place) => <Place {...place} key={uuid()} />)}
+				</div>
 			</div>
 		</>
 	);

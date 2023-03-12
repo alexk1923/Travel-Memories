@@ -63,7 +63,9 @@ const logout = async (req, res) => {
 }
 
 const getPlacesByUser = async (req, res) => {
-    Place.find({ addedBy: req.params.username }, (err, places) => {
+    console.log("My params:");
+    console.log(req.params);
+    Place.find({ addedBy: req.authUserID.userID }, (err, places) => {
         if (err) {
             console.log("Error in finding places added by this user.");
             return res.status(404).send("Finding error");
@@ -74,7 +76,6 @@ const getPlacesByUser = async (req, res) => {
 }
 
 const getUserData = async (req, res) => {
-    console.log("aiciiiiiiiiiiaaaaaaadwqdssssssssssssssssssssssssssssssssssssssssssssssssssa");
     User.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
             console.log("Error in finding a user that has this username");
