@@ -13,6 +13,12 @@ type inputValuesAddPlace = {
 	[key: string]: string;
 };
 
+type CountryType = {
+	iso3: string;
+	country: string;
+	cities: string[];
+};
+
 export default function Dashboard() {
 	const { user } = useUserContext();
 	const [inputValues, setInputValues] = useState<inputValuesAddPlace>({
@@ -21,6 +27,10 @@ export default function Dashboard() {
 		imgURL: "",
 	});
 	const [places, setPlaces] = useState<PlaceType[]>([]);
+	const [countries, setCountries] = useState<CountryType[]>([]);
+	const [currentCountry, setCurrentCountry] = useState("");
+	const [cities, setCities] = useState([]);
+	const [currentCity, setCurrentCity] = useState("");
 
 	function getUserPlaces() {
 		fetch(`http://localhost:8000/api/user/${user.username}/places`, {
@@ -43,12 +53,21 @@ export default function Dashboard() {
 		getUserPlaces();
 	}, [user]);
 
+	useEffect(() => {
+		fetch("https://countriesnow.space/api/v0.1/countries", {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then((data) => setCountries(data.data))
+			.catch((err) => console.log(err));
+	}, []);
+
 	function handleAddPlace(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
 		const dataInput = {
 			name: inputValues.placeName,
-			city: inputValues.city,
+			city: `${currentCity}, ${currentCountry}`,
 			imageURL: inputValues.imgURL,
 		};
 
@@ -85,15 +104,28 @@ export default function Dashboard() {
 		},
 		{
 			key: 2,
-			name: "city",
-			placeholder: "Country, city",
-		},
-		{
-			key: 3,
 			name: "imgURL",
 			placeholder: "Add image url here",
 		},
 	];
+
+	function fetchCities(country: string) {
+		const countryData = {
+			country,
+		};
+
+		console.log(countryData);
+
+		fetch("https://countriesnow.space/api/v0.1/countries/states", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(countryData),
+		})
+			.then((res) => res.json())
+			.then((data) => setCities(data.data.states));
+	}
 
 	return (
 		<>
@@ -134,11 +166,37 @@ export default function Dashboard() {
 							</React.Fragment>
 						);
 					})}
-					<textarea placeholder='Place description'></textarea>
+					{currentCountry}
+					<select
+						onChange={(e) => {
+							setCurrentCountry(e.target.value);
+
+							console.log(e.target.value);
+							fetchCities(e.target.value);
+						}}
+						value={currentCountry}
+					>
+						<option value='' disabled hidden>
+							Choose a country
+						</option>
+						{countries.map((country) => (
+							<React.Fragment key={uuid()}>
+								<option value={country.country}>{country.country}</option>
+							</React.Fragment>
+						))}
+					</select>
+					<select onChange={(e) => setCurrentCity(e.target.value)}>
+						<option value='' disabled hidden>
+							Choose a country, then a city
+						</option>
+						{cities.map((city: { name: string }) => (
+							<option value={city.name}>{city.name}</option>
+						))}
+					</select>
 					<button className='btn w-[15%]'>Add new place</button>
 				</form>
 
-				<div className='text-black flex flex-col items-center gap-3'>
+				<div className='text-black grid grid-cols-3 items-center gap-2 rounded-xlg'>
 					{places.length > 0 &&
 						places.map((place) => <Place {...place} key={uuid()} />)}
 				</div>

@@ -16,9 +16,8 @@ export default function Place(props: PlaceType) {
 	const { name, imageURL, city, likes, favorite, visitors, addedBy } = props;
 
 	return (
-		<div className='flex flex-col w-[25%] aspect-square items-center justify-center bg-slate-100 font-bold text-xl'>
+		<div className='flex flex-col aspect-square items-center justify-center bg-slate-100 font-bold text-xl'>
 			<h1>{name}</h1>
-			<span>Added by: {addedBy}</span>
 			<img src={imageURL} alt={name} className='max-w-[70%] aspect-square' />
 			<span className='inline'>
 				<FaMapMarkerAlt className='inline' />
