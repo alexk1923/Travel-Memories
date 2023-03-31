@@ -3,8 +3,10 @@ import defaultUserImg from "../img/defaultUser.svg";
 import Header from "../components/Header";
 import { v4 as uuid } from "uuid";
 import Place from "../components/Place";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { PlaceType } from "../components/Place";
+import Places from "./Places";
+import { type } from "os";
 
 type inputValuesAddPlace = {
 	placeName: string;
@@ -19,6 +21,45 @@ type CountryType = {
 	cities: string[];
 };
 
+enum PlaceActionType {
+	ADD = "ADD",
+	DELETE = "DELETE",
+	GET = "GET",
+}
+
+interface ActionInfo<T> {
+	type: PlaceActionType;
+	payload: T;
+}
+
+interface PlaceState {
+	places: PlaceType[];
+}
+
+function reducer(
+	state: PlaceState,
+	action: ActionInfo<PlaceType[] | PlaceType | string>
+): PlaceState {
+	switch (action.type) {
+		case PlaceActionType.GET:
+			const newPlaces = {
+				places: action.payload as PlaceType[],
+			};
+			return newPlaces;
+		case PlaceActionType.ADD:
+			state.places.push(action.payload as PlaceType);
+			return state;
+		case PlaceActionType.DELETE:
+			return {
+				places: state.places.filter(
+					(place) => place._id != (action.payload as string)
+				),
+			};
+		default:
+			return { ...state };
+	}
+}
+
 export default function Dashboard() {
 	const { user } = useUserContext();
 	const [inputValues, setInputValues] = useState<inputValuesAddPlace>({
@@ -26,7 +67,10 @@ export default function Dashboard() {
 		city: "",
 		imgURL: "",
 	});
-	const [places, setPlaces] = useState<PlaceType[]>([]);
+	// const [places, setPlaces] = useState<PlaceType[]>([]);
+
+	const [state, dispatch] = useReducer(reducer, { places: [] });
+
 	const [countries, setCountries] = useState<CountryType[]>([]);
 	const [currentCountry, setCurrentCountry] = useState("");
 	const [cities, setCities] = useState([]);
@@ -41,7 +85,7 @@ export default function Dashboard() {
 			.then((data) => {
 				console.log("Data given by the MAIN API places:");
 				console.log(data);
-				setPlaces(data);
+				dispatch(data);
 				user.places = data;
 			})
 			.catch((err) => {
@@ -170,8 +214,7 @@ export default function Dashboard() {
 					<select
 						onChange={(e) => {
 							setCurrentCountry(e.target.value);
-
-							console.log(e.target.value);
+							console.log("S-a schimbat tara");
 							fetchCities(e.target.value);
 						}}
 						value={currentCountry}
@@ -185,21 +228,23 @@ export default function Dashboard() {
 							</React.Fragment>
 						))}
 					</select>
-					<select onChange={(e) => setCurrentCity(e.target.value)}>
+					<select
+						onChange={(e) => setCurrentCity(e.target.value)}
+						value={currentCity}
+					>
 						<option value='' disabled hidden>
 							Choose a country, then a city
 						</option>
 						{cities.map((city: { name: string }) => (
-							<option value={city.name}>{city.name}</option>
+							<React.Fragment key={uuid()}>
+								<option value={city.name}>{city.name}</option>
+							</React.Fragment>
 						))}
 					</select>
 					<button className='btn w-[15%]'>Add new place</button>
 				</form>
 
-				<div className='text-black grid grid-cols-3 items-center gap-2 rounded-xlg'>
-					{places.length > 0 &&
-						places.map((place) => <Place {...place} key={uuid()} />)}
-				</div>
+				<Places user={user}></Places>
 			</div>
 		</>
 	);

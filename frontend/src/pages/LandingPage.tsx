@@ -9,7 +9,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 export default function LandingPage() {
-	const { user, setUser } = useUserContext();
+	const { user } = useUserContext();
 	const navigate = useNavigate();
 	useEffect(() => {
 		AOS.init();

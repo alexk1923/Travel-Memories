@@ -63,8 +63,6 @@ const logout = async (req, res) => {
 }
 
 const getPlacesByUser = async (req, res) => {
-    console.log("My params:");
-    console.log(req.params);
     Place.find({ addedBy: req.authUserID.userID }, (err, places) => {
         if (err) {
             console.log("Error in finding places added by this user.");

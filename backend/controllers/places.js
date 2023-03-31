@@ -25,7 +25,7 @@ const deletePlaceByID = async (req, res) => {
     }
 
     existingPlace.remove();
-    return res.status(200).send("Place deleted");
+    return res.status(200).send({ "deleted_id": req.params.placeID });
 }
 
 const addNewPlace = async (req, res) => {

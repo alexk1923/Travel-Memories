@@ -12,6 +12,12 @@ type PlacesPropsType = {
 export default function Places({ user }: PlacesPropsType) {
 	const [places, setPlaces] = useState<PlaceType[]>([]);
 
+	const deleteFromList = (deleted_id: string) =>
+		setPlaces((prevPlace) => {
+			const newPlaces = prevPlace.filter((place) => place._id != deleted_id);
+			return newPlaces;
+		});
+
 	useEffect(() => {
 		if (user.username === undefined) {
 			return;
@@ -34,10 +40,16 @@ export default function Places({ user }: PlacesPropsType) {
 	}, [user]);
 
 	return (
-		<div className='text-white'>
-			{places.map((place) => (
-				<Place {...place} key={uuid()} />
-			))}
+		<div className='text-black grid grid-cols-3 items-center gap-2 rounded-xlg'>
+			{places.map((place) => {
+				return (
+					<Place
+						placeInfo={place}
+						deleteFromList={deleteFromList}
+						key={uuid()}
+					/>
+				);
+			})}
 		</div>
 	);
 }

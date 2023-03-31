@@ -31,22 +31,22 @@ export default function Header() {
 				</Link>
 				{user.username == undefined ? (
 					<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%]'>
-						<button
-							type='button'
-							className='hidden text-white lg:block text-xl border-2 rounded-2xl border-white px-8 py-2 '
-						>
-							<b>
-								<Link to='/login'>Login</Link>
-							</b>
-						</button>
-						<button
-							type='button'
-							className='hidden text-white lg:block text-xl border-2 rounded-2xl border-white px-8 py-2'
-						>
-							<b>
-								<Link to='/register'>Register</Link>
-							</b>
-						</button>
+						<NavLink to='/login'>
+							<button
+								type='button'
+								className=' text-white lg:block text-xl border-2 rounded-2xl border-white px-8 py-2 '
+							>
+								<b>Login</b>
+							</button>
+						</NavLink>
+						<NavLink to='/register'>
+							<button
+								type='button'
+								className=' text-white lg:block text-xl border-2 rounded-2xl border-white px-8 py-2'
+							>
+								<b>Register</b>
+							</button>
+						</NavLink>
 					</div>
 				) : (
 					<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%] text-white'>
