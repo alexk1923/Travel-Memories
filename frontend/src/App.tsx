@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import { useEffect } from "react";
 import Dashboard from "./pages/Dashboard";
 import { useLogout } from "./hooks/useLogout";
+import { PlaceProvider } from "./contexts/PlaceContext";
 
 function App() {
 	const { user, setUser } = useUserContext();
@@ -50,9 +51,16 @@ function App() {
 					<Route
 						path='/'
 						element={
-							user.username === undefined ? <LandingPage /> : <Dashboard />
+							user.username === undefined ? (
+								<LandingPage />
+							) : (
+								<PlaceProvider>
+									<Dashboard />
+								</PlaceProvider>
+							)
 						}
 					/>
+
 					<Route path='/login' element={<Login />} />
 					<Route path='/user/:username' element={<Profile />} />
 					<Route path='/register' element={<Register />} />

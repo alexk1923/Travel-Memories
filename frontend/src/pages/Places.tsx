@@ -4,19 +4,21 @@ import { v4 as uuid } from "uuid";
 import { PlaceType } from "../components/Place";
 import Place from "../components/Place";
 import { UserType } from "../contexts/UserContext";
+import { usePlaceContext } from "../contexts/PlaceContext";
 
 type PlacesPropsType = {
 	user: UserType;
 };
 
 export default function Places({ user }: PlacesPropsType) {
-	const [places, setPlaces] = useState<PlaceType[]>([]);
+	// const [places, setPlaces] = useState<PlaceType[]>([]);
+	const { state, dispatch } = usePlaceContext();
 
-	const deleteFromList = (deleted_id: string) =>
-		setPlaces((prevPlace) => {
-			const newPlaces = prevPlace.filter((place) => place._id != deleted_id);
-			return newPlaces;
-		});
+	// const deleteFromList = (deleted_id: string) =>
+	// 	setPlaces((prevPlace) => {
+	// 		const newPlaces = prevPlace.filter((place) => place._id != deleted_id);
+	// 		return newPlaces;
+	// 	});
 
 	useEffect(() => {
 		if (user.username === undefined) {
@@ -31,7 +33,6 @@ export default function Places({ user }: PlacesPropsType) {
 			.then((data) => {
 				console.log("Data given by the API places:");
 				console.log(data);
-				setPlaces(data);
 			})
 			.catch((err) => {
 				console.log("Eroare bai");
@@ -41,14 +42,8 @@ export default function Places({ user }: PlacesPropsType) {
 
 	return (
 		<div className='text-black grid grid-cols-3 items-center gap-2 rounded-xlg'>
-			{places.map((place) => {
-				return (
-					<Place
-						placeInfo={place}
-						deleteFromList={deleteFromList}
-						key={uuid()}
-					/>
-				);
+			{state.places.map((place) => {
+				return <Place {...place} key={uuid()} />;
 			})}
 		</div>
 	);

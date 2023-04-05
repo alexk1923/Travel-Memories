@@ -2,6 +2,7 @@ import { FaHeart, FaMapMarkerAlt } from "react-icons/fa";
 import { MdBackpack, MdClose } from "react-icons/md";
 import { BiLike } from "react-icons/bi";
 import { useUserContext } from "../contexts/UserContext";
+import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 
 type PlaceProps = {
 	placeInfo: PlaceType;
@@ -17,14 +18,14 @@ export type PlaceType = {
 	favorite: number;
 	visitors: number;
 	addedBy: string;
-	deleteFromList: (id: string) => void;
 };
 
-export default function Place(props: PlaceProps) {
+export default function Place(props: PlaceType) {
 	const { user } = useUserContext();
-	const { placeInfo, deleteFromList } = props;
+	const { state, dispatch } = usePlaceContext();
+
 	const { _id, name, city, imageURL, likes, favorite, visitors, addedBy } =
-		placeInfo;
+		props;
 
 	function handleRemovePlace() {
 		console.log(user.token);
@@ -38,7 +39,7 @@ export default function Place(props: PlaceProps) {
 			.then((data: { deleted_id: string }) => {
 				console.log(data);
 				console.log(data.deleted_id);
-				deleteFromList(data.deleted_id);
+				dispatch({ type: PlaceActionType.DELETE, payload: data.deleted_id });
 			})
 
 			.catch((err) => {
@@ -67,7 +68,12 @@ export default function Place(props: PlaceProps) {
 			</span>
 			<div className='flex gap-3'>
 				<span>
-					<BiLike className='inline' />
+					<BiLike
+						className='inline'
+						onClick={() =>
+							dispatch({ type: PlaceActionType.LIKE_INC, payload: _id })
+						}
+					/>
 					{likes}
 				</span>
 

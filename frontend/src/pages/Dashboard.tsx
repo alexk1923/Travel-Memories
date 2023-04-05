@@ -2,11 +2,9 @@ import { useUserContext } from "../contexts/UserContext";
 import defaultUserImg from "../img/defaultUser.svg";
 import Header from "../components/Header";
 import { v4 as uuid } from "uuid";
-import Place from "../components/Place";
-import React, { useEffect, useReducer, useState } from "react";
-import { PlaceType } from "../components/Place";
+import React, { useEffect, useState } from "react";
 import Places from "./Places";
-import { type } from "os";
+import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 
 type inputValuesAddPlace = {
 	placeName: string;
@@ -21,45 +19,6 @@ type CountryType = {
 	cities: string[];
 };
 
-enum PlaceActionType {
-	ADD = "ADD",
-	DELETE = "DELETE",
-	GET = "GET",
-}
-
-interface ActionInfo<T> {
-	type: PlaceActionType;
-	payload: T;
-}
-
-interface PlaceState {
-	places: PlaceType[];
-}
-
-function reducer(
-	state: PlaceState,
-	action: ActionInfo<PlaceType[] | PlaceType | string>
-): PlaceState {
-	switch (action.type) {
-		case PlaceActionType.GET:
-			const newPlaces = {
-				places: action.payload as PlaceType[],
-			};
-			return newPlaces;
-		case PlaceActionType.ADD:
-			state.places.push(action.payload as PlaceType);
-			return state;
-		case PlaceActionType.DELETE:
-			return {
-				places: state.places.filter(
-					(place) => place._id != (action.payload as string)
-				),
-			};
-		default:
-			return { ...state };
-	}
-}
-
 export default function Dashboard() {
 	const { user } = useUserContext();
 	const [inputValues, setInputValues] = useState<inputValuesAddPlace>({
@@ -69,12 +28,11 @@ export default function Dashboard() {
 	});
 	// const [places, setPlaces] = useState<PlaceType[]>([]);
 
-	const [state, dispatch] = useReducer(reducer, { places: [] });
-
 	const [countries, setCountries] = useState<CountryType[]>([]);
 	const [currentCountry, setCurrentCountry] = useState("");
 	const [cities, setCities] = useState([]);
 	const [currentCity, setCurrentCity] = useState("");
+	const { state, dispatch } = usePlaceContext();
 
 	function getUserPlaces() {
 		fetch(`http://localhost:8000/api/user/${user.username}/places`, {
@@ -85,7 +43,7 @@ export default function Dashboard() {
 			.then((data) => {
 				console.log("Data given by the MAIN API places:");
 				console.log(data);
-				dispatch(data);
+				dispatch({ type: PlaceActionType.GET, payload: data });
 				user.places = data;
 			})
 			.catch((err) => {
@@ -128,7 +86,7 @@ export default function Dashboard() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log(`Added ${data} to the database`);
-				getUserPlaces();
+				dispatch({ type: PlaceActionType.ADD, payload: data });
 			})
 			.catch((err) => {
 				console.log(err);
