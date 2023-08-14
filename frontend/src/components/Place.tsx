@@ -1,6 +1,7 @@
 import { FaHeart, FaMapMarkerAlt } from "react-icons/fa";
 import { MdBackpack, MdClose } from "react-icons/md";
 import { BiLike } from "react-icons/bi";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { useUserContext } from "../contexts/UserContext";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 
@@ -18,17 +19,26 @@ export type PlaceType = {
 	favorite: number;
 	visitors: number;
 	addedBy: string;
+	likedBy: string[];
 };
 
 export default function Place(props: PlaceType) {
 	const { user } = useUserContext();
 	const { state, dispatch } = usePlaceContext();
 
-	const { _id, name, city, imageURL, likes, favorite, visitors, addedBy } =
-		props;
+	const {
+		_id,
+		name,
+		city,
+		imageURL,
+		likes,
+		favorite,
+		visitors,
+		addedBy,
+		likedBy,
+	} = props;
 
 	function handleRemovePlace() {
-		console.log(user.token);
 		fetch(`http://localhost:8000/api/places/${_id}`, {
 			method: "DELETE",
 			headers: {
@@ -37,14 +47,20 @@ export default function Place(props: PlaceType) {
 		})
 			.then((res) => res.json())
 			.then((data: { deleted_id: string }) => {
-				console.log(data);
-				console.log(data.deleted_id);
 				dispatch({ type: PlaceActionType.DELETE, payload: data.deleted_id });
 			})
 
 			.catch((err) => {
 				console.log(err);
 			});
+	}
+
+	function isLiked() {
+		if (likedBy.includes(user._id)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	return (
@@ -67,14 +83,14 @@ export default function Place(props: PlaceType) {
 				{city}
 			</span>
 			<div className='flex gap-3'>
-				<span>
-					<BiLike
+				<span className={isLiked() ? "text-blue-700" : ""}>
+					<AiFillLike
 						className='inline'
 						onClick={() =>
-							dispatch({ type: PlaceActionType.LIKE_INC, payload: _id })
+							dispatch({ type: PlaceActionType.LIKE_TOGGLE, payload: _id })
 						}
 					/>
-					{likes}
+					{likedBy.length}
 				</span>
 
 				<span className='px-3'>

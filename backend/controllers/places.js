@@ -47,7 +47,8 @@ const addNewPlace = async (req, res) => {
             favorite: 0,
             likes: 0,
             visitors: 1,
-            addedBy: req.authUserID.userID
+            addedBy: req.authUserID.userID,
+            liked: []
         }, (err, newPlace) => {
             if (err) {
                 return res.status(500).send(err);

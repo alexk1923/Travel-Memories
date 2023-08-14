@@ -6,6 +6,7 @@ type UserProps = {
 };
 
 export type UserType = {
+	_id: string;
 	username: string;
 	email: string;
 	token: string;

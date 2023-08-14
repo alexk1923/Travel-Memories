@@ -7,7 +7,8 @@ const placeSchema = new mongoose.Schema({
     likes: Number,
     favorite: Number,
     visitors: Number,
-    addedBy: { type: String, required: true }
+    addedBy: { type: String, required: true },
+    likedBy: { type: [], required: true }
 })
 
 module.exports = mongoose.model("place", placeSchema);
