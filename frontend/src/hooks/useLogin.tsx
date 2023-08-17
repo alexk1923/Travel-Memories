@@ -23,6 +23,9 @@ export const useLogin = () => {
 
 		if (response.ok) {
 			const authenticatedUser = await response.json();
+
+			console.log("Authenticated user:");
+
 			console.log(authenticatedUser);
 
 			// add the user to the global context

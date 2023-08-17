@@ -65,9 +65,9 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 					places: state.places.map((place) => {
 						if (
 							place._id == action.payload &&
-							!place.likedBy.includes(user._id)
+							!place.likedBy.includes(user.username)
 						) {
-							place.likedBy.push(user._id);
+							place.likedBy.push(user.username);
 							console.log(place);
 							return {
 								...place,
@@ -76,7 +76,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 							return {
 								...place,
 								likedBy: place.likedBy.filter(
-									(userLikeId) => userLikeId != user._id
+									(userLikeId) => userLikeId != user.username
 								),
 							};
 						}

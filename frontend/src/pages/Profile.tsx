@@ -4,47 +4,51 @@ import { useUserContext, UserType } from "../contexts/UserContext";
 import { useLogout } from "../hooks/useLogout";
 import defaultUser from "../img/defaultUser.svg";
 import Places from "./Places";
+import SocialWrapper from "./SocialWrapper";
+import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 
-export default function Profile() {
+function Profile() {
 	const logout = useLogout();
-	const [profileUser, setProfileUser] = useState({} as UserType);
-	const { username } = useParams();
+	const { profileUser } = useParams();
 	const { user } = useUserContext();
+	const { state, dispatch } = usePlaceContext();
 
-	useEffect(() => {
-		console.log("My token: ");
-		console.log(user);
+	// function getUserPlaces() {
+	// 	fetch(`http://localhost:8000/api/user/${profileUser}/places`, {
+	// 		method: "GET",
+	// 		headers: { Authorization: `Bearer ${user.token}` },
+	// 	})
+	// 		.then((res) => res.json())
+	// 		.then((data) => {
+	// 			dispatch({ type: PlaceActionType.GET, payload: data });
+	// 			// user.places = data;
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log(err);
+	// 		});
+	// }
 
-		if (user.username === undefined) {
-			return;
-		}
+	// Get places
+	// useEffect(() => {
+	// 	getUserPlaces();
+	// }, [user]);
 
-		fetch(`http://localhost:8000/api/user/${username}`, {
-			method: "GET",
-			headers: { Authorization: `Bearer ${user.token}` },
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log("Data given by the API:");
-				console.log(data);
-				setProfileUser(data);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}, [user]);
 
 	return (
-		<div className='text-white flex justify-center items-start bg-gradient-to-b lg:from-sky-700 lg:transparent h-screen'>
+		<div className='text-white flex flex-column justify-center items-start bg-gradient-to-b lg:from-sky-700 lg:transparent h-screen'>
 			<div>
 				<img src={defaultUser} className='w-10' />
-				<h1>{user.username}</h1>
-				<h2>{user.email}</h2>
+				<h1>{profileUser}</h1>
+				{profileUser === user.username && <h2>{user.email}</h2>}
 			</div>
 			<button onClick={logout} className='bg-rose-500'>
 				Log out
 			</button>
-			<Places user={user} />
+			<Places profileUser={profileUser} />
 		</div>
 	);
 }
+
+const ProfilePage = () => SocialWrapper({ WrappedComponent: Profile });
+
+export default ProfilePage;

@@ -1,16 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
-import Places from "./pages/Places";
 import Register from "./pages/Register";
-import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
-import Container from "./components/Container";
-import Body from "./components/Body";
 import UserProvider, { useUserContext } from "./contexts/UserContext";
 import Profile from "./pages/Profile";
 import { useEffect } from "react";
-import Dashboard from "./pages/Dashboard";
+import Feed from "./pages/Feed";
 import { useLogout } from "./hooks/useLogout";
 import { PlaceProvider } from "./contexts/PlaceContext";
 
@@ -45,30 +41,26 @@ function App() {
 	}, [user]);
 
 	return (
-		<Body>
-			<Container>
-				<Routes>
-					<Route
-						path='/'
-						element={
-							user.username === undefined ? (
-								<LandingPage />
-							) : (
-								<PlaceProvider>
-									<Dashboard />
-								</PlaceProvider>
-							)
-						}
-					/>
+		<div className='h-screen bg-black'>
+			<Routes>
+				<Route
+					path='/'
+					element={
+						user.username === undefined ? (
+							<LandingPage />
+						) : (
+							<Feed />
+						)
+					}
+				/>
 
-					<Route path='/login' element={<Login />} />
-					<Route path='/user/:username' element={<Profile />} />
-					<Route path='/register' element={<Register />} />
-					<Route path='*' element={<NotFound />} />
-				</Routes>
-				<Footer />
-			</Container>
-		</Body>
+				<Route path='/login' element={<Login />} />
+				<Route path='/user/:profileUser' element={<PlaceProvider><Profile /></PlaceProvider>} />
+				<Route path='/register' element={<Register />} />
+				<Route path='*' element={<NotFound />} />
+			</Routes>
+		</div>
+
 	);
 }
 

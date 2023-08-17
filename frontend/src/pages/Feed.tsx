@@ -1,10 +1,10 @@
 import { useUserContext } from "../contexts/UserContext";
 import defaultUserImg from "../img/defaultUser.svg";
-import Header from "../components/Header";
 import { v4 as uuid } from "uuid";
 import React, { useEffect, useState } from "react";
 import Places from "./Places";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
+import SocialWrapper from "./SocialWrapper";
 
 type inputValuesAddPlace = {
 	placeName: string;
@@ -19,7 +19,7 @@ type CountryType = {
 	cities: string[];
 };
 
-export default function Dashboard() {
+function Feed() {
 	const { user } = useUserContext();
 	const [inputValues, setInputValues] = useState<inputValuesAddPlace>({
 		placeName: "",
@@ -41,8 +41,6 @@ export default function Dashboard() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("Data given by the MAIN API places:");
-				console.log(data);
 				dispatch({ type: PlaceActionType.GET, payload: data });
 				user.places = data;
 			})
@@ -51,10 +49,12 @@ export default function Dashboard() {
 			});
 	}
 
+	// Get places
 	useEffect(() => {
 		getUserPlaces();
 	}, [user]);
 
+	// Get and set the countries
 	useEffect(() => {
 		fetch("https://countriesnow.space/api/v0.1/countries", {
 			method: "GET",
@@ -131,7 +131,6 @@ export default function Dashboard() {
 
 	return (
 		<>
-			<Header />
 			<div className='bg-white flex flex-row border-b-4 border-b-slate-200'>
 				<div className='flex flex-row items-center'>
 					<img
@@ -202,8 +201,10 @@ export default function Dashboard() {
 					<button className='btn w-[15%]'>Add new place</button>
 				</form>
 
-				<Places user={user}></Places>
 			</div>
 		</>
 	);
 }
+
+const FeedPage = () => SocialWrapper({ WrappedComponent: Feed });
+export default FeedPage;

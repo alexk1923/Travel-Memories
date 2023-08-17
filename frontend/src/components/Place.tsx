@@ -56,7 +56,7 @@ export default function Place(props: PlaceType) {
 	}
 
 	function isLiked() {
-		if (likedBy.includes(user._id)) {
+		if (likedBy.includes(user.username)) {
 			return true;
 		}
 
