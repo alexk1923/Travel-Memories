@@ -1,10 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const auth = require("../middlware/auth");
+import { getUserData } from "../controllers/user.js";
+import { auth } from "../middlware/auth.js"
+import express from "express"
 
-const { getPlacesByUser, getUserData } = require("../controllers/user");
+const router = express.Router();
 
 router.get("/user/:username", auth, getUserData);
-router.get("/user/:username/places", auth, getPlacesByUser);
 
-module.exports = router;
+export default router;

@@ -1,5 +1,7 @@
-const Place = require("../models/place");
-const mongoose = require("mongoose")
+import Place from "../models/place.js";
+import User from "../models/user.js"
+
+import mongoose from "mongoose";
 
 const getAllPlaces = async (req, res) => {
     try {
@@ -10,7 +12,6 @@ const getAllPlaces = async (req, res) => {
         return res.status(500).send(err);
     }
 }
-
 
 
 const deletePlaceByID = async (req, res) => {
@@ -30,7 +31,6 @@ const deletePlaceByID = async (req, res) => {
 
 const addNewPlace = async (req, res) => {
     try {
-        console.log(req);
         const place = await Place.findOne({ name: req.body.name });
 
         if (place) {
@@ -38,7 +38,6 @@ const addNewPlace = async (req, res) => {
         }
 
         const { name, city, imageURL } = req.body;
-
 
         Place.create({
             name,
@@ -63,6 +62,7 @@ const addNewPlace = async (req, res) => {
 }
 
 const updatePlace = async (req, res) => {
+    console.log("Update place");
 
     if (!mongoose.Types.ObjectId.isValid(req.params.placeID)) {
         return res.status(422).send("Place ID has an invalid format");
@@ -108,10 +108,42 @@ const getSinglePlaceByID = async (req, res) => {
     return res.status(200).send(place);
 }
 
-module.exports = {
+const getPlacesByUser = async (req, res) => {
+    console.log("Requested:");
+    console.log(req.params);
+
+    try {
+        const foundUser = await User.findOne({ username: req.params.username });
+        console.log(foundUser);
+
+        if (foundUser) {
+            console.log("found user id:");
+            console.log(foundUser._id.toString());
+
+            Place.find({ addedBy: foundUser._id.toString() }, (err, places) => {
+                if (err) {
+                    console.log("Error in finding places added by this user.");
+                    return res.status(404).send("Finding error");
+                }
+
+                return res.status(200).send(places);
+            });
+        } else {
+            return res.status(404).send("Finding error");
+        }
+
+
+    } catch (err) {
+        console.log(`The user with username:${req.params.username} could not be found`);
+        return res.status(404).send("Finding erorr");
+    }
+}
+
+export {
     getAllPlaces,
     deletePlaceByID,
     addNewPlace,
     updatePlace,
-    getSinglePlaceByID
+    getSinglePlaceByID,
+    getPlacesByUser
 }

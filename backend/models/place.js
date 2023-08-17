@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const placeSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -11,4 +11,4 @@ const placeSchema = new mongoose.Schema({
     likedBy: { type: [], required: true }
 })
 
-module.exports = mongoose.model("place", placeSchema);
+export default mongoose.model("place", placeSchema);

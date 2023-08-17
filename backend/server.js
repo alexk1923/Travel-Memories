@@ -1,22 +1,26 @@
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const placesRoutes = require("./routes/places")
-const usersRoutes = require("./routes/users")
-const cors = require("cors");
+import dotenv from "dotenv"
+dotenv.config()
+
+import express, { json } from "express"
+import { connect } from "mongoose"
+import placesRoutes from "./routes/places.js"
+import usersRoutes from "./routes/users.js"
+import authenticationRoutes from "./routes/authentication.js"
+import cors from "cors"
+import { auth } from "./middlware/auth.js";
 
 const PORT = process.env.PORT || 8000;
-const auth = require("./middlware/auth");
-const { login, register, logout } = require("./controllers/user");
+
 
 const app = express();
-app.use(express.json());
+app.use(json());
 app.use(cors());
 app.use("/api/", placesRoutes);
 app.use("/api/", usersRoutes);
+app.use("/", authenticationRoutes);
 
 
-mongoose.connect("mongodb+srv://alexk1923:travel-memories-alexk1923@travel-memories.a8qhq46.mongodb.net/travelMemoriesUsersDB").then(() => {
+connect("mongodb+srv://alexk1923:travel-memories-alexk1923@travel-memories.a8qhq46.mongodb.net/travelMemoriesUsersDB").then(() => {
     app.listen(PORT, () => {
         console.log("Connected to the database and started server on port: " + PORT);
     })
@@ -25,9 +29,6 @@ mongoose.connect("mongodb+srv://alexk1923:travel-memories-alexk1923@travel-memor
 });
 
 
-app.post("/login", login);
-app.post("/register", register);
-app.post("/logout", logout);
 
 app.get("/homepage", auth, (req, res) => {
     res.status(200).send("Authenticated !");

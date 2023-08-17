@@ -1,17 +1,22 @@
-const express = require("express");
+import express from 'express';
 const router = express.Router();
-const auth = require("../middlware/auth");
-const { getAllPlaces, deletePlaceByID, addNewPlace, updatePlace,
-    getSinglePlaceByID } = require("../controllers/places");
+import { auth } from "../middlware/auth.js"
+import {
+    getAllPlaces, deletePlaceByID, addNewPlace, updatePlace,
+    getSinglePlaceByID, getPlacesByUser
+} from "../controllers/places.js";
 
-router.get("places/all", getAllPlaces);
+router.get("/places/all", getAllPlaces);
 
-router.get("places/:placeID", getSinglePlaceByID);
+router.get("/places/:placeID", getSinglePlaceByID);
 
 router.delete("/places/:placeID", auth, deletePlaceByID);
 
 router.post("/places", auth, addNewPlace);
 
-router.patch("places/:placeID", auth, updatePlace);
+router.patch("/places/:placeID", auth, updatePlace);
 
-module.exports = router;
+router.get("/user/:username/places", auth, getPlacesByUser);
+
+export default router;
+

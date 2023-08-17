@@ -1,7 +1,6 @@
-const User = require("../models/user");
-const Place = require("../models/place");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+import User from "../models/user.js";
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 
 const login = async (req, res) => {
     try {
@@ -29,7 +28,6 @@ const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-        console.log(existingUser);
 
         if (existingUser) {
             return res.status(409).send("There is already an account using this email address.");
@@ -62,17 +60,6 @@ const logout = async (req, res) => {
     }
 }
 
-const getPlacesByUser = async (req, res) => {
-    Place.find({ addedBy: req.authUserID.userID }, (err, places) => {
-        if (err) {
-            console.log("Error in finding places added by this user.");
-            return res.status(404).send("Finding error");
-        }
-
-        return res.status(200).send(places);
-    });
-}
-
 const getUserData = async (req, res) => {
     User.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
@@ -80,15 +67,17 @@ const getUserData = async (req, res) => {
             return res.status(404).json({ err: "Finding error" });
         }
 
-
+        // console.log("user:");
         return res.status(200).send({ id: user.id, username: user.username, profilePhoto: user.profilePhoto });
     });
 }
 
-module.exports = {
+export {
     login,
     register,
     logout,
-    getPlacesByUser,
     getUserData
 }
+
+
+
