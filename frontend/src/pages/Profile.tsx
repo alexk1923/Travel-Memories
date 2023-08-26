@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useUserContext, UserType } from "../contexts/UserContext";
 import { useLogout } from "../hooks/useLogout";
 import defaultUser from "../img/defaultUser.svg";
-import Places from "./Places";
+import Places from "../components/Places";
 import SocialWrapper from "./SocialWrapper";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 

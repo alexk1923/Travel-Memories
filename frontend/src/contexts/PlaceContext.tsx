@@ -1,7 +1,7 @@
-import React, { Dispatch, createContext, useContext, useReducer } from "react";
+import React, { Dispatch, createContext, useContext, useEffect, useReducer, useState } from "react";
 import { PlaceType } from "../components/Place";
 import { useUserContext } from "./UserContext";
-import Places from "../pages/Places";
+import Places from "../components/Places";
 
 type ReducerType = {
 	state: PlaceState;
@@ -13,6 +13,11 @@ export enum PlaceActionType {
 	DELETE = "DELETE",
 	GET = "GET",
 	LIKE_TOGGLE = "LIKE_TOGGLE",
+}
+
+type LikeChangeType = {
+	id: string;
+	likedBy: string[];
 }
 
 interface ActionInfo<T> {
@@ -37,6 +42,29 @@ export function usePlaceContext() {
 
 export function PlaceProvider({ children }: { children: React.ReactNode }) {
 	const { user } = useUserContext();
+	const [likeChange, setLikeChange] = useState<LikeChangeType>({} as LikeChangeType);
+	const [stateReducer, dispatchReducer] = useReducer(reducer, { places: [] });
+
+
+	useEffect(() => {
+		if (likeChange.id) {
+
+			console.log("Database function");
+
+			console.log(likeChange);
+			// console.log(likeChange.likedBy);
+			console.log();
+
+			fetch(`http://localhost:8000/api/places/${likeChange.id}`, {
+				method: 'PATCH',
+				headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
+				body: JSON.stringify({
+					likedBy: likeChange.likedBy
+				}),
+			})
+		}
+
+	}, [stateReducer])
 
 	function reducer(
 		state: PlaceState,
@@ -52,7 +80,6 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				return newPlaces;
 			case PlaceActionType.ADD:
 				state.places.push(action.payload as PlaceType);
-				console.log(state.places);
 				return { ...state };
 			case PlaceActionType.DELETE:
 				return {
@@ -63,31 +90,53 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 			case PlaceActionType.LIKE_TOGGLE:
 				return {
 					places: state.places.map((place) => {
+						// If the user didn't like the post before
 						if (
-							place._id == action.payload &&
-							!place.likedBy.includes(user.username)
+							place._id === action.payload
 						) {
-							place.likedBy.push(user.username);
-							console.log(place);
-							return {
-								...place,
-							};
-						} else {
-							return {
-								...place,
-								likedBy: place.likedBy.filter(
-									(userLikeId) => userLikeId != user.username
-								),
-							};
+							if (!place.likedBy.includes(user.username)) {
+								place.likedBy.push(user.username);
+
+								console.log("Before Like Toggle");
+
+								console.log(action.payload);
+								console.log(place.likedBy);
+
+
+								const newLikeChange = { id: action.payload, likedBy: place.likedBy }
+								console.log("After Like Toggle:");
+
+								console.log(newLikeChange);
+
+								setLikeChange({ id: place._id, likedBy: place.likedBy });
+								return {
+									...place,
+								};
+							}
+
+							// The post was already liked
+							else if (place.likedBy.includes(user.username)) {
+								const newPlace = {
+									...place,
+									likedBy: place.likedBy.filter(
+										(userLikeId) => userLikeId != user.username
+									),
+								};
+								setLikeChange({ id: newPlace._id, likedBy: newPlace.likedBy });
+								return newPlace;
+							}
 						}
+
+						return place;
 					}),
 				};
 			default:
 				return { ...state };
 		}
+
+
 	}
 
-	const [stateReducer, dispatchReducer] = useReducer(reducer, { places: [] });
 	return (
 		<PlaceContext.Provider
 			value={{ state: stateReducer, dispatch: dispatchReducer }}

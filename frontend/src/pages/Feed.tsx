@@ -2,7 +2,7 @@ import { useUserContext } from "../contexts/UserContext";
 import defaultUserImg from "../img/defaultUser.svg";
 import { v4 as uuid } from "uuid";
 import React, { useEffect, useState } from "react";
-import Places from "./Places";
+import Places from "../components/Places";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import SocialWrapper from "./SocialWrapper";
 

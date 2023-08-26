@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 
-import { PlaceType } from "../components/Place";
-import Place from "../components/Place";
+import { PlaceType } from "./Place";
+import Place from "./Place";
 import { UserType, useUserContext } from "../contexts/UserContext";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
@@ -15,7 +15,7 @@ export default function Places({ profileUser }: PlacesPropsType) {
 	// const [places, setPlaces] = useState<PlaceType[]>([]);
 	const { state, dispatch } = usePlaceContext();
 	const { user, setUser } = useUserContext();
-	const logout = useLogout(); //zambeste, Andreea te iubeste <3 :)
+	const logout = useLogout();
 	// const deleteFromList = (deleted_id: string) =>
 	// 	setPlaces((prevPlace) => {
 	// 		const newPlaces = prevPlace.filter((place) => place._id != deleted_id);
@@ -68,8 +68,6 @@ export default function Places({ profileUser }: PlacesPropsType) {
 				return Promise.reject(res);
 			})
 			.then((data) => {
-				console.log("Places updated");
-				console.log(data);
 				dispatch({ type: PlaceActionType.GET, payload: data })
 			})
 			.catch((err) => {
