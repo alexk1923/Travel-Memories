@@ -13,11 +13,17 @@ export enum PlaceActionType {
 	DELETE = "DELETE",
 	GET = "GET",
 	LIKE_TOGGLE = "LIKE_TOGGLE",
+	FAVORITE_TOGGLE = "FAVORITE_TOGGLE"
 }
 
 type LikeChangeType = {
 	id: string;
 	likedBy: string[];
+}
+
+type FavoriteChange = {
+	userId: string;
+	favoritePlaces: string[];
 }
 
 interface ActionInfo<T> {
@@ -43,18 +49,13 @@ export function usePlaceContext() {
 export function PlaceProvider({ children }: { children: React.ReactNode }) {
 	const { user } = useUserContext();
 	const [likeChange, setLikeChange] = useState<LikeChangeType>({} as LikeChangeType);
+	const [favoriteChange, setFavoriteChange] = useState<FavoriteChange>({} as FavoriteChange);
+
 	const [stateReducer, dispatchReducer] = useReducer(reducer, { places: [] });
 
-
+	// Update database if like list changed
 	useEffect(() => {
 		if (likeChange.id) {
-
-			console.log("Database function");
-
-			console.log(likeChange);
-			// console.log(likeChange.likedBy);
-			console.log();
-
 			fetch(`http://localhost:8000/api/places/${likeChange.id}`, {
 				method: 'PATCH',
 				headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
@@ -64,7 +65,23 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 			})
 		}
 
-	}, [stateReducer])
+	}, [likeChange])
+
+	// Update database if favorite list changed
+	useEffect(() => {
+		if (favoriteChange.userId) {
+			fetch(`http://localhost:8000/api/user/${favoriteChange.userId}`, {
+				method: 'PATCH',
+				headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
+				body: JSON.stringify({
+					favoritePlaces: favoriteChange.favoritePlaces
+				}),
+			})
+
+			localStorage.setItem("user", JSON.stringify(user))
+		}
+
+	}, [favoriteChange])
 
 	function reducer(
 		state: PlaceState,
@@ -97,16 +114,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 							if (!place.likedBy.includes(user.username)) {
 								place.likedBy.push(user.username);
 
-								console.log("Before Like Toggle");
-
-								console.log(action.payload);
-								console.log(place.likedBy);
-
-
 								const newLikeChange = { id: action.payload, likedBy: place.likedBy }
-								console.log("After Like Toggle:");
-
-								console.log(newLikeChange);
 
 								setLikeChange({ id: place._id, likedBy: place.likedBy });
 								return {
@@ -130,6 +138,21 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 						return place;
 					}),
 				};
+			case PlaceActionType.FAVORITE_TOGGLE:
+				const newFavPlaceId = action.payload;
+				console.log("Favorite toggle");
+				console.log(user);
+
+
+				if (!user.favoritePlaces.includes(newFavPlaceId as string)) {
+					user.favoritePlaces.push(newFavPlaceId as string);
+				} else {
+					user.favoritePlaces = user.favoritePlaces.filter(favPlaceId => favPlaceId !== newFavPlaceId);
+				}
+
+				setFavoriteChange({ userId: user.id, favoritePlaces: user.favoritePlaces });
+				return { ...state }
+
 			default:
 				return { ...state };
 		}

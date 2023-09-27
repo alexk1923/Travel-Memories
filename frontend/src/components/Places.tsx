@@ -26,12 +26,14 @@ export default function Places({ profileUser }: PlacesPropsType) {
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
 
-		if (user.username == undefined && storageUser) {
+
+		if (user.username === undefined && storageUser) {
 			setUser(JSON.parse(storageUser));
 			console.log("S-a setat userul global si se va face un API request");
+
 		}
 
-		if (user.username != undefined) {
+		if (user.username !== undefined) {
 			// Check if the token is still valid
 			fetch(`http://localhost:8000/api/user/${user.username}`, {
 				method: "GET",
@@ -50,29 +52,26 @@ export default function Places({ profileUser }: PlacesPropsType) {
 			return;
 		}
 
-		console.log("my user from places:");
-		console.log(user);
-
-		console.log("my profile user:");
-		console.log(profileUser);
-
-		fetch(`http://localhost:8000/api/user/${profileUser}/places`, {
-			method: "GET",
-			headers: { Authorization: `Bearer ${user.token}` },
-		})
-			.then((res) => {
-				console.log("my res:");
-				console.log(res);
-				if (res.ok)
-					return res.json();
-				return Promise.reject(res);
+		if (user && user.username) {
+			fetch(`http://localhost:8000/api/user/${profileUser}/places`, {
+				method: "GET",
+				headers: { Authorization: `Bearer ${user.token}` },
 			})
-			.then((data) => {
-				dispatch({ type: PlaceActionType.GET, payload: data })
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+				.then((res) => {
+					if (res.ok)
+						return res.json();
+					return Promise.reject(res);
+				})
+				.then((data) => {
+					dispatch({ type: PlaceActionType.GET, payload: data })
+				})
+				.catch((err) => {
+					console.log("Err:");
+					console.log(err);
+				});
+		}
+
+
 	}, [user]);
 
 	return (

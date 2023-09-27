@@ -93,9 +93,8 @@ export default function Place(props: PlaceType) {
 					{likedBy.length}
 				</span>
 
-				<span className='px-3'>
-					<FaHeart className='inline' />
-					{favorite}
+				<span className={user && user.favoritePlaces && user?.favoritePlaces.includes(props._id) ? 'text-red-700 px-3' : 'px-3'}>
+					<FaHeart className='inline' onClick={() => dispatch({ type: PlaceActionType.FAVORITE_TOGGLE, payload: _id })} />
 				</span>
 				<span>
 					<MdBackpack className='inline' />

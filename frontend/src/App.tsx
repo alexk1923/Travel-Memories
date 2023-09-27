@@ -16,15 +16,18 @@ function App() {
 
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
+		console.log(storageUser);
 
-		if (user.username == undefined && storageUser) {
+		if (user.username === undefined && storageUser !== null &&
+			JSON.parse(storageUser).username !== undefined) {
 			setUser(JSON.parse(storageUser));
-			console.log("S-a setat userul global si se va face un API request");
+
 		}
 
-		if (user.username != undefined) {
+		if (user.username !== undefined) {
 			console.log("My user is: ");
 			console.log(user);
+
 			// Check if the token is still valid
 			fetch(`http://localhost:8000/api/user/${user.username}`, {
 				method: "GET",
@@ -32,13 +35,16 @@ function App() {
 			}).then((res) => {
 				if (res.status == 401) {
 					logout();
-				} else if (user.username != undefined) {
-					console.log("My user second requesst is: ");
-					console.log(user);
+				}
+				return res.json();
+			}).then((dataUser) => {
+				if (user.username != undefined) {
+					console.log("My user after getting all his data from the database is: ");
+					console.log(dataUser);
 				}
 			});
-		}
-	}, [user]);
+		};
+	}, []);
 
 	return (
 		<div className='h-screen bg-black'>

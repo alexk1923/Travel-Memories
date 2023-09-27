@@ -6,12 +6,13 @@ type UserProps = {
 };
 
 export type UserType = {
-	_id: string;
+	id: string;
 	username: string;
 	email: string;
 	token: string;
 	profilePhoto: string;
 	places: PlaceType[];
+	favoritePlaces: string[];
 };
 
 type ContextValue = {
