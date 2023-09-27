@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import mongoose from "mongoose"
 
 const login = async (req, res) => {
     try {
@@ -14,7 +15,14 @@ const login = async (req, res) => {
             });
             existingUser.token = token;
 
-            return res.status(200).send({ "email": existingUser.email, "username": existingUser.username, "token": token });
+            return res.status(200).send({
+                "id": existingUser._id,
+                "email": existingUser.email,
+                "username": existingUser.username,
+                "token": token,
+                favoritePlaces: existingUser.favoritePlaces,
+                profilePhoto: existingUser.profilePhoto
+            });
         }
 
         return res.status(400).json("Wrong credentials. Please try again");
@@ -33,7 +41,7 @@ const register = async (req, res) => {
             return res.status(409).send("There is already an account using this email address.");
         }
 
-        encryptedPass = await bcrypt.hash(password, 10);
+        const encryptedPass = await bcrypt.hash(password, 10);
 
         const newUser = await User.create({
             username,
@@ -45,7 +53,6 @@ const register = async (req, res) => {
         res.status(201).json(newUser);
 
     } catch (err) {
-
         console.log(err);
         res.status(400).send(err);
     }
@@ -67,16 +74,47 @@ const getUserData = async (req, res) => {
             return res.status(404).json({ err: "Finding error" });
         }
 
-        // console.log("user:");
-        return res.status(200).send({ id: user.id, username: user.username, profilePhoto: user.profilePhoto });
+        return res.status(200).send({ id: user.id, username: user.username, profilePhoto: user.profilePhoto, favoritePlaces: user.favoritePlaces });
     });
+}
+
+const updateUser = async (req, res) => {
+    console.log("Update user");
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+        return res.status(422).send("User ID has an invalid format");
+    }
+
+    const existingUser = await User.findById(req.params.userId);
+
+    if (!existingUser) {
+        return res.status(404).send("User not found");
+    }
+
+    for (let key of Object.keys(req.body)) {
+        const jsonUser = JSON.parse(JSON.stringify(existingUser));
+        if (jsonUser.hasOwnProperty(key)) {
+            existingUser[key] = req.body[key];
+        }
+    }
+
+    console.log("update user has existing User:");
+    console.log(existingUser);
+
+    existingUser.save((err, modifiedUser) => {
+        if (err) {
+            return res.status(409).send("Updating resource error");
+        }
+        return res.status(200).send(modifiedUser);
+    })
 }
 
 export {
     login,
     register,
     logout,
-    getUserData
+    getUserData,
+    updateUser
 }
 
 
