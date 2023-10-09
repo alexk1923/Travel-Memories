@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const placeSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    country: { type: String, required: true },
     city: { type: String, required: true },
     imageURL: String,
     likes: Number,

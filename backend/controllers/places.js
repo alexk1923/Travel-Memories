@@ -37,10 +37,11 @@ const addNewPlace = async (req, res) => {
             return res.status(409).send("This places already exists");
         }
 
-        const { name, city, imageURL } = req.body;
+        const { name, city, country, imageURL } = req.body;
 
         Place.create({
             name,
+            country,
             city,
             imageURL,
             favorite: 0,
