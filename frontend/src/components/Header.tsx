@@ -49,9 +49,11 @@ export default function Header() {
 						</NavLink>
 					</div>
 				) : (
-					<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%] text-white'>
-						{user.username}
-					</div>
+					<Link to={`/user/${user.username}`}>
+						<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%] text-white'>
+							{user.username}
+						</div>
+					</Link>
 				)}
 			</div>
 		</>

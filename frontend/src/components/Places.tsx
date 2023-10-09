@@ -12,20 +12,13 @@ type PlacesPropsType = {
 };
 
 export default function Places({ profileUser }: PlacesPropsType) {
-	// const [places, setPlaces] = useState<PlaceType[]>([]);
 	const { state, dispatch } = usePlaceContext();
 	const { user, setUser } = useUserContext();
 	const logout = useLogout();
-	// const deleteFromList = (deleted_id: string) =>
-	// 	setPlaces((prevPlace) => {
-	// 		const newPlaces = prevPlace.filter((place) => place._id != deleted_id);
-	// 		return newPlaces;
-	// 	});
 
 
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
-
 
 		if (user.username === undefined && storageUser) {
 			setUser(JSON.parse(storageUser));
@@ -70,7 +63,6 @@ export default function Places({ profileUser }: PlacesPropsType) {
 					console.log(err);
 				});
 		}
-
 
 	}, [user]);
 

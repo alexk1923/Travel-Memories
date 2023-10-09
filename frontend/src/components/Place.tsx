@@ -1,9 +1,12 @@
-import { FaHeart, FaMapMarkerAlt } from "react-icons/fa";
-import { MdBackpack, MdClose } from "react-icons/md";
+import { FaHeart, FaMapMarkerAlt, FaStar } from "react-icons/fa";
+import { MdBackpack, MdClose, } from "react-icons/md";
 import { BiLike } from "react-icons/bi";
-import { AiFillLike, AiOutlineLike } from "react-icons/ai";
+import { AiFillLike, AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useUserContext } from "../contexts/UserContext";
-import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
+import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceContext";
+import { useEffect, useState } from "react";
+import { arrayBuffer } from "stream/consumers";
+
 
 type PlaceProps = {
 	placeInfo: PlaceType;
@@ -20,11 +23,13 @@ export type PlaceType = {
 	visitors: number;
 	addedBy: string;
 	likedBy: string[];
+	ratings: RatingType[];
 };
 
 export default function Place(props: PlaceType) {
 	const { user } = useUserContext();
 	const { state, dispatch } = usePlaceContext();
+	const [colored, setColored] = useState([false, false, false, false, false]);
 
 	const {
 		_id,
@@ -36,7 +41,29 @@ export default function Place(props: PlaceType) {
 		visitors,
 		addedBy,
 		likedBy,
+		ratings
 	} = props;
+
+	useEffect(() => {
+		console.log("Loading rating from Place...");
+		const index = ratings.findIndex(rating => rating.userId === user.id);
+		if (index != -1) {
+			console.log("dada");
+
+			setColored(ratingToStars(ratings[index].rating));
+		}
+	}, [])
+
+	function ratingToStars(rating: number) {
+		let arr = [...colored];
+		for (let i in arr) {
+			arr[i] = false;
+			if (Number(i) < rating) {
+				arr[i] = true;
+			}
+		}
+		return arr;
+	}
 
 	function handleRemovePlace() {
 		fetch(`http://localhost:8000/api/places/${_id}`, {
@@ -56,11 +83,16 @@ export default function Place(props: PlaceType) {
 	}
 
 	function isLiked() {
-		if (likedBy.includes(user.username)) {
-			return true;
-		}
+		return likedBy.includes(user.username);
+	}
 
-		return false;
+	function handelMouseOutRating() {
+		const avg = Number((ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2));
+		setColored(ratingToStars(avg))
+	}
+
+	function handleRatingHover(i: number) {
+		setColored(ratingToStars(i + 1))
 	}
 
 	return (
@@ -100,7 +132,25 @@ export default function Place(props: PlaceType) {
 					<MdBackpack className='inline' />
 					{visitors}
 				</span>
+
+
 			</div>
+
+			<div className='rating' onMouseOut={handelMouseOutRating}>
+				{
+					[...colored].map((e, i) =>
+						<span key={i} onMouseOver={() => handleRatingHover(i)}
+							onClick={() => dispatch({ type: PlaceActionType.CHANGE_RATING, payload: { _id, newRating: i + 1, userId: user.id } })}
+						>
+							{colored[i] ? <FaStar className='inline text-yellow-400 drop-shadow-md' /> :
+								<FaStar className='inline text-stone-400 drop-shadow-md' />}
+						</span>)
+				}
+				{ratings.length > 0 ?
+					(ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2)
+					: '0.00'}
+			</div>
+
 		</div>
 	);
 }

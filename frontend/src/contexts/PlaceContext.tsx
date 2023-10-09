@@ -1,19 +1,28 @@
 import React, { Dispatch, createContext, useContext, useEffect, useReducer, useState } from "react";
 import { PlaceType } from "../components/Place";
 import { useUserContext } from "./UserContext";
-import Places from "../components/Places";
 
 type ReducerType = {
 	state: PlaceState;
 	dispatch: Dispatch<any>;
 };
 
+type RatingPayloadType = {
+	_id: string;
+	newRating: number;
+	userId: string
+};
+
+export type RatingType = { userId: string, rating: number };
+
+
 export enum PlaceActionType {
 	ADD = "ADD",
 	DELETE = "DELETE",
 	GET = "GET",
 	LIKE_TOGGLE = "LIKE_TOGGLE",
-	FAVORITE_TOGGLE = "FAVORITE_TOGGLE"
+	FAVORITE_TOGGLE = "FAVORITE_TOGGLE",
+	CHANGE_RATING = "CHANGE_RATING"
 }
 
 type LikeChangeType = {
@@ -83,9 +92,20 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 
 	}, [favoriteChange])
 
+	function updatePlaceRatingDb(placeId: string, newRatings: RatingType[]) {
+		fetch(`http://localhost:8000/api/places/${placeId}`, {
+			method: 'PATCH',
+			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
+			body: JSON.stringify({
+				ratings: newRatings
+			})
+		});
+
+	}
+
 	function reducer(
 		state: PlaceState,
-		action: ActionInfo<PlaceType[] | PlaceType | string>
+		action: ActionInfo<PlaceType[] | PlaceType | RatingPayloadType | string>
 	) {
 		console.log(action);
 		switch (action.type) {
@@ -149,10 +169,25 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				} else {
 					user.favoritePlaces = user.favoritePlaces.filter(favPlaceId => favPlaceId !== newFavPlaceId);
 				}
-
 				setFavoriteChange({ userId: user.id, favoritePlaces: user.favoritePlaces });
 				return { ...state }
+			case PlaceActionType.CHANGE_RATING:
+				state.places.map(place => {
+					if (place._id === (action.payload as RatingPayloadType)._id) {
+						const index = place.ratings.findIndex(rating => rating.userId === (action.payload as RatingPayloadType).userId)
+						if (index !== -1) {
+							place.ratings[index].rating = (action.payload as RatingPayloadType).newRating;
+						} else {
+							place.ratings.push({
+								userId: (action.payload as RatingPayloadType).userId,
+								rating: (action.payload as RatingPayloadType).newRating
+							});
+						}
+						updatePlaceRatingDb(place._id, place.ratings);
+					}
+				})
 
+				return state;
 			default:
 				return { ...state };
 		}
