@@ -8,7 +8,8 @@ const placeSchema = new mongoose.Schema({
     favorite: Number,
     visitors: Number,
     addedBy: { type: String, required: true },
-    likedBy: { type: [], required: true }
+    likedBy: { type: [], required: true },
+    ratings: [{ userId: String, rating: Number }]
 })
 
 export default mongoose.model("place", placeSchema);
