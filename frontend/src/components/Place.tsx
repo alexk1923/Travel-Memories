@@ -16,6 +16,7 @@ type PlaceProps = {
 export type PlaceType = {
 	_id: string;
 	name: string;
+	country: string;
 	city: string;
 	imageURL: string;
 	likes: number;
@@ -35,6 +36,7 @@ export default function Place(props: PlaceType) {
 		_id,
 		name,
 		city,
+		country,
 		imageURL,
 		likes,
 		favorite,
@@ -112,7 +114,7 @@ export default function Place(props: PlaceType) {
 
 			<span className='inline'>
 				<FaMapMarkerAlt className='inline' />
-				{city}
+				{`${country}, ${city}`}
 			</span>
 			<div className='flex gap-3'>
 				<span className={isLiked() ? "text-blue-700" : ""}>

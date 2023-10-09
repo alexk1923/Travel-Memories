@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Places from "../components/Places";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import SocialWrapper from "./SocialWrapper";
+import { PlaceType } from "../components/Place";
 
 type inputValuesAddPlace = {
 	placeName: string;
@@ -33,6 +34,8 @@ function Feed() {
 	const [cities, setCities] = useState([]);
 	const [currentCity, setCurrentCity] = useState("");
 	const { state, dispatch } = usePlaceContext();
+	const [allPlaces, setAllPlaces] = useState<PlaceType[]>([]);
+	const [filteredAllPlaces, setFilteredAllPlaces] = useState<PlaceType[]>([]);
 
 	function getUserPlaces() {
 		fetch(`http://localhost:8000/api/user/${user.username}/places`, {
@@ -67,9 +70,15 @@ function Feed() {
 	function handleAddPlace(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
+		if (currentCity.length === 0) {
+			alert('SELECT A CITY FIRST!');
+			return;
+		}
+
 		const dataInput = {
 			name: inputValues.placeName,
-			city: `${currentCity}, ${currentCountry}`,
+			country: currentCountry,
+			city: currentCity,
 			imageURL: inputValues.imgURL,
 		};
 
@@ -116,8 +125,6 @@ function Feed() {
 			country,
 		};
 
-		console.log(countryData);
-
 		fetch("https://countriesnow.space/api/v0.1/countries/states", {
 			method: "POST",
 			headers: {
@@ -127,7 +134,32 @@ function Feed() {
 		})
 			.then((res) => res.json())
 			.then((data) => setCities(data.data.states));
+
+
 	}
+
+	useEffect(() => {
+		fetch(`http://localhost:8000/api/places/all`, {
+			method: 'GET',
+			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
+		}).then(res => res.json())
+			.then(data => setAllPlaces(data))
+	}, [])
+
+	useEffect(() => {
+		console.log('Current Country or City changed');
+		console.log(`${currentCountry} cu city: ${currentCity}`);
+		console.log(allPlaces);
+
+		setFilteredAllPlaces(allPlaces.filter(place => place.country === currentCountry));
+
+		// A city is selected
+		if (currentCity.length > 0) {
+			setFilteredAllPlaces(allPlaces.filter(place => place.country === currentCountry && place.city === currentCity));
+		}
+
+
+	}, [currentCountry, currentCity])
 
 	return (
 		<>
@@ -151,22 +183,7 @@ function Feed() {
 				[&>*]:border-2 [&>*]:border-black'
 					onSubmit={handleAddPlace}
 				>
-					{inputs.map((inputElem) => {
-						return (
-							<React.Fragment key={inputElem.key}>
-								<input
-									value={inputValues[inputElem.name]}
-									{...inputElem}
-									onChange={(e) =>
-										setInputValues({
-											...inputValues,
-											[inputElem.name]: e.target.value,
-										})
-									}
-								></input>
-							</React.Fragment>
-						);
-					})}
+
 					{currentCountry}
 					<select
 						onChange={(e) => {
@@ -185,22 +202,41 @@ function Feed() {
 							</React.Fragment>
 						))}
 					</select>
-					<select
+					{currentCountry.length > 0 && <select
 						onChange={(e) => setCurrentCity(e.target.value)}
 						value={currentCity}
 					>
-						<option value='' disabled hidden>
-							Choose a country, then a city
+						<option value=''>
+							-
 						</option>
 						{cities.map((city: { name: string }) => (
 							<React.Fragment key={uuid()}>
 								<option value={city.name}>{city.name}</option>
 							</React.Fragment>
 						))}
-					</select>
+					</select>}
+
+					{inputs.map((inputElem) => {
+						return (
+							<React.Fragment key={inputElem.key}>
+								<input
+									value={inputValues[inputElem.name]}
+									{...inputElem}
+									onChange={(e) =>
+										setInputValues({
+											...inputValues,
+											[inputElem.name]: e.target.value,
+										})
+									}
+								></input>
+							</React.Fragment>
+						);
+					})}
 					<button className='btn w-[15%]'>Add new place</button>
 				</form>
-
+				<div className="text-red-800">
+					{filteredAllPlaces.map(filteredPlace => <p key={uuid()}>{`${filteredPlace.name} from ${filteredPlace.country}, ${filteredPlace.city}`}</p>)}
+				</div>
 			</div>
 		</>
 	);
