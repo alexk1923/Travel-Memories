@@ -107,12 +107,17 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 		state: PlaceState,
 		action: ActionInfo<PlaceType[] | PlaceType | RatingPayloadType | string>
 	) {
+		console.log("ACTION:");
+
 		console.log(action);
 		switch (action.type) {
 			case PlaceActionType.GET:
+
 				const newPlaces = {
 					places: action.payload as PlaceType[],
 				};
+				console.log("new places:");
+				console.log(newPlaces);
 
 				return newPlaces;
 			case PlaceActionType.ADD:
@@ -187,7 +192,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 					}
 				})
 
-				return state;
+				return { ...state };
 			default:
 				return { ...state };
 		}

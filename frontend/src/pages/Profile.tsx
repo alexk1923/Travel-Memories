@@ -6,33 +6,24 @@ import defaultUser from "../img/defaultUser.svg";
 import Places from "../components/Places";
 import SocialWrapper from "./SocialWrapper";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
+import { log } from "console";
+import LocationForm from "../components/LocationForm";
+import FilterForm, { PLACE_CATEGORY, PLACE_FILTER, PLACE_SORT } from "../components/FilterForm";
+import { DEFAULT_COUNTRY } from "../constants";
 
 function Profile() {
 	const logout = useLogout();
 	const { profileUser } = useParams();
 	const { user } = useUserContext();
-	const { state, dispatch } = usePlaceContext();
+	const [currentCity, setCurrentCity] = useState("");
+	const [currentCountry, setCurrentCountry] = useState("");
+	const [placesCategory, setPlacesCategory] = useState<PLACE_CATEGORY>(PLACE_CATEGORY.MY_PLACES);
+	const [sortPlace, setSortPlace] = useState<PLACE_SORT>(PLACE_SORT.RATINGS);
+	const [filterPlace, setFilterPlace] = useState<PLACE_FILTER>({ country: DEFAULT_COUNTRY, city: '' });
 
-	// function getUserPlaces() {
-	// 	fetch(`http://localhost:8000/api/user/${profileUser}/places`, {
-	// 		method: "GET",
-	// 		headers: { Authorization: `Bearer ${user.token}` },
-	// 	})
-	// 		.then((res) => res.json())
-	// 		.then((data) => {
-	// 			dispatch({ type: PlaceActionType.GET, payload: data });
-	// 			// user.places = data;
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 		});
-	// }
-
-	// Get places
-	// useEffect(() => {
-	// 	getUserPlaces();
-	// }, [user]);
-
+	useEffect(() => {
+		setFilterPlace({ country: currentCountry, city: currentCity });
+	}, [currentCity, currentCountry])
 
 	return (
 		<div className='text-white flex flex-column justify-center items-start bg-gradient-to-b lg:from-sky-700 lg:transparent h-screen'>
@@ -44,7 +35,12 @@ function Profile() {
 			<button onClick={logout} className='bg-rose-500'>
 				Log out
 			</button>
-			<Places profileUser={profileUser} />
+
+			<FilterForm {...{ sortPlace, setSortPlace }} category={{ page: 'Profile', placesCategory, setPlacesCategory }} />
+			<LocationForm {...{ currentCity, setCurrentCity, currentCountry, setCurrentCountry }} />
+
+			<Places profileUser={profileUser} category={placesCategory as PLACE_CATEGORY}
+				sortPlace={sortPlace as PLACE_SORT} filter={filterPlace} />
 		</div>
 	);
 }

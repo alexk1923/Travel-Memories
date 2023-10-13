@@ -6,6 +6,10 @@ import Places from "../components/Places";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import SocialWrapper from "./SocialWrapper";
 import { PlaceType } from "../components/Place";
+import LocationForm from "../components/LocationForm";
+import FilterForm, { PLACE_CATEGORY, PLACE_FILTER, PLACE_SORT } from "../components/FilterForm";
+import { DEFAULT_COUNTRY } from "../constants";
+
 
 type inputValuesAddPlace = {
 	placeName: string;
@@ -14,11 +18,7 @@ type inputValuesAddPlace = {
 	[key: string]: string;
 };
 
-type CountryType = {
-	iso3: string;
-	country: string;
-	cities: string[];
-};
+
 
 function Feed() {
 	const { user } = useUserContext();
@@ -28,48 +28,25 @@ function Feed() {
 		imgURL: "",
 	});
 	// const [places, setPlaces] = useState<PlaceType[]>([]);
-
-	const [countries, setCountries] = useState<CountryType[]>([]);
-	const [currentCountry, setCurrentCountry] = useState("");
-	const [cities, setCities] = useState([]);
+	const [currentCountry, setCurrentCountry] = useState(DEFAULT_COUNTRY);
 	const [currentCity, setCurrentCity] = useState("");
 	const { state, dispatch } = usePlaceContext();
-	const [allPlaces, setAllPlaces] = useState<PlaceType[]>([]);
-	const [filteredAllPlaces, setFilteredAllPlaces] = useState<PlaceType[]>([]);
+	const [sortPlace, setSortPlace] = useState<PLACE_SORT>(PLACE_SORT.RATINGS);
+	const [filterPlace, setFilterPlace] = useState<PLACE_FILTER>({ country: DEFAULT_COUNTRY, city: '' });
 
-	function getUserPlaces() {
-		fetch(`http://localhost:8000/api/user/${user.username}/places`, {
-			method: "GET",
-			headers: { Authorization: `Bearer ${user.token}` },
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				dispatch({ type: PlaceActionType.GET, payload: data });
-				user.places = data;
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}
-
-	// Get places
 	useEffect(() => {
-		getUserPlaces();
-	}, [user]);
+		setFilterPlace({ country: currentCountry, city: currentCity });
+		console.log(filterPlace);
 
-	// Get and set the countries
-	useEffect(() => {
-		fetch("https://countriesnow.space/api/v0.1/countries", {
-			method: "GET",
-		})
-			.then((res) => res.json())
-			.then((data) => setCountries(data.data))
-			.catch((err) => console.log(err));
-	}, []);
+	}, [currentCity, currentCountry])
 
-	function handleAddPlace(e: React.FormEvent<HTMLFormElement>) {
+
+	function handleAddPlace(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 		e.preventDefault();
-
+		if (currentCountry === 'Worldwide') {
+			alert('SELECT A COUNTRY FIRST')
+			return;
+		}
 		if (currentCity.length === 0) {
 			alert('SELECT A CITY FIRST!');
 			return;
@@ -120,46 +97,6 @@ function Feed() {
 		},
 	];
 
-	function fetchCities(country: string) {
-		const countryData = {
-			country,
-		};
-
-		fetch("https://countriesnow.space/api/v0.1/countries/states", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(countryData),
-		})
-			.then((res) => res.json())
-			.then((data) => setCities(data.data.states));
-
-
-	}
-
-	useEffect(() => {
-		fetch(`http://localhost:8000/api/places/all`, {
-			method: 'GET',
-			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
-		}).then(res => res.json())
-			.then(data => setAllPlaces(data))
-	}, [])
-
-	useEffect(() => {
-		console.log('Current Country or City changed');
-		console.log(`${currentCountry} cu city: ${currentCity}`);
-		console.log(allPlaces);
-
-		setFilteredAllPlaces(allPlaces.filter(place => place.country === currentCountry));
-
-		// A city is selected
-		if (currentCity.length > 0) {
-			setFilteredAllPlaces(allPlaces.filter(place => place.country === currentCountry && place.city === currentCity));
-		}
-
-
-	}, [currentCountry, currentCity])
 
 	return (
 		<>
@@ -181,41 +118,17 @@ function Feed() {
 				<form
 					className='flex flex-col items-center w-full gap-2 [&>*]:w-[30%]
 				[&>*]:border-2 [&>*]:border-black'
-					onSubmit={handleAddPlace}
 				>
+					<FilterForm category={{ "page": "Feed" }} {...{ sortPlace, setSortPlace }} />
+					<LocationForm setCurrentCountry={setCurrentCountry} setCurrentCity={setCurrentCity} currentCity={currentCity} currentCountry={currentCountry} />
 
-					{currentCountry}
-					<select
-						onChange={(e) => {
-							setCurrentCountry(e.target.value);
-							console.log("S-a schimbat tara");
-							fetchCities(e.target.value);
-						}}
-						value={currentCountry}
-					>
-						<option value='' disabled hidden>
-							Choose a country
-						</option>
-						{countries.map((country) => (
-							<React.Fragment key={uuid()}>
-								<option value={country.country}>{country.country}</option>
-							</React.Fragment>
-						))}
-					</select>
-					{currentCountry.length > 0 && <select
-						onChange={(e) => setCurrentCity(e.target.value)}
-						value={currentCity}
-					>
-						<option value=''>
-							-
-						</option>
-						{cities.map((city: { name: string }) => (
-							<React.Fragment key={uuid()}>
-								<option value={city.name}>{city.name}</option>
-							</React.Fragment>
-						))}
-					</select>}
-
+				</form>
+				<div className="bg-red-800 w-full ">
+					<Places profileUser={user.username} category={PLACE_CATEGORY.ALL_PLACES}
+						sortPlace={sortPlace as PLACE_SORT} filter={filterPlace} />
+				</div >
+				<div className="bg-red-400 flex flex-col items-center">
+					<p>Cant find your place?</p>
 					{inputs.map((inputElem) => {
 						return (
 							<React.Fragment key={inputElem.key}>
@@ -232,12 +145,11 @@ function Feed() {
 							</React.Fragment>
 						);
 					})}
-					<button className='btn w-[15%]'>Add new place</button>
-				</form>
-				<div className="text-red-800">
-					{filteredAllPlaces.map(filteredPlace => <p key={uuid()}>{`${filteredPlace.name} from ${filteredPlace.country}, ${filteredPlace.city}`}</p>)}
+					<button className='btn w-[15%]' onClick={(e) => handleAddPlace(e)}>Add new place</button>
 				</div>
-			</div>
+			</div >
+
+
 		</>
 	);
 }

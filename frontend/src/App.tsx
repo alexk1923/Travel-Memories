@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import Feed from "./pages/Feed";
 import { useLogout } from "./hooks/useLogout";
 import { PlaceProvider } from "./contexts/PlaceContext";
+import LocationForm from "./components/LocationForm";
 
 function App() {
 	const { user, setUser } = useUserContext();
@@ -61,7 +62,7 @@ function App() {
 				/>
 
 				<Route path='/login' element={<Login />} />
-				<Route path='/user/:profileUser' element={<PlaceProvider><Profile /></PlaceProvider>} />
+				<Route path='/user/:profileUser' element={<Profile />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='*' element={<NotFound />} />
 			</Routes>
