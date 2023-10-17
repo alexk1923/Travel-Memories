@@ -13,6 +13,11 @@ type RatingPayloadType = {
 	userId: string
 };
 
+type VisitPayloadType = {
+	placeId: string;
+	newVisitors: string[];
+}
+
 export type RatingType = { userId: string, rating: number };
 
 
@@ -22,7 +27,8 @@ export enum PlaceActionType {
 	GET = "GET",
 	LIKE_TOGGLE = "LIKE_TOGGLE",
 	FAVORITE_TOGGLE = "FAVORITE_TOGGLE",
-	CHANGE_RATING = "CHANGE_RATING"
+	CHANGE_RATING = "CHANGE_RATING",
+	VISIT = "VISIT"
 }
 
 type LikeChangeType = {
@@ -95,17 +101,28 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 	function updatePlaceRatingDb(placeId: string, newRatings: RatingType[]) {
 		fetch(`http://localhost:8000/api/places/${placeId}`, {
 			method: 'PATCH',
-			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
+			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json" },
 			body: JSON.stringify({
 				ratings: newRatings
 			})
 		});
+	}
 
+	function updateVisitNumber(placeId: string, newVisitors: string[]) {
+
+		fetch(`http://localhost:8000/api/places/${placeId}`, {
+			method: 'PATCH',
+			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json" },
+			body: JSON.stringify({
+				visitors: newVisitors,
+				unprivileged: "yes"
+			})
+		});
 	}
 
 	function reducer(
 		state: PlaceState,
-		action: ActionInfo<PlaceType[] | PlaceType | RatingPayloadType | string>
+		action: ActionInfo<PlaceType[] | PlaceType | RatingPayloadType | VisitPayloadType | string>
 	) {
 		console.log("ACTION:");
 
@@ -138,9 +155,6 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 						) {
 							if (!place.likedBy.includes(user.username)) {
 								place.likedBy.push(user.username);
-
-								const newLikeChange = { id: action.payload, likedBy: place.likedBy }
-
 								setLikeChange({ id: place._id, likedBy: place.likedBy });
 								return {
 									...place,
@@ -165,10 +179,6 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				};
 			case PlaceActionType.FAVORITE_TOGGLE:
 				const newFavPlaceId = action.payload;
-				console.log("Favorite toggle");
-				console.log(user);
-
-
 				if (!user.favoritePlaces.includes(newFavPlaceId as string)) {
 					user.favoritePlaces.push(newFavPlaceId as string);
 				} else {
@@ -193,6 +203,11 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				})
 
 				return { ...state };
+			case PlaceActionType.VISIT:
+				const { placeId, newVisitors } = (action.payload as VisitPayloadType);
+				console.log(newVisitors);
+				updateVisitNumber(placeId, newVisitors);
+				return { ...state }
 			default:
 				return { ...state };
 		}

@@ -121,7 +121,7 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 			case PLACE_SORT.LIKES:
 				return placeB.likedBy.length - placeA.likedBy.length;
 			case PLACE_SORT.VISITORS:
-				return placeA.visitors - placeB.visitors;
+				return placeA.visitors.length - placeB.visitors.length;
 			default:
 				return -1;
 		}

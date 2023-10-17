@@ -4,7 +4,7 @@ import { BiLike } from "react-icons/bi";
 import { AiFillLike, AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useUserContext } from "../contexts/UserContext";
 import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceContext";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { arrayBuffer } from "stream/consumers";
 
 
@@ -21,7 +21,7 @@ export type PlaceType = {
 	imageURL: string;
 	likes: number;
 	favorite: number;
-	visitors: number;
+	visitors: string[];
 	addedBy: string;
 	likedBy: string[];
 	ratings: RatingType[];
@@ -97,12 +97,23 @@ export default function Place(props: PlaceType) {
 		setColored(ratingToStars(i + 1))
 	}
 
+	function handleMarkAsVisited(e: React.MouseEvent) {
+		if (!visitors.includes(user.id)) {
+			visitors.push(user.id);
+		} else {
+			const index = visitors.findIndex(visitor => visitor === user.id);
+			visitors.splice(index, 1);
+		}
+		const newVisitors = visitors;
+		dispatch({ type: PlaceActionType.VISIT, payload: { placeId: _id, newVisitors } });
+	}
+
 	return (
 		<div className='flex flex-col relative aspect-square items-center justify-center bg-slate-100 font-bold text-xl text-end '>
-			<MdClose
+			{addedBy === user.id && <MdClose
 				className='inline text-red-700 self-start absolute text-3xl top-1 right-[5%] top-0 cursor-pointer'
 				onClick={handleRemovePlace}
-			/>
+			/>}
 
 			<div
 				className='flex items-center relative'
@@ -132,10 +143,13 @@ export default function Place(props: PlaceType) {
 				</span>
 				<span>
 					<MdBackpack className='inline' />
-					{visitors}
+					{visitors.length}
 				</span>
-
-
+				{(addedBy !== user.id) &&
+					<button className="border border-2 bg-red-400" onClick={handleMarkAsVisited}>
+						{!visitors.includes(user.id) ? "Mark as visited" : "Remove from visited list"}
+					</button>
+				}
 			</div>
 
 			<div className='rating' onMouseOut={handelMouseOutRating}>
