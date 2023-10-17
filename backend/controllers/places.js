@@ -46,7 +46,7 @@ const addNewPlace = async (req, res) => {
             imageURL,
             favorite: 0,
             likes: 0,
-            visitors: 1,
+            visitors: [req.authUserID.userID],
             addedBy: req.authUserID.userID,
             liked: [],
             ratings: []
@@ -76,7 +76,7 @@ const updatePlace = async (req, res) => {
         return res.status(404).send("Place not found");
     }
 
-    if (req.authUserID.userID !== existingPlace.addedBy) {
+    if (!req.body.unprivileged && req.authUserID.userID !== existingPlace.addedBy) {
         console.log(req.authUserID.userID + "vs." + existingPlace.addedBy);
         return res.status(401).send("You are not allowed to edit this place");
     }

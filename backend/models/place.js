@@ -7,7 +7,7 @@ const placeSchema = new mongoose.Schema({
     imageURL: String,
     likes: Number,
     favorite: Number,
-    visitors: Number,
+    visitors: { type: [String], required: true },
     addedBy: { type: String, required: true },
     likedBy: { type: [], required: true },
     ratings: [{ userId: String, rating: Number }]

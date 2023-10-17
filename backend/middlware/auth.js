@@ -4,13 +4,12 @@ dotenv.config()
 
 const auth = (req, res, next) => {
 
+    console.log("=============Authentication=============");
     const token = req.headers["authorization"].split(" ")[1];
 
     if (!token) {
         return res.status(403).json({ err: "Token required" });
     }
-
-    console.log(req.headers);
 
     console.log("token:");
     console.log(token);
@@ -24,6 +23,7 @@ const auth = (req, res, next) => {
         return res.status(401).send({ err: "Invalid token" });
     }
 
+    console.log("======================================");
     return next();
 }
 
