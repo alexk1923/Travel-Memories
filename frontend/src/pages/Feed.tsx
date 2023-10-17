@@ -116,8 +116,7 @@ function Feed() {
 			</div>
 			<div className='bg-white h-screen'>
 				<form
-					className='flex flex-col items-center w-full gap-2 [&>*]:w-[30%]
-				[&>*]:border-2 [&>*]:border-black'
+					className='flex flex-col items-center w-full gap-2 [&>*]:w-[30%]'
 				>
 					<FilterForm category={{ "page": "Feed" }} {...{ sortPlace, setSortPlace }} />
 					<LocationForm setCurrentCountry={setCurrentCountry} setCurrentCity={setCurrentCity} currentCity={currentCity} currentCountry={currentCountry} />

@@ -8,7 +8,7 @@ type ReducerType = {
 };
 
 type RatingPayloadType = {
-	_id: string;
+	placeId: string;
 	newRating: number;
 	userId: string
 };
@@ -99,11 +99,14 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 	}, [favoriteChange])
 
 	function updatePlaceRatingDb(placeId: string, newRatings: RatingType[]) {
+		console.log(`Update the place ${placeId} with new ratings: ${newRatings}`);
+
 		fetch(`http://localhost:8000/api/places/${placeId}`, {
 			method: 'PATCH',
 			headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json" },
 			body: JSON.stringify({
-				ratings: newRatings
+				ratings: newRatings,
+				unprivileged: "true"
 			})
 		});
 	}
@@ -188,11 +191,14 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				return { ...state }
 			case PlaceActionType.CHANGE_RATING:
 				state.places.map(place => {
-					if (place._id === (action.payload as RatingPayloadType)._id) {
+					if (place._id === (action.payload as RatingPayloadType).placeId) {
 						const index = place.ratings.findIndex(rating => rating.userId === (action.payload as RatingPayloadType).userId)
 						if (index !== -1) {
+							console.log("var1");
+
 							place.ratings[index].rating = (action.payload as RatingPayloadType).newRating;
 						} else {
+							console.log("var2");
 							place.ratings.push({
 								userId: (action.payload as RatingPayloadType).userId,
 								rating: (action.payload as RatingPayloadType).newRating

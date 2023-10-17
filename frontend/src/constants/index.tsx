@@ -1,3 +1,5 @@
+import { RatingType } from "../contexts/PlaceContext";
+
 export const DEFAULT_COUNTRY = "Worldwide"
 
 export enum PLACE_CATEGORY {
@@ -17,4 +19,10 @@ export enum PLACE_SORT {
 export type PLACE_FILTER = {
     country: string;
     city: string;
+}
+
+export type RatingProps = {
+    ratings: RatingType[];
+    placeId: string;
+    userId: string;
 }

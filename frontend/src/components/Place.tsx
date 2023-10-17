@@ -6,6 +6,7 @@ import { useUserContext } from "../contexts/UserContext";
 import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceContext";
 import React, { useEffect, useState } from "react";
 import { arrayBuffer } from "stream/consumers";
+import Rating from "./Rating";
 
 
 type PlaceProps = {
@@ -30,7 +31,6 @@ export type PlaceType = {
 export default function Place(props: PlaceType) {
 	const { user } = useUserContext();
 	const { state, dispatch } = usePlaceContext();
-	const [colored, setColored] = useState([false, false, false, false, false]);
 
 	const {
 		_id,
@@ -45,27 +45,6 @@ export default function Place(props: PlaceType) {
 		likedBy,
 		ratings
 	} = props;
-
-	useEffect(() => {
-		console.log("Loading rating from Place...");
-		const index = ratings.findIndex(rating => rating.userId === user.id);
-		if (index != -1) {
-			console.log("dada");
-
-			setColored(ratingToStars(ratings[index].rating));
-		}
-	}, [])
-
-	function ratingToStars(rating: number) {
-		let arr = [...colored];
-		for (let i in arr) {
-			arr[i] = false;
-			if (Number(i) < rating) {
-				arr[i] = true;
-			}
-		}
-		return arr;
-	}
 
 	function handleRemovePlace() {
 		fetch(`http://localhost:8000/api/places/${_id}`, {
@@ -88,14 +67,6 @@ export default function Place(props: PlaceType) {
 		return likedBy.includes(user.username);
 	}
 
-	function handelMouseOutRating() {
-		const avg = Number((ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2));
-		setColored(ratingToStars(avg))
-	}
-
-	function handleRatingHover(i: number) {
-		setColored(ratingToStars(i + 1))
-	}
 
 	function handleMarkAsVisited(e: React.MouseEvent) {
 		if (!visitors.includes(user.id)) {
@@ -121,7 +92,7 @@ export default function Place(props: PlaceType) {
 			>
 				<h1 className=''>{name}</h1>
 			</div>
-			<img src={imageURL} alt={name} className='max-w-[70%] aspect-square' />
+			<img src={imageURL ? imageURL : ""} alt={name} className='max-w-[70%] aspect-square' />
 
 			<span className='inline'>
 				<FaMapMarkerAlt className='inline' />
@@ -152,20 +123,7 @@ export default function Place(props: PlaceType) {
 				}
 			</div>
 
-			<div className='rating' onMouseOut={handelMouseOutRating}>
-				{
-					[...colored].map((e, i) =>
-						<span key={i} onMouseOver={() => handleRatingHover(i)}
-							onClick={() => dispatch({ type: PlaceActionType.CHANGE_RATING, payload: { _id, newRating: i + 1, userId: user.id } })}
-						>
-							{colored[i] ? <FaStar className='inline text-yellow-400 drop-shadow-md' /> :
-								<FaStar className='inline text-stone-400 drop-shadow-md' />}
-						</span>)
-				}
-				{ratings.length > 0 ?
-					(ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2)
-					: '0.00'}
-			</div>
+			<Rating ratings={ratings} placeId={_id} userId={user.id} />
 
 		</div>
 	);

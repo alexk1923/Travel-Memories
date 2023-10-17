@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from "uuid";
+import { DEFAULT_COUNTRY } from '../constants';
 
 type CountryType = {
     iso3: string;
@@ -46,12 +47,9 @@ export default function Location(props: LocationPropsType) {
             .then((data) => setCities(data.data.states));
     }
 
-    useEffect(() => {
-
-    }, [])
 
     return (
-        <div className="text-slate-900">
+        <div className="text-slate-900 flex flex-col gap-2">
             <select
                 onChange={(e) => {
                     setCurrentCountry(e.target.value);
@@ -68,7 +66,7 @@ export default function Location(props: LocationPropsType) {
                     </React.Fragment>
                 ))}
             </select>
-            {currentCountry.length > 0 && <select
+            {currentCountry !== DEFAULT_COUNTRY && <select
                 onChange={(e) => setCurrentCity(e.target.value)}
                 value={currentCity}
             >

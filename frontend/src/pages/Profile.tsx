@@ -16,7 +16,7 @@ function Profile() {
 	const { profileUser } = useParams();
 	const { user } = useUserContext();
 	const [currentCity, setCurrentCity] = useState("");
-	const [currentCountry, setCurrentCountry] = useState("");
+	const [currentCountry, setCurrentCountry] = useState(DEFAULT_COUNTRY);
 	const [placesCategory, setPlacesCategory] = useState<PLACE_CATEGORY>(PLACE_CATEGORY.MY_PLACES);
 	const [sortPlace, setSortPlace] = useState<PLACE_SORT>(PLACE_SORT.RATINGS);
 	const [filterPlace, setFilterPlace] = useState<PLACE_FILTER>({ country: DEFAULT_COUNTRY, city: '' });

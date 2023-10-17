@@ -45,32 +45,11 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 	}, []);
 
 	useEffect(() => {
-		console.log("oOn the telephone");
-
 		if (profileUser === undefined) {
-
 			return;
 		}
 
 		if (user && user.username) {
-
-			// fetch(`http://localhost:8000/api/user/${profileUser}/places`, {
-			// 	method: "GET",
-			// 	headers: { Authorization: `Bearer ${user.token}` },
-			// })
-			// 	.then((res) => {
-			// 		if (res.ok)
-			// 			return res.json();
-			// 		return Promise.reject(res);
-			// 	})
-			// 	.then((data) => {
-			// 		dispatch({ type: PlaceActionType.GET, payload: data })
-			// 	})
-			// 	.catch((err) => {
-			// 		console.log("Err:");
-			// 		console.log(err);
-			// 	});
-
 			fetch(`http://localhost:8000/api/places/all`, {
 				method: "GET",
 				headers: { Authorization: `Bearer ${user.token}` }
@@ -95,7 +74,7 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 
 	}, [user]);
 
-	function applyFilter(place: PlaceType) {
+	function filterByCategory(place: PlaceType) {
 		switch (category) {
 			case PLACE_CATEGORY.MY_PLACES:
 				return place.addedBy === user.id;
@@ -109,6 +88,9 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 	}
 
 	function avgRating(ratings: RatingType[]) {
+		if (ratings.length === 0) {
+			return 0.00;
+		}
 		return Number((ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2));
 	}
 
@@ -128,10 +110,8 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 	}
 
 	function filterByLocation(place: PlaceType) {
-
-		const filterByCountry = filter.country == DEFAULT_COUNTRY ? true : (filter.country === place.country);
+		const filterByCountry = filter.country === DEFAULT_COUNTRY ? true : (filter.country === place.country);
 		const filterByCity = filter.city === "" ? true : (filter.city === place.city);
-
 		return filterByCountry && filterByCity;
 	}
 
@@ -152,7 +132,7 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 
 	return (
 		<div className='text-black grid grid-cols-3 items-center gap-2 rounded-xlg'>
-			{state.places.filter(filterByLocation).filter(applyFilter).sort(applySort).map((place) => {
+			{state.places.filter(filterByLocation).filter(filterByCategory).sort(applySort).map((place) => {
 				return <Place {...place} key={uuid()} />;
 			})}
 		</div>
