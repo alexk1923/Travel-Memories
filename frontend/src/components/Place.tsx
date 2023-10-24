@@ -7,6 +7,7 @@ import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceC
 import React, { useEffect, useState } from "react";
 import { arrayBuffer } from "stream/consumers";
 import Rating from "./Rating";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 type PlaceProps = {
@@ -28,9 +29,11 @@ export type PlaceType = {
 	ratings: RatingType[];
 };
 
+
 export default function Place(props: PlaceType) {
 	const { user } = useUserContext();
 	const { state, dispatch } = usePlaceContext();
+	const navigate = useNavigate();
 
 	const {
 		_id,
@@ -45,6 +48,9 @@ export default function Place(props: PlaceType) {
 		likedBy,
 		ratings
 	} = props;
+
+	const location = useLocation();
+	// console.log(location.pathname);
 
 	function handleRemovePlace() {
 		fetch(`http://localhost:8000/api/places/${_id}`, {
@@ -68,6 +74,10 @@ export default function Place(props: PlaceType) {
 	}
 
 
+	console.log("Place rendered");
+	console.log(likedBy);
+
+
 	function handleMarkAsVisited(e: React.MouseEvent) {
 		if (!visitors.includes(user.id)) {
 			visitors.push(user.id);
@@ -80,7 +90,7 @@ export default function Place(props: PlaceType) {
 	}
 
 	return (
-		<div className='flex flex-col relative aspect-square items-center justify-center bg-slate-100 font-bold text-xl text-end '>
+		<div className='flex flex-col relative aspect-square items-center justify-center bg-slate-100 font-bold text-xl text-end'>
 			{addedBy === user.id && <MdClose
 				className='inline text-red-700 self-start absolute text-3xl top-1 right-[5%] top-0 cursor-pointer'
 				onClick={handleRemovePlace}
@@ -92,7 +102,10 @@ export default function Place(props: PlaceType) {
 			>
 				<h1 className=''>{name}</h1>
 			</div>
-			<img src={imageURL ? imageURL : ""} alt={name} className='max-w-[70%] aspect-square' />
+			<img src={imageURL ? imageURL : ""} alt={name} className='max-w-[70%] aspect-square'
+				onClick={() => {
+					if (!location.pathname.includes(_id)) { navigate(`/place/${_id}`) }
+				}} />
 
 			<span className='inline'>
 				<FaMapMarkerAlt className='inline' />
@@ -103,7 +116,7 @@ export default function Place(props: PlaceType) {
 					<AiFillLike
 						className='inline'
 						onClick={() =>
-							dispatch({ type: PlaceActionType.LIKE_TOGGLE, payload: _id })
+							dispatch({ type: PlaceActionType.LIKE_TOGGLE, payload: { placeId: _id } })
 						}
 					/>
 					{likedBy.length}
@@ -128,3 +141,5 @@ export default function Place(props: PlaceType) {
 		</div>
 	);
 }
+
+export const MemoizedPlace = React.memo(Place);

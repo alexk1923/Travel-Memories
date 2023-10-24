@@ -35,6 +35,7 @@ export const useLogin = () => {
 					username: authenticatedUser.username,
 					email: authenticatedUser.email,
 					token: authenticatedUser.token,
+					profilePhoto: authenticatedUser.profilePhoto
 				};
 			});
 

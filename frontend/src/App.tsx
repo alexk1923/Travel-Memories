@@ -8,27 +8,24 @@ import Profile from "./pages/Profile";
 import { useEffect } from "react";
 import Feed from "./pages/Feed";
 import { useLogout } from "./hooks/useLogout";
-import { PlaceProvider } from "./contexts/PlaceContext";
+import { PlaceActionType, PlaceProvider, usePlaceContext } from "./contexts/PlaceContext";
 import LocationForm from "./components/LocationForm";
+import PlaceDetailsPage from "./pages/PlaceDetails";
 
 function App() {
 	const { user, setUser } = useUserContext();
 	const logout = useLogout();
+	const { state, dispatch } = usePlaceContext();
 
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
-		console.log(storageUser);
 
 		if (user.username === undefined && storageUser !== null &&
 			JSON.parse(storageUser).username !== undefined) {
 			setUser(JSON.parse(storageUser));
-
 		}
 
 		if (user.username !== undefined) {
-			console.log("My user is: ");
-			console.log(user);
-
 			// Check if the token is still valid
 			fetch(`http://localhost:8000/api/user/${user.username}`, {
 				method: "GET",
@@ -56,13 +53,17 @@ function App() {
 						user.username === undefined ? (
 							<LandingPage />
 						) : (
-							<Feed />
+							<PlaceProvider>
+								<Feed />
+							</PlaceProvider>
+
 						)
 					}
 				/>
 
 				<Route path='/login' element={<Login />} />
-				<Route path='/user/:profileUser' element={<Profile />} />
+				<Route path='/user/:profileUser' element={<PlaceProvider> <Profile /> </PlaceProvider>} />
+				<Route path='/place/:placeId' element={<PlaceProvider> <PlaceDetailsPage /> </PlaceProvider>} />
 				<Route path='/register' element={<Register />} />
 				<Route path='*' element={<NotFound />} />
 			</Routes>

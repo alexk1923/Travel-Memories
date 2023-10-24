@@ -26,3 +26,15 @@ export type RatingProps = {
     placeId: string;
     userId: string;
 }
+
+export type CommentaryType = {
+    _id: string;
+    placeId: string;
+    commentMsg: string;
+    datePosted: Date;
+    user: {
+        userId: string;
+        username: string;
+        profilePhoto: string;
+    };
+}

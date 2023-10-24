@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 
-import { PlaceType } from "./Place";
-import Place from "./Place";
+import { MemoizedPlace, PlaceType } from "./Place";
 import { UserType, useUserContext } from "../contexts/UserContext";
 import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
@@ -21,14 +20,12 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 	const { user, setUser } = useUserContext();
 	const logout = useLogout();
 
-
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
 
 		if (user.username === undefined && storageUser) {
 			setUser(JSON.parse(storageUser));
 			console.log("S-a setat userul global si se va face un API request");
-
 		}
 
 		if (user.username !== undefined) {
@@ -43,36 +40,6 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 			});
 		}
 	}, []);
-
-	useEffect(() => {
-		if (profileUser === undefined) {
-			return;
-		}
-
-		if (user && user.username) {
-			fetch(`http://localhost:8000/api/places/all`, {
-				method: "GET",
-				headers: { Authorization: `Bearer ${user.token}` }
-			}).then(res => {
-				if (res.ok) {
-					return res.json()
-				}
-				return Promise.reject(res)
-			}).then(data => {
-				console.log("My all places:");
-
-				console.log(data);
-
-				dispatch({ type: PlaceActionType.GET, payload: data })
-				console.log("S-a facut dispatch teoretic");
-
-			}).catch(err => {
-				console.log("Error in getting all places:");
-				console.log(err);
-			});
-		}
-
-	}, [user]);
 
 	function filterByCategory(place: PlaceType) {
 		switch (category) {
@@ -103,7 +70,7 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 			case PLACE_SORT.LIKES:
 				return placeB.likedBy.length - placeA.likedBy.length;
 			case PLACE_SORT.VISITORS:
-				return placeA.visitors.length - placeB.visitors.length;
+				return placeB.visitors.length - placeA.visitors.length;
 			default:
 				return -1;
 		}
@@ -115,25 +82,22 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 		return filterByCountry && filterByCity;
 	}
 
-	useEffect(() => {
-		console.log(filter);
 
-		let arr = state.places.filter(filterByLocation);
-		console.log(state.places);
-
-	}, [filter])
 
 	useEffect(() => {
-		console.log("S-a schimbat state places");
-		console.log(state.places);
-
+		console.log("state changed");
 
 	}, [state.places])
+
+
+	console.log("Places rendered");
+
+
 
 	return (
 		<div className='text-black grid grid-cols-3 items-center gap-2 rounded-xlg'>
 			{state.places.filter(filterByLocation).filter(filterByCategory).sort(applySort).map((place) => {
-				return <Place {...place} key={uuid()} />;
+				return <MemoizedPlace {...place} key={place._id} />;
 			})}
 		</div>
 	);

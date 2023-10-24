@@ -11,9 +11,8 @@ export default function Rating(props: RatingProps) {
     const [avg, setAvg] = useState(0.0);
 
     useEffect(() => {
-        console.log("changed avg");
         setAvg(Number((ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2)));
-    }, [ratings])
+    }, [ratings, state])
 
     useEffect(() => {
         setColoredAvg(ratingToStars(avg))
@@ -52,14 +51,12 @@ export default function Rating(props: RatingProps) {
             <p>Average rating</p>
             {
                 [...coloredAvg].map((e, i) =>
-                    <>
-                        {/* <p>Calculus: {(avg - (i))}</p> */}
-                        <span key={i}>
-                            {coloredAvg[i]
-                                ? <FaStar className='inline text-red-400 drop-shadow-md' />
-                                : (avg - i >= 0.5) ? <FaStarHalf className='inline text-red-400 drop-shadow-md' />
-                                    : <FaStar className='inline text-stone-200 drop-shadow-md' />}
-                        </span></>)
+                    <span key={i}>
+                        {coloredAvg[i]
+                            ? <FaStar className='inline text-red-400 drop-shadow-md' />
+                            : (avg - i >= 0.5) ? <FaStarHalf className='inline text-red-400 drop-shadow-md' />
+                                : <FaStar className='inline text-stone-200 drop-shadow-md' />}
+                    </span>)
             }
 
             {ratings.length > 0 ?

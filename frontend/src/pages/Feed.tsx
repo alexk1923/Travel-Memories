@@ -3,7 +3,7 @@ import defaultUserImg from "../img/defaultUser.svg";
 import { v4 as uuid } from "uuid";
 import React, { useEffect, useState } from "react";
 import Places from "../components/Places";
-import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
+import { PlaceActionType, PlaceProvider, usePlaceContext } from "../contexts/PlaceContext";
 import SocialWrapper from "./SocialWrapper";
 import { PlaceType } from "../components/Place";
 import LocationForm from "../components/LocationForm";
@@ -17,8 +17,6 @@ type inputValuesAddPlace = {
 	imgURL: string;
 	[key: string]: string;
 };
-
-
 
 function Feed() {
 	const { user } = useUserContext();
@@ -58,8 +56,6 @@ function Feed() {
 			city: currentCity,
 			imageURL: inputValues.imgURL,
 		};
-
-		console.log(dataInput);
 
 		fetch(`http://localhost:8000/api/places`, {
 			method: "POST",
@@ -147,8 +143,6 @@ function Feed() {
 					<button className='btn w-[15%]' onClick={(e) => handleAddPlace(e)}>Add new place</button>
 				</div>
 			</div >
-
-
 		</>
 	);
 }

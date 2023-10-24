@@ -18,6 +18,10 @@ type VisitPayloadType = {
 	newVisitors: string[];
 }
 
+type LikePayloadType = {
+	placeId: string;
+}
+
 export type RatingType = { userId: string, rating: number };
 
 
@@ -57,16 +61,18 @@ const PlaceContext = createContext<ReducerType>({
 	},
 });
 
+
+
 export function usePlaceContext() {
 	return useContext(PlaceContext);
 }
 
 export function PlaceProvider({ children }: { children: React.ReactNode }) {
 	const { user } = useUserContext();
-	const [likeChange, setLikeChange] = useState<LikeChangeType>({} as LikeChangeType);
+	const [likeChange, setLikeChangeDb] = useState<LikeChangeType>({} as LikeChangeType);
 	const [favoriteChange, setFavoriteChange] = useState<FavoriteChange>({} as FavoriteChange);
-
 	const [stateReducer, dispatchReducer] = useReducer(reducer, { places: [] });
+
 
 	// Update database if like list changed
 	useEffect(() => {
@@ -75,11 +81,11 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				method: 'PATCH',
 				headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "application/json", },
 				body: JSON.stringify({
-					likedBy: likeChange.likedBy
+					likedBy: likeChange.likedBy,
+					unprivileged: "true"
 				}),
 			})
 		}
-
 	}, [likeChange])
 
 	// Update database if favorite list changed
@@ -123,6 +129,31 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 		});
 	}
 
+	useEffect(() => {
+		if (user === undefined) {
+			return;
+		}
+
+		if (user && user.username) {
+			fetch(`http://localhost:8000/api/places/all`, {
+				method: "GET",
+				headers: { Authorization: `Bearer ${user.token}` }
+			}).then(res => {
+				if (res.ok) {
+					return res.json()
+				}
+				return Promise.reject(res)
+			}).then(data => {
+				dispatchReducer({ type: PlaceActionType.GET, payload: data });
+				console.log(data);
+
+			}).catch(err => {
+				console.log("Error in getting all places:");
+				console.log(err);
+			});
+		}
+	}, [user]);
+
 	function reducer(
 		state: PlaceState,
 		action: ActionInfo<PlaceType[] | PlaceType | RatingPayloadType | VisitPayloadType | string>
@@ -132,14 +163,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 		console.log(action);
 		switch (action.type) {
 			case PlaceActionType.GET:
-
-				const newPlaces = {
-					places: action.payload as PlaceType[],
-				};
-				console.log("new places:");
-				console.log(newPlaces);
-
-				return newPlaces;
+				return { ...state, places: action.payload as PlaceType[] }
 			case PlaceActionType.ADD:
 				state.places.push(action.payload as PlaceType);
 				return { ...state };
@@ -150,36 +174,27 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 					),
 				};
 			case PlaceActionType.LIKE_TOGGLE:
-				return {
-					places: state.places.map((place) => {
-						// If the user didn't like the post before
-						if (
-							place._id === action.payload
-						) {
-							if (!place.likedBy.includes(user.username)) {
-								place.likedBy.push(user.username);
-								setLikeChange({ id: place._id, likedBy: place.likedBy });
-								return {
-									...place,
-								};
-							}
+				const place = state.places.find(place => place._id === (action.payload as LikePayloadType).placeId);
+				console.log("Found place:");
+				console.log(place);
+				if (place) {
+					if (!place.likedBy.includes(user.username)) {
+						place.likedBy.push(user.username);
+						console.log("Not liked yet");
+						setLikeChangeDb({ id: place._id, likedBy: place.likedBy });
+						return { ...state };
+					} else if (place.likedBy.includes(user.username)) {
+						place.likedBy = place.likedBy.filter(username => username !== user.username);
+						console.log("Already liked");
+						console.log(place);
 
-							// The post was already liked
-							else if (place.likedBy.includes(user.username)) {
-								const newPlace = {
-									...place,
-									likedBy: place.likedBy.filter(
-										(userLikeId) => userLikeId != user.username
-									),
-								};
-								setLikeChange({ id: newPlace._id, likedBy: newPlace.likedBy });
-								return newPlace;
-							}
-						}
+						setLikeChangeDb({ id: place._id, likedBy: place.likedBy });
+						return { ...state }
+					}
+				}
 
-						return place;
-					}),
-				};
+				return { ...state }
+
 			case PlaceActionType.FAVORITE_TOGGLE:
 				const newFavPlaceId = action.payload;
 				if (!user.favoritePlaces.includes(newFavPlaceId as string)) {
@@ -194,11 +209,8 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 					if (place._id === (action.payload as RatingPayloadType).placeId) {
 						const index = place.ratings.findIndex(rating => rating.userId === (action.payload as RatingPayloadType).userId)
 						if (index !== -1) {
-							console.log("var1");
-
 							place.ratings[index].rating = (action.payload as RatingPayloadType).newRating;
 						} else {
-							console.log("var2");
 							place.ratings.push({
 								userId: (action.payload as RatingPayloadType).userId,
 								rating: (action.payload as RatingPayloadType).newRating
@@ -207,7 +219,6 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 						updatePlaceRatingDb(place._id, place.ratings);
 					}
 				})
-
 				return { ...state };
 			case PlaceActionType.VISIT:
 				const { placeId, newVisitors } = (action.payload as VisitPayloadType);

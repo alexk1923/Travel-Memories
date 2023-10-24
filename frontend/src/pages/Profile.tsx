@@ -5,11 +5,10 @@ import { useLogout } from "../hooks/useLogout";
 import defaultUser from "../img/defaultUser.svg";
 import Places from "../components/Places";
 import SocialWrapper from "./SocialWrapper";
-import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
-import { log } from "console";
 import LocationForm from "../components/LocationForm";
 import FilterForm, { PLACE_CATEGORY, PLACE_FILTER, PLACE_SORT } from "../components/FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
+import PlaceDetailsPage from "./PlaceDetails";
 
 function Profile() {
 	const logout = useLogout();

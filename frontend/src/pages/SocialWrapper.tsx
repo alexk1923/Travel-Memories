@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react'
+import React, { Component, FunctionComponent } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
 interface SocialWrapperProps {
-    WrappedComponent: FunctionComponent
+    WrappedComponent: React.ComponentType<any>
 }
 
 export default function SocialWrapper(props: SocialWrapperProps) {
