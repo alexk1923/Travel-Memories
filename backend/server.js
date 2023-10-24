@@ -5,6 +5,7 @@ import express, { json } from "express"
 import { connect } from "mongoose"
 import placesRoutes from "./routes/places.js"
 import usersRoutes from "./routes/users.js"
+import commentRoutes from "./routes/comments.js"
 import authenticationRoutes from "./routes/authentication.js"
 import cors from "cors"
 import { auth } from "./middlware/auth.js";
@@ -17,6 +18,7 @@ app.use(json());
 app.use(cors());
 app.use("/api/", placesRoutes);
 app.use("/api/", usersRoutes);
+app.use("/api/", commentRoutes)
 app.use("/", authenticationRoutes);
 
 

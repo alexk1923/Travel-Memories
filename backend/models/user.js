@@ -9,6 +9,4 @@ const userSchema = new mongoose.Schema({
     favoritePlaces: { type: [] }
 })
 
-
-
 export default mongoose.model("user", userSchema);

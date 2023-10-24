@@ -78,6 +78,18 @@ const getUserData = async (req, res) => {
     });
 }
 
+const getUserDataById = async (req, res) => {
+
+    User.findOne({ _id: req.params.userId }, (err, user) => {
+        if (err) {
+            console.log("Error in finding a user that has this username");
+            return res.status(404).json({ err: "Finding error" });
+        }
+
+        return res.status(200).send({ id: user.id, username: user.username, profilePhoto: user.profilePhoto, favoritePlaces: user.favoritePlaces });
+    });
+}
+
 const updateUser = async (req, res) => {
     console.log("Update user");
 
@@ -114,7 +126,8 @@ export {
     register,
     logout,
     getUserData,
-    updateUser
+    updateUser,
+    getUserDataById
 }
 
 
