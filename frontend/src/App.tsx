@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -8,14 +8,12 @@ import Profile from "./pages/Profile";
 import { useEffect } from "react";
 import Feed from "./pages/Feed";
 import { useLogout } from "./hooks/useLogout";
-import { PlaceActionType, PlaceProvider, usePlaceContext } from "./contexts/PlaceContext";
-import LocationForm from "./components/LocationForm";
+import { PlaceProvider, usePlaceContext } from "./contexts/PlaceContext";
 import PlaceDetailsPage from "./pages/PlaceDetails";
 
 function App() {
 	const { user, setUser } = useUserContext();
 	const logout = useLogout();
-	const { state, dispatch } = usePlaceContext();
 
 	useEffect(() => {
 		const storageUser = localStorage.getItem("user");
@@ -31,18 +29,18 @@ function App() {
 				method: "GET",
 				headers: { Authorization: `Bearer ${user.token}` },
 			}).then((res) => {
-				if (res.status == 401) {
+				if (res.status === 401) {
 					logout();
 				}
 				return res.json();
 			}).then((dataUser) => {
-				if (user.username != undefined) {
+				if (user.username !== undefined) {
 					console.log("My user after getting all his data from the database is: ");
 					console.log(dataUser);
 				}
 			});
 		};
-	}, []);
+	}, [user.username, user.token]);
 
 	return (
 		<div className='h-screen bg-black'>

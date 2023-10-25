@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CommentaryType } from '../constants';
-import { UserType, useUserContext } from '../contexts/UserContext';
-import { Console } from 'console';
+import { useUserContext } from '../contexts/UserContext';
 
 type CommentProps = {
     placeId: string;
@@ -16,10 +15,6 @@ export default function Comments(props: CommentProps) {
 
     useEffect(() => {
         // fetch commentaries
-        console.log("Fetch commentaries by placeId:");
-        console.log(props.placeId);
-        console.log(user.token);
-
         if (placeId) {
             fetch(`http://localhost:8000/api/comments?placeId=${placeId}`, {
                 method: "GET",
@@ -31,7 +26,7 @@ export default function Comments(props: CommentProps) {
                 .then((data: CommentaryType[]) => { console.log(data); setCommentaries(data.map(comment => ({ ...comment, datePosted: new Date(comment.datePosted) }))) })
                 .catch(err => { console.log(err); return "Err" });
         }
-    }, [user])
+    }, [user, placeId])
 
     function handlePostNewComment() {
         if (newComment === "") {
@@ -73,10 +68,6 @@ export default function Comments(props: CommentProps) {
         return `${date.getDate()}-${date.getMonth()} ${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}`;
     }
 
-    useEffect(() => {
-        console.log(user)
-    }, [commentaries])
-
     return (
         <div className='flex flex-col'>
             <textarea className='text-black' value={newComment} onChange={e => setNewComment(e.target.value)} placeholder='Write a review or a question about the place'></textarea>
@@ -86,7 +77,7 @@ export default function Comments(props: CommentProps) {
                     Number(commentPostB.datePosted) - Number(commentPostA.datePosted))
                     .map(commentPost =>
                         <div className='bg-slate-300 mb-5' key={commentPost._id}>
-                            <img src={require(`../img/${commentPost.user.profilePhoto}`)} width={50} height={50} />
+                            <img alt='user' src={require(`../img/${commentPost.user.profilePhoto}`)} width={50} height={50} />
                             <p>{commentPost.user.username}</p>
                             <p >{commentPost.commentMsg}</p>
                             <p>{`Posted at: ${formatDate(commentPost.datePosted)}`}</p>

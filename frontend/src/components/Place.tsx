@@ -1,19 +1,11 @@
-import { FaHeart, FaMapMarkerAlt, FaStar } from "react-icons/fa";
+import { FaHeart, FaMapMarkerAlt } from "react-icons/fa";
 import { MdBackpack, MdClose, } from "react-icons/md";
-import { BiLike } from "react-icons/bi";
-import { AiFillLike, AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { AiFillLike, } from "react-icons/ai";
 import { useUserContext } from "../contexts/UserContext";
 import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceContext";
-import React, { useEffect, useState } from "react";
-import { arrayBuffer } from "stream/consumers";
+import React from "react";
 import Rating from "./Rating";
 import { useLocation, useNavigate } from "react-router-dom";
-
-
-type PlaceProps = {
-	placeInfo: PlaceType;
-	deleteFromList: (deleted_id: string) => void;
-};
 
 export type PlaceType = {
 	_id: string;
@@ -32,7 +24,7 @@ export type PlaceType = {
 
 export default function Place(props: PlaceType) {
 	const { user } = useUserContext();
-	const { state, dispatch } = usePlaceContext();
+	const { dispatch } = usePlaceContext();
 	const navigate = useNavigate();
 
 	const {
@@ -41,8 +33,6 @@ export default function Place(props: PlaceType) {
 		city,
 		country,
 		imageURL,
-		likes,
-		favorite,
 		visitors,
 		addedBy,
 		likedBy,

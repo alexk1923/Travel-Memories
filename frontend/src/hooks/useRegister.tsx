@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useLogin } from "./useLogin";
 
 type DataInputRegister = {
@@ -10,7 +9,6 @@ type DataInputRegister = {
 
 export default function useRegister() {
 	const [error, setError] = useState("");
-	const navigate = useNavigate();
 	const { login } = useLogin();
 
 	const register = async (dataInput: DataInputRegister) => {

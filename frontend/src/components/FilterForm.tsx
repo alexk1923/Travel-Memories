@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import LocationForm from './LocationForm';
+import React from 'react'
 
 export enum PLACE_CATEGORY {
     'ALL_PLACES',
@@ -60,21 +59,21 @@ export default function Filter(props: FilterPropsType) {
                     <p>Sort by:</p>
                 </div>
                 <div >
-                    <label htmlFor="huey">Ratings</label>
+                    <label htmlFor="huey">{PlaceSortMap[PLACE_SORT.RATINGS]}</label>
                     <input type="radio" id="huey" name="drone" value="huey"
                         checked={sortPlace === PLACE_SORT.RATINGS}
                         onChange={() => setSortPlace(PLACE_SORT.RATINGS)} />
                 </div>
 
                 <div>
-                    <label htmlFor="dewey">No Likes</label>
+                    <label htmlFor="dewey">{PlaceSortMap[PLACE_SORT.LIKES]}</label>
                     <input type="radio" id="dewey" name="drone" value="dewey"
                         checked={sortPlace === PLACE_SORT.LIKES}
                         onChange={() => setSortPlace(PLACE_SORT.LIKES)} />
                 </div>
 
                 <div>
-                    <label htmlFor="louie">Visits</label>
+                    <label htmlFor="louie">{PlaceSortMap[PLACE_SORT.VISITORS]}</label>
                     <input type="radio" id="louie" name="drone" value="louie"
                         checked={sortPlace === PLACE_SORT.VISITORS}
                         onChange={() => setSortPlace(PLACE_SORT.VISITORS)} />

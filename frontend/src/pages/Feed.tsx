@@ -1,11 +1,9 @@
 import { useUserContext } from "../contexts/UserContext";
 import defaultUserImg from "../img/defaultUser.svg";
-import { v4 as uuid } from "uuid";
 import React, { useEffect, useState } from "react";
 import Places from "../components/Places";
-import { PlaceActionType, PlaceProvider, usePlaceContext } from "../contexts/PlaceContext";
+import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import SocialWrapper from "./SocialWrapper";
-import { PlaceType } from "../components/Place";
 import LocationForm from "../components/LocationForm";
 import FilterForm, { PLACE_CATEGORY, PLACE_FILTER, PLACE_SORT } from "../components/FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
@@ -25,17 +23,15 @@ function Feed() {
 		city: "",
 		imgURL: "",
 	});
-	// const [places, setPlaces] = useState<PlaceType[]>([]);
+
 	const [currentCountry, setCurrentCountry] = useState(DEFAULT_COUNTRY);
 	const [currentCity, setCurrentCity] = useState("");
-	const { state, dispatch } = usePlaceContext();
+	const { dispatch } = usePlaceContext();
 	const [sortPlace, setSortPlace] = useState<PLACE_SORT>(PLACE_SORT.RATINGS);
 	const [filterPlace, setFilterPlace] = useState<PLACE_FILTER>({ country: DEFAULT_COUNTRY, city: '' });
 
 	useEffect(() => {
 		setFilterPlace({ country: currentCountry, city: currentCity });
-		console.log(filterPlace);
-
 	}, [currentCity, currentCountry])
 
 
@@ -99,6 +95,7 @@ function Feed() {
 			<div className='bg-white flex flex-row border-b-4 border-b-slate-200'>
 				<div className='flex flex-row items-center'>
 					<img
+						alt="user"
 						src={defaultUserImg}
 						className='w-[15%] drop-shadow-xl rounded-full'
 					/>

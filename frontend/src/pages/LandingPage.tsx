@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
-import whiteLogo from "../img/logo/default-monochrome-white.svg";
 import Header from "../components/Header";
 import mapMarker from "../img/map-marker.svg";
 import { FaUserAlt, FaGlobeAmericas } from "react-icons/fa";

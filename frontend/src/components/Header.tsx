@@ -1,6 +1,4 @@
-import React from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
-import SearchBar from "./SearchBar";
+import { Link, NavLink } from "react-router-dom";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
 import { useUserContext } from "../contexts/UserContext";
 
@@ -29,7 +27,7 @@ export default function Header() {
 						className=' custom-drop-shadow'
 					/>
 				</Link>
-				{user.username == undefined ? (
+				{user.username === undefined ? (
 					<div className='flex justify-end w-[25%] min-w-fit gap-5 mr-[2%]'>
 						<NavLink to='/login'>
 							<button

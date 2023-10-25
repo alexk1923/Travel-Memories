@@ -32,6 +32,10 @@ export default function Location(props: LocationPropsType) {
     }, []);
 
     function fetchCities(country: string) {
+        if (country === "Worldwide") {
+            return;
+        }
+
         const countryData = {
             country,
         };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import { RatingProps } from "../constants";
@@ -14,11 +14,7 @@ export default function Rating(props: RatingProps) {
         setAvg(Number((ratings.reduce((acc, ratingInfo) => ratingInfo.rating + acc, 0) / ratings.length).toFixed(2)));
     }, [ratings, state])
 
-    useEffect(() => {
-        setColoredAvg(ratingToStars(avg))
-    }, [avg])
-
-    function ratingToStars(rating: number) {
+    const ratingToStars = useCallback((rating: number) => {
         let arr = [...colored];
         for (let i = 0; i < arr.length; i++) {
             arr[i] = false;
@@ -27,7 +23,15 @@ export default function Rating(props: RatingProps) {
             }
         }
         return arr;
-    }
+    }, [colored]);
+
+    useEffect(() => {
+        const stars = ratingToStars(avg);
+        setColoredAvg(stars);
+    }, [avg, ratingToStars])
+
+
+
 
     function handleRatingHover(i: number) {
         setColored(ratingToStars(i + 1))

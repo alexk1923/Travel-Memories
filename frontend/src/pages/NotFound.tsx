@@ -7,7 +7,7 @@ export default function NotFound() {
 			<h1 className='lg:text-xl text-center font-bold'>
 				This page doesn't exist, try again
 			</h1>
-			<img src={bgImg} className='w-full lg:w-3/4 xl:w-1/2' />
+			<img alt="not-found" src={bgImg} className='w-full lg:w-3/4 xl:w-1/2' />
 		</div>
 	);
 }

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { v4 as uuid } from "uuid";
-
+import { useEffect } from "react";
 import { MemoizedPlace, PlaceType } from "./Place";
-import { UserType, useUserContext } from "../contexts/UserContext";
-import { PlaceActionType, RatingType, usePlaceContext } from "../contexts/PlaceContext";
+import { useUserContext } from "../contexts/UserContext";
+import { RatingType, usePlaceContext } from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
 import { PLACE_CATEGORY, PLACE_SORT, PLACE_FILTER } from "./FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
@@ -16,7 +14,7 @@ type PlacesPropsType = {
 };
 
 export default function Places({ profileUser, category, sortPlace, filter }: PlacesPropsType) {
-	const { state, dispatch } = usePlaceContext();
+	const { state } = usePlaceContext();
 	const { user, setUser } = useUserContext();
 	const logout = useLogout();
 
@@ -34,12 +32,12 @@ export default function Places({ profileUser, category, sortPlace, filter }: Pla
 				method: "GET",
 				headers: { Authorization: `Bearer ${user.token}` },
 			}).then((res) => {
-				if (res.status == 401) {
+				if (res.status === 401) {
 					logout();
 				}
 			});
 		}
-	}, []);
+	}, [user.token, user.username, setUser, logout]);
 
 	function filterByCategory(place: PlaceType) {
 		switch (category) {

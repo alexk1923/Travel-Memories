@@ -86,7 +86,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 				}),
 			})
 		}
-	}, [likeChange])
+	}, [likeChange, user])
 
 	// Update database if favorite list changed
 	useEffect(() => {
@@ -102,7 +102,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 			localStorage.setItem("user", JSON.stringify(user))
 		}
 
-	}, [favoriteChange])
+	}, [favoriteChange, user])
 
 	function updatePlaceRatingDb(placeId: string, newRatings: RatingType[]) {
 		console.log(`Update the place ${placeId} with new ratings: ${newRatings}`);
@@ -170,7 +170,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 			case PlaceActionType.DELETE:
 				return {
 					places: state.places.filter(
-						(place) => place._id != (action.payload as string)
+						(place) => place._id !== (action.payload as string)
 					),
 				};
 			case PlaceActionType.LIKE_TOGGLE:
@@ -218,6 +218,7 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
 						}
 						updatePlaceRatingDb(place._id, place.ratings);
 					}
+					return place;
 				})
 				return { ...state };
 			case PlaceActionType.VISIT:
