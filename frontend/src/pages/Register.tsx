@@ -145,7 +145,7 @@ export default function Register() {
 											[e.target.name]: e.target.value,
 										})
 									}
-									error={error}
+									errorMessage={error}
 								/>
 							))}
 						</div>

@@ -48,7 +48,6 @@ export default function Login() {
 			htmlFor: "email",
 			type: "email",
 			name: "emailInput",
-			id: "email",
 			autoComplete: "email",
 			placeholder: "example@gmail.com",
 			errorMessage: "Input should be a valid email address",
@@ -60,7 +59,6 @@ export default function Login() {
 			htmlFor: "password",
 			type: "password",
 			name: "passwordInput",
-			id: "password",
 			autoComplete: "password",
 			placeholder: "",
 			errorMessage: "Password should be at least 8 characters",
@@ -117,7 +115,7 @@ export default function Login() {
 											};
 										})
 									}
-									error={error}
+									errorMessage={error}
 								/>
 							))}
 						</div>

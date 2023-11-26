@@ -1,78 +1,128 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
-import Header from "../components/Header";
-import mapMarker from "../img/map-marker.svg";
-import { FaUserAlt, FaGlobeAmericas } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import about1 from "../img/about1.png"
+import about2 from "../img/about2.png"
+
+import Navbar from "../components/Navbar";
+import Button from "../components/Button";
+import Place, { PlaceType } from "../components/Place";
+import { usePlaceContext } from "../contexts/PlaceContext";
+import Divider from "../components/Divider";
+import ContactForm from "../components/ContactForm";
+import Footer from "../components/Footer";
 
 export default function LandingPage() {
 	const { user } = useUserContext();
+	const { state } = usePlaceContext();
+	const [demoPlaces, setDemoPlaces] = useState<PlaceType[]>([] as PlaceType[]);
 	const navigate = useNavigate();
+	const trendingRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		AOS.init();
 	}, []);
 
+	const handleExplore = () => {
+		if (trendingRef.current) {
+			trendingRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	}
+
+	useEffect(() => {
+		fetch(`http://localhost:8000/api/places/all?limit=5`, {
+			method: "GET"
+		}).then(res => {
+			console.log(res);
+			return res.json()
+		}).then(data => {
+			console.log("Am primit cu o limita de 5 urmatoarele locuri:");
+			console.log(data);
+			setDemoPlaces(data);
+		})
+	}, [])
+
 	return (
-		<div
-			className="text-white flex flex-col justify-stretch h-screen
-		lg:bg-[url('./img/landing-bg.jpg')] lg:bg-center lg:bg-cover"
-		>
-			<Header />
-			<div className='hidden lg:flex flex-1 justify-between items-center'>
-				<div
-					data-aos='fade-left'
-					data-aos-delay='150'
-					data-aos-duration='1500'
-					className='hidden lg:flex flex-1 flex-col justify-center max-w-[50%] ml-4'
-				>
-					<h1 className='md:text-7xl lg::text-9xl mb-4'>
-						DISCOVER YOUR NEXT TRIP
-					</h1>
-					<p className='text-2xl'>
-						Explore places from all around the world, added by community
-						members. Choose your next destination and share the experience with
-						others
-					</p>
+		<div className="h-screen w-full">
+
+			<div
+				className="text-white flex flex-col justify-stretch h-screen w-full
+		bg-[url('./img/landing-bg.png')] bg-center bg-cover"
+			>
+				<Navbar />
+
+				<div className="flex flex-col justify-center items-center md:max-w-[50%] mx-auto my-auto text-center gap-4">
+					<h1 className="font-bold drop-shadow-lg">MOST EXCITING PLACES TO VISIT</h1>
+					<h3 className="drop-shadow-lg font-semibold">Get new travel ideas and connect  with people
+						all over the world to take a look
+						at their journey</h3>
+					<Button text="EXPLORE" variant="filled" onClick={handleExplore} />
 				</div>
 
-				<div
-					data-aos='fade-right'
-					data-aos-delay='150'
-					data-aos-duration='1500'
-					className='hidden lg:flex text-3xl gap-5 flex-col border-l-4 border-l-white pl-5 mr-6'
-				>
-					<div className='[&>*]'>
-						<FaUserAlt className='inline mr-6' />
-						<span>300+ users</span>
-					</div>
-					<div>
-						<FaGlobeAmericas className='inline mr-6' />
-						<span>700+ locations</span>
-					</div>
-				</div>
 			</div>
 
-			<div className='lg:hidden flex-[2] bg-gradient-to-b from-sky-700 h-[50%] to-sky-900/0 flex flex-col items-center'>
-				<div className='flex flex-col items-center transform -translate-y-[15%]'>
-					<img src={mapMarker} className='w-[50%]' alt='map marker' />
-					<div className='text-center w-[75%] [&>*]:py-2'>
-						<h1 className='text-2xl'>
-							<b>Do you know your next trip destination?</b>
-						</h1>
-						<p className='text-base text-white/75'>Choose from over x places</p>
+			{/* Used only for scrolling */}
+			<div ref={trendingRef}></div>
+
+			<Divider />
+
+			<div className="flex flex-col justify-center items-center text-center gap-4">
+				<h2 className="font-bold drop-shadow-lg">TRENDING PLACES</h2>
+				<h3 className=" drop-shadow-lg font-semibold">Find the perfect place for your next travel</h3>
+				<div className="flex justify-center flex-wrap md:flex-nowrap gap-5 text-black overflow-hidden max-w-full">
+					{demoPlaces.map(place => <Place {...place} />)}
+				</div>
+				<Button text={"DISCOVER MORE"} variant={"filled"} onClick={undefined} />
+			</div>
+
+			<Divider />
+
+
+			<div className="flex flex-col justify-center items-center text-center gap-4 lg:mx-[20%]">
+				<h2 className="font-bold drop-shadow-lg">Different people, same passion</h2>
+				<div className="flex items-start justify-between" >
+					<img src={about1} className="max-w-[50%]" />
+					<div className="text-start ps-8">
+						<h3 className="font-bold text-primary ">A network meant to connect</h3>
+						<p className="text-body-1">To gether, we'll explore new horizons, learn from one another, and build bridges that connect us across the continents.
+							Because no matter where you're from, the desire to explore and connect with the world is a universal language we all share.</p>
 					</div>
 				</div>
-				<button
-					className='text-2xl border-4 border-white rounded-xl px-8 py-4 btn hover:custom-hover'
-					onClick={() => navigate("/login")}
-				>
-					<b>Get started</b>
-				</button>
+
+				<div className="flex items-start justify-between" >
+					<div className="text-start pe-8 flex-1 ps-2 lg:ps-0">
+						<h3 className="font-bold text-primary ">Track your journey</h3>
+						<p className="text-body-1">Our platform is designed to offer an intuitive and organized way for you to easily track the places you've visited.
+							Create a plan for your future adventures by exploring and saving desired experiences within your personal profile to access them whenever you need. </p>
+					</div>
+					<div className="flex-1">
+						<img src={about2} className="h-full object-cover" />
+					</div>
+				</div>
+
+				<span className="text-body-1 font-semibold italic text-primary">Learn more {">"}  </span>
 			</div>
-			<h1 className='text-rose-800'>{user.username}</h1>
-			<h1>{user.email}</h1>
+
+
+			<Divider />
+
+
+			<div className="bg-waves-bg bg-cover bg-center flex flex-col lg:flex-row items-center lg:px-[20%] lg:h-screen">
+
+				<div className="ms-8">
+					<h3 className="text-primary font-bold mt-4 lg:mt-0">GET IN TOUCH</h3>
+					<p className="text-body-1">Still have questions? Send us a message and our response will come as quickly as possible</p>
+				</div>
+				<ContactForm />
+
+			</div>
+
+			<Footer />
 		</div>
+
+
+
+
 	);
 }
