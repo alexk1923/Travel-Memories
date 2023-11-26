@@ -5,11 +5,25 @@ import mongoose from "mongoose";
 
 const getAllPlaces = async (req, res) => {
     try {
-        const places = await Place.find({});
+        const places = await Place.aggregate([
+            {
+                $set: { noVisitors: { $size: { "$ifNull": ["$visitors", []] } } }
+            },
+            {
+                $sort: { "noVisitors": -1 }
+            },
+            {
+                "$limit": Number(req.query.limit)
+            },
+            {
+                $unset: ["noVisitors"]
+            }
+        ]);
+
         return res.status(200).send(places);
 
     } catch (err) {
-        return res.status(500).send(err);
+        return res.status(500).send({ 'err': err });
     }
 }
 
