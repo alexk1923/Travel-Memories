@@ -1,11 +1,9 @@
-import React from 'react'
+import React from "react";
 
 export default function Divider() {
-    return (
-        <div className='w-full flex justify-center p-16'>
-            <div className='bg-primary h-2 w-16'>
-            </div>
-        </div>
-
-    )
+  return (
+    <div className="flex w-full justify-center p-16">
+      <div className="h-2 w-16 bg-primary"></div>
+    </div>
+  );
 }

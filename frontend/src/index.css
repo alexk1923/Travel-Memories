@@ -6,235 +6,235 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 @layer base {
-	/* http://meyerweb.com/eric/tools/css/reset/ 
+  /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
 
-	html,
-	body,
-	div,
-	span,
-	applet,
-	object,
-	iframe,
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6,
-	p,
-	blockquote,
-	pre,
-	a,
-	abbr,
-	acronym,
-	address,
-	big,
-	cite,
-	code,
-	del,
-	dfn,
-	em,
-	img,
-	ins,
-	kbd,
-	q,
-	s,
-	samp,
-	small,
-	strike,
-	strong,
-	sub,
-	sup,
-	tt,
-	var,
-	b,
-	u,
-	i,
-	center,
-	dl,
-	dt,
-	dd,
-	ol,
-	ul,
-	li,
-	fieldset,
-	form,
-	label,
-	legend,
-	table,
-	caption,
-	tbody,
-	tfoot,
-	thead,
-	tr,
-	th,
-	td,
-	article,
-	aside,
-	canvas,
-	details,
-	embed,
-	figure,
-	figcaption,
-	footer,
-	header,
-	hgroup,
-	menu,
-	nav,
-	output,
-	ruby,
-	section,
-	summary,
-	time,
-	mark,
-	audio,
-	video {
-		margin: 0;
-		padding: 0;
-		border: 0;
-		font-size: 100%;
-		font: inherit;
-		vertical-align: baseline;
-	}
-	/* HTML5 display-role reset for older browsers */
-	article,
-	aside,
-	details,
-	figcaption,
-	figure,
-	footer,
-	header,
-	hgroup,
-	menu,
-	nav,
-	section {
-		display: block;
-	}
-	body {
-		line-height: 1;
-	}
-	ol,
-	ul {
-		list-style: none;
-	}
-	blockquote,
-	q {
-		quotes: none;
-	}
-	blockquote:before,
-	blockquote:after,
-	q:before,
-	q:after {
-		content: "";
-		content: none;
-	}
-	table {
-		border-collapse: collapse;
-		border-spacing: 0;
-	}
+  html,
+  body,
+  div,
+  span,
+  applet,
+  object,
+  iframe,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  abbr,
+  acronym,
+  address,
+  big,
+  cite,
+  code,
+  del,
+  dfn,
+  em,
+  img,
+  ins,
+  kbd,
+  q,
+  s,
+  samp,
+  small,
+  strike,
+  strong,
+  sub,
+  sup,
+  tt,
+  var,
+  b,
+  u,
+  i,
+  center,
+  dl,
+  dt,
+  dd,
+  ol,
+  ul,
+  li,
+  fieldset,
+  form,
+  label,
+  legend,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td,
+  article,
+  aside,
+  canvas,
+  details,
+  embed,
+  figure,
+  figcaption,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  output,
+  ruby,
+  section,
+  summary,
+  time,
+  mark,
+  audio,
+  video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+  /* HTML5 display-role reset for older browsers */
+  article,
+  aside,
+  details,
+  figcaption,
+  figure,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  section {
+    display: block;
+  }
+  body {
+    line-height: 1;
+  }
+  ol,
+  ul {
+    list-style: none;
+  }
+  blockquote,
+  q {
+    quotes: none;
+  }
+  blockquote:before,
+  blockquote:after,
+  q:before,
+  q:after {
+    content: "";
+    content: none;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
 
-	html {
-		font-family: "Raleway", "Roboto", system-ui, sans-serif;
-	}
+  html {
+    font-family: "Raleway", "Roboto", system-ui, sans-serif;
+  }
 
-	* {
-		box-sizing: border-box;
-	}
+  * {
+    box-sizing: border-box;
+  }
 }
 
 @layer utilities {
-	h1 {
-		@apply text-lg md:text-3xl lg:text-6xl;
-	}
-	h2 {
-		@apply text-2xl lg:text-5xl;
-	}
+  h1 {
+    @apply text-lg md:text-3xl lg:text-6xl;
+  }
+  h2 {
+    @apply text-2xl lg:text-5xl;
+  }
 
-	h3 {
-		@apply text-lg sm:text-xl lg:text-3xl;
-	}
+  h3 {
+    @apply text-lg sm:text-xl lg:text-3xl;
+  }
 
-	.text-body-1 {
-		@apply text-xs sm:text-xl md:text-base lg:text-2xl;
-	}
+  .text-body-1 {
+    @apply text-xs sm:text-xl md:text-base lg:text-2xl;
+  }
 
-	.text-body-2 {
-		@apply text-xs md:text-sm lg:text-lg;
-	}
+  .text-body-2 {
+    @apply text-xs md:text-sm lg:text-lg;
+  }
 
-	.text-menu-text {
-		@apply text-xs lg:text-sm;
-	}
+  .text-menu-text {
+    @apply text-xs lg:text-sm;
+  }
 
-	.text-profile-menu {
-		@apply text-sm md:text-lg lg:text-xl;
-	}
+  .text-profile-menu {
+    @apply text-sm md:text-lg lg:text-xl;
+  }
 
-	.text-navbar-menu {
-		@apply text-base lg:text-2xl;
-	}
+  .text-navbar-menu {
+    @apply text-base lg:text-2xl;
+  }
 
-	.text-place-card {
-		@apply text-base sm:text-lg;
-	}
+  .text-place-card {
+    @apply text-base sm:text-lg;
+  }
 }
 
 @layer components {
-	.gradient-background {
-		background: linear-gradient(0deg, #64748b, #475569, #334155);
-		background-size: 600% 600%;
+  .gradient-background {
+    background: linear-gradient(0deg, #64748b, #475569, #334155);
+    background-size: 600% 600%;
 
-		animation: gradient-animation 5s ease infinite alternate-reverse;
-	}
+    animation: gradient-animation 5s ease infinite alternate-reverse;
+  }
 
-	.zoom-img {
-		background-size: 100% 100%;
-		animation: background-zoom 25s ease infinite alternate-reverse;
-		animation-delay: 0ms;
-	}
+  .zoom-img {
+    background-size: 100% 100%;
+    animation: background-zoom 25s ease infinite alternate-reverse;
+    animation-delay: 0ms;
+  }
 
-	.custom-drop-shadow {
-		filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
-	}
+  .custom-drop-shadow {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  }
 
-	.btn {
-		transition: ease-out 0.4s;
-		font-weight: bold;
-	}
+  .btn {
+    transition: ease-out 0.4s;
+    font-weight: bold;
+  }
 
-	.custom-hover {
-		@apply bg-white;
-		@apply border-slate-200;
-		@apply text-slate-800;
-	}
+  .custom-hover {
+    @apply bg-white;
+    @apply border-slate-200;
+    @apply text-slate-800;
+  }
 
-	@keyframes gradient-animation {
-		0% {
-			background-position: 40% 0%;
-		}
-		50% {
-			background-position: 50% 100%;
-		}
-		100% {
-			background-position: 40% 0%;
-		}
-	}
+  @keyframes gradient-animation {
+    0% {
+      background-position: 40% 0%;
+    }
+    50% {
+      background-position: 50% 100%;
+    }
+    100% {
+      background-position: 40% 0%;
+    }
+  }
 
-	@keyframes background-zoom {
-		0% {
-			background-position: 0% 50%;
-			background-size: 100%;
-		}
-		50% {
-			background-position: 50% 50%;
-			background-size: 150%;
-		}
-		100% {
-			background-position: 100% 50%;
-			background-size: 100%;
-		}
-	}
+  @keyframes background-zoom {
+    0% {
+      background-position: 0% 50%;
+      background-size: 100%;
+    }
+    50% {
+      background-position: 50% 50%;
+      background-size: 150%;
+    }
+    100% {
+      background-position: 100% 50%;
+      background-size: 100%;
+    }
+  }
 }

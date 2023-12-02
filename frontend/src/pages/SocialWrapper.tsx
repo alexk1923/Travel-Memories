@@ -1,16 +1,17 @@
-import React from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import React from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 interface SocialWrapperProps {
-    WrappedComponent: React.ComponentType<any>
+  WrappedComponent: React.ComponentType<any>;
 }
 
 export default function SocialWrapper(props: SocialWrapperProps) {
-    return (
-        <><Header />
-            <props.WrappedComponent></props.WrappedComponent>
-            <Footer />
-        </>
-    )
+  return (
+    <>
+      <Header />
+      <props.WrappedComponent></props.WrappedComponent>
+      <Footer />
+    </>
+  );
 }

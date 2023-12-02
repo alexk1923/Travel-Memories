@@ -8,16 +8,16 @@ import UserProvider from "./contexts/UserContext";
 import { PlaceProvider } from "./contexts/PlaceContext";
 
 const root = ReactDOM.createRoot(
-	document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 root.render(
-	// <React.StrictMode>
-	<UserProvider>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	</UserProvider>
-	// </React.StrictMode>
+  // <React.StrictMode>
+  <UserProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </UserProvider>,
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
