@@ -4,14 +4,15 @@ import FormInput from "../components/FormInput";
 import LoginCard from "../components/LoginCard";
 import useRegister from "../hooks/useRegister";
 import whiteLogo from "../img/logo/default-monochrome-white.svg";
-
-type InputValuesRegister = {
-  usernameInput: string;
-  emailInput: string;
-  passwordInput: string;
-  confirmPasswordInput: string;
-  [key: string]: string;
-};
+import {
+  FormType,
+  InputValuesContact,
+  InputValuesLogin,
+  InputValuesRegister,
+  NAVBAR_VARIANT,
+} from "../constants";
+import Navbar from "../components/Navbar";
+import Form from "../components/Form";
 
 export default function Register() {
   const { register, error } = useRegister();
@@ -100,68 +101,25 @@ export default function Register() {
 
   return (
     <>
-      <div
-        className="lg:transparent flex h-screen w-full flex-col items-center justify-between 
-			bg-[url('img/mountain.jpg')] bg-cover bg-[center_top_60vh] lg:justify-center lg:bg-gradient-to-b lg:from-sky-700 lg:bg-center
-			"
-      >
-        <div className="flex w-full justify-center text-xl">
-          <Link
-            to="/"
-            className="mt-5 w-[50%] sm:w-[55%] md:w-[40%] lg:w-[25%]"
-          >
-            <img src={whiteLogo} alt="logo" className="custom-drop-shadow" />
-          </Link>
-        </div>
-
-        <div
-          className="mt-5 flex h-[75%] w-full flex-col items-center justify-center rounded-xl rounded-t-lg bg-gradient-to-b from-slate-50
-				 to-slate-300 text-slate-600 drop-shadow-md sm:h-[80%] md:h-[65%] lg:aspect-square lg:h-auto
-				lg:w-[80%] 
-				lg:flex-row
-				lg:rounded-lg
-				[&>*]:flex-1"
-        >
-          <form
-            action="/login"
-            className="flex w-[90%] flex-col items-center justify-center text-sky-800"
-            onSubmit={handleRegister}
-          >
-            <h1 className="text-3xl sm:text-5xl md:text-4xl">Welcome back!</h1>
-            <h2 className="text-xl sm:text-3xl">Sign in to continue</h2>
-            {error !== "" && (
-              <h3 className="text-md text-red-500 bg-red-300 border-red-500 rounded-lg border-2 p-2">
-                {error}
-              </h3>
-            )}
-            <div className="flex w-full flex-col items-center justify-center gap-4 text-slate-400">
-              {inputs.map((input) => (
-                <FormInput
-                  {...input}
-                  value={inputValues[input.name]}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setInputValues({
-                      ...inputValues,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
-                  errorMessage={error}
-                />
-              ))}
-            </div>
-
-            <button className="m-2 w-[50%] rounded-lg bg-sky-500 font-bold text-white hover:bg-sky-600 md:w-[40%] lg:w-[25%]">
-              Register
-            </button>
-
-            <p className="text-slate-600">
-              Already a traveler?{" "}
-              <NavLink to="/login" className="text-sky-800 hover:text-sky-500">
-                Sign In
-              </NavLink>
-            </p>
-          </form>
-          <LoginCard />
+      <div className="flex h-screen flex-col bg-[url(./img/waves-bg.png)] bg-cover bg-center">
+        <Navbar variant={NAVBAR_VARIANT.SOLID} />
+        <div className="flex h-[100%] w-full justify-center">
+          <Form
+            inputs={inputs}
+            title={"Become a traveler"}
+            submitMessage={"Register"}
+            textArea={""}
+            type={FormType.REGISTER}
+            handleFormSubmit={handleRegister}
+            inputValues={inputValues}
+            setInputValues={
+              setInputValues as React.Dispatch<
+                React.SetStateAction<
+                  InputValuesLogin | InputValuesRegister | InputValuesContact
+                >
+              >
+            }
+          />
         </div>
       </div>
     </>

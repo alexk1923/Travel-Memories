@@ -55,7 +55,7 @@ export default function FormInput(props: FormInputProps) {
         }
       ></input>
 
-      {props.value && (
+      {props.value && error && (
         <span className="text-red-500 text-body-2 hidden text-red peer-invalid:block">
           {props.errorMessage}
         </span>

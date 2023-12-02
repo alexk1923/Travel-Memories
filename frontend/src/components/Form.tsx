@@ -8,15 +8,13 @@ import React, {
 import FormInput from "./FormInput";
 import Button from "./Button";
 import { NavLink } from "react-router-dom";
-import { FormType } from "../constants";
+import {
+  FormType,
+  InputValuesContact,
+  InputValuesLogin,
+  InputValuesRegister,
+} from "../constants";
 import { useLogin } from "../hooks/useLogin";
-
-interface InputInterface {
-  emailInput: string;
-  nameInput: string;
-  textAreaInput: string;
-  [key: string]: string;
-}
 
 interface InputErrorInterface {
   emailInput: boolean;
@@ -31,25 +29,36 @@ interface FormProps {
   submitMessage: string;
   textArea: string;
   type: FormType;
+  inputValues: InputValuesRegister | InputValuesLogin | InputValuesContact;
+  setInputValues: React.Dispatch<
+    React.SetStateAction<
+      InputValuesLogin | InputValuesRegister | InputValuesContact
+    >
+  >;
+  handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => any;
 }
 
 export default function Form(props: FormProps) {
-  const [inputValues, setInputValues] = useState<InputInterface>({
-    emailInput: "",
-    nameInput: "",
-    passwordInput: "",
-    textAreaInput: "",
-  });
   const [inputErrors, setInputErrors] = useState<InputErrorInterface>({
     emailInput: false,
     nameInput: false,
     passwordInput: false,
     textAreaInput: false,
+    cnfPasswordInput: false,
   });
 
-  const { inputs, title, submitMessage, textArea, type } = props;
+  const {
+    inputs,
+    title,
+    submitMessage,
+    textArea,
+    type,
+    inputValues,
+    setInputValues,
+    handleFormSubmit,
+  } = props;
 
-  const { login, error } = useLogin();
+  const { error } = useLogin();
 
   const textAreaData = {
     name: "textAreaInput",
@@ -58,20 +67,6 @@ export default function Form(props: FormProps) {
     placeholder: "",
     label: textArea,
   };
-
-  useEffect(() => {
-    // This effect runs when the error state changes
-    console.log("Am avut o eroare bai");
-    console.log(error);
-
-    if (error) {
-      // reset form fields
-      setInputValues((prevInputValues) => ({
-        ...prevInputValues,
-        passwordInput: "",
-      }));
-    }
-  }, [error]); // This effect depends on the error state
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setInputErrors({
@@ -85,21 +80,35 @@ export default function Form(props: FormProps) {
     });
   }
 
-  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("type = " + type);
-
-    if (type === FormType.LOGIN) {
-      console.log(inputValues);
-      await login({
-        email: inputValues.emailInput,
-        password: inputValues.passwordInput,
-      });
+  function renderTypeMessage() {
+    switch (type) {
+      case FormType.LOGIN:
+        return (
+          <p className="text-slate-600">
+            Don't have an account?{" "}
+            <NavLink to="/register" className="text-primary hover:text-sky-500">
+              Register
+            </NavLink>
+          </p>
+        );
+      case FormType.REGISTER:
+        return (
+          <p className="text-slate-600">
+            Already a member?{" "}
+            <NavLink to="/login" className="text-primary hover:text-sky-500">
+              Login
+            </NavLink>
+          </p>
+        );
+      case FormType.CONTACT:
+        return <></>;
+      default:
+        return <></>;
     }
   }
 
   return (
-    <div className="my-8 mb-8 flex max-w-[90%] flex-col  justify-center rounded-lg bg-pure-white px-8 py-8 text-primary shadow-lg sm:px-10 ">
+    <div className="flex max-w-[90%] flex-col  justify-center rounded-lg bg-pure-white px-8 py-8 text-primary shadow-lg sm:px-10 lg:w-[40%] ">
       <h2 className="py-4 text-center font-bold">{title}</h2>
 
       <form
@@ -124,15 +133,13 @@ export default function Form(props: FormProps) {
             ></textarea>
           </div>
         )}
-        {type === FormType.LOGIN && (
-          <p className="text-slate-600">
-            Don't have an account?{" "}
-            <NavLink to="/register" className="text-primary hover:text-sky-500">
-              Register
-            </NavLink>
-          </p>
-        )}
-        <Button variant="filled" text={submitMessage} onClick={undefined} />
+
+        {renderTypeMessage()}
+        <Button
+          variant="filled"
+          text={submitMessage}
+          onClick={handleFormSubmit}
+        />
         <span className="flex justify-center text-red ">{error.err}</span>
       </form>
     </div>

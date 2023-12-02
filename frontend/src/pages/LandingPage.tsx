@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 import AOS from "aos";
@@ -13,7 +13,13 @@ import { usePlaceContext } from "../contexts/PlaceContext";
 import Divider from "../components/Divider";
 import Form from "../components/Form";
 import Footer from "../components/Footer";
-import { FormType, NAVBAR_VARIANT } from "../constants";
+import {
+  FormType,
+  InputValuesContact,
+  InputValuesLogin,
+  InputValuesRegister,
+  NAVBAR_VARIANT,
+} from "../constants";
 
 export default function LandingPage() {
   const { user } = useUserContext();
@@ -67,9 +73,15 @@ export default function LandingPage() {
     },
   ];
 
-  const handleContactSubmit = (inputs: string) => {
+  const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log(inputs);
   };
+
+  const [inputValues, setInputValues] = useState<InputValuesContact>({
+    nameInput: "",
+    emailInput: "",
+    textAreaInput: "",
+  });
 
   return (
     <div className="h-screen w-full">
@@ -167,6 +179,15 @@ export default function LandingPage() {
           submitMessage="Send"
           textArea="Message"
           type={FormType.CONTACT}
+          inputValues={inputValues}
+          setInputValues={
+            setInputValues as React.Dispatch<
+              React.SetStateAction<
+                InputValuesLogin | InputValuesRegister | InputValuesContact
+              >
+            >
+          }
+          handleFormSubmit={handleContactSubmit}
         />
       </div>
 

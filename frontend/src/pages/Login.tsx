@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import wavesBg from "../img/waves-bg.png";
 import Navbar from "../components/Navbar";
 import Form from "../components/Form";
-import { FormType, NAVBAR_VARIANT } from "../constants";
+import {
+  FormType,
+  InputValuesContact,
+  InputValuesLogin,
+  InputValuesRegister,
+  NAVBAR_VARIANT,
+} from "../constants";
 
 // bg-[url('img/travel1.jpg')] bg-cover bg-center brightness-10
 
-export type InputValuesType = {
-  emailInput: string;
-  passwordInput: string;
-  [key: string]: string;
-};
-
 export default function Login() {
+  const [inputValues, setInputValues] = useState<InputValuesLogin>({
+    emailInput: "",
+    passwordInput: "",
+  });
+
   const inputs = [
     {
       key: 1,
@@ -39,6 +44,32 @@ export default function Login() {
     },
   ];
 
+  const { login, error } = useLogin();
+
+  useEffect(() => {
+    // This effect runs when the error state changes
+    console.log("Am avut o eroare bai");
+    console.log(error);
+
+    if (error) {
+      // reset form fields
+      setInputValues((prevInputValues) => ({
+        ...prevInputValues,
+        passwordInput: "",
+      }));
+    }
+  }, [error]); // This effect depends on the error state
+
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    console.log(inputValues);
+    await login({
+      email: inputValues.emailInput,
+      password: inputValues.passwordInput,
+    });
+  }
+
   return (
     <div className="flex h-screen flex-col bg-[url(./img/waves-bg.png)] bg-cover bg-center">
       <Navbar variant={NAVBAR_VARIANT.SOLID} />
@@ -49,10 +80,16 @@ export default function Login() {
           submitMessage="Login"
           textArea=""
           type={FormType.LOGIN}
+          inputValues={inputValues}
+          setInputValues={
+            setInputValues as React.Dispatch<
+              React.SetStateAction<
+                InputValuesLogin | InputValuesRegister | InputValuesContact
+              >
+            >
+          }
+          handleFormSubmit={handleLogin}
         />
-        <img src="" />
-
-        {/* <LoginCard /> */}
       </div>
     </div>
   );

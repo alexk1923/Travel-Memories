@@ -59,3 +59,24 @@ export enum FormType {
   LOGIN,
   REGISTER,
 }
+
+export type InputValuesRegister = {
+  usernameInput: string;
+  emailInput: string;
+  passwordInput: string;
+  confirmPasswordInput: string;
+  [key: string]: string;
+};
+
+export type InputValuesLogin = {
+  emailInput: string;
+  passwordInput: string;
+  [key: string]: string;
+};
+
+export type InputValuesContact = {
+  emailInput: string;
+  nameInput: string;
+  textAreaInput: string;
+  [key: string]: string;
+};
