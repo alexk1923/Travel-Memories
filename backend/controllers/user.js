@@ -25,7 +25,7 @@ const login = async (req, res) => {
             });
         }
 
-        return res.status(400).json("Wrong credentials. Please try again");
+        return res.status(400).json({ err: "Wrong credentials. Please try again" });
 
     } catch (err) {
         console.log(err);
@@ -38,7 +38,7 @@ const register = async (req, res) => {
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 
         if (existingUser) {
-            return res.status(409).send("There is already an account using this email address.");
+            return res.status(409).send({ err: "There is already an account using this email address." });
         }
 
         const encryptedPass = await bcrypt.hash(password, 10);
@@ -94,7 +94,7 @@ const updateUser = async (req, res) => {
     console.log("Update user");
 
     if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
-        return res.status(422).send("User ID has an invalid format");
+        return res.status(422).send({ err: "User ID has an invalid format" });
     }
 
     const existingUser = await User.findById(req.params.userId);
@@ -115,7 +115,7 @@ const updateUser = async (req, res) => {
 
     existingUser.save((err, modifiedUser) => {
         if (err) {
-            return res.status(409).send("Updating resource error");
+            return res.status(409).send({ err: "Updating resource error" });
         }
         return res.status(200).send(modifiedUser);
     })
