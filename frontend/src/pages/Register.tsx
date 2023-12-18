@@ -20,7 +20,7 @@ export default function Register() {
     usernameInput: "",
     emailInput: "",
     passwordInput: "",
-    confirmPasswordInput: "",
+    cnfPasswordInput: "",
   });
 
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
@@ -40,7 +40,7 @@ export default function Register() {
           usernameInput: "",
           emailInput: "",
           passwordInput: "",
-          confirmPasswordInput: "",
+          cnfPasswordInput: "",
         };
       });
     }
@@ -103,7 +103,7 @@ export default function Register() {
     <>
       <div className="flex h-screen flex-col bg-[url(./img/waves-bg.png)] bg-cover bg-center">
         <Navbar variant={NAVBAR_VARIANT.SOLID} />
-        <div className="flex h-[100%] w-full justify-center">
+        <div className="flex h-[100%] w-full items-center justify-center lg:items-stretch">
           <Form
             inputs={inputs}
             title={"Become a traveler"}

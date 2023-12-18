@@ -101,7 +101,7 @@ export default function Comments(props: CommentProps) {
             <div className="mb-5 bg-slate-300" key={commentPost._id}>
               <img
                 alt="user"
-                src={require(`../img/${commentPost.user.profilePhoto}`)}
+                src={require(`../img/users/${commentPost.user.profilePhoto}`)}
                 width={50}
                 height={50}
               />

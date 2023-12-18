@@ -1,5 +1,5 @@
 import { useUserContext } from "../contexts/UserContext";
-import defaultUserImg from "../img/defaultUser.svg";
+import defaultUserImg from "../img/users/defaultUser.svg";
 import React, { useEffect, useState } from "react";
 import Places from "../components/Places";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
@@ -11,6 +11,7 @@ import FilterForm, {
   PLACE_SORT,
 } from "../components/FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
+import Button from "../components/Button";
 
 type inputValuesAddPlace = {
   placeName: string;
@@ -58,7 +59,7 @@ function Feed() {
       imageURL: inputValues.imgURL,
     };
 
-    fetch(`http://localhost:8000/api/places`, {
+    fetch(`http://localhost:8000/api/places/all/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -95,24 +96,12 @@ function Feed() {
   ];
 
   return (
-    <>
-      <div className="flex flex-row border-b-4 border-b-slate-200 bg-white">
-        <div className="flex flex-row items-center">
-          <img
-            alt="user"
-            src={defaultUserImg}
-            className="w-[15%] rounded-full drop-shadow-xl"
-          />
-          <div>
-            <h1>
-              <b>{user.username}</b>
-            </h1>
-            <h2>{user.email}</h2>
-          </div>
-        </div>
+    <div className="mt-4 max-h-[90%] overflow-y-scroll rounded-lg shadow-lg">
+      <div className="flex flex-col border-b-4 border-b-slate-200 bg-pure-white text-center">
+        <h1 className="font-bold text-primary">EXPLORE</h1>
       </div>
-      <div className="h-screen bg-white">
-        <form className="flex w-full flex-col items-center gap-2 [&>*]:w-[30%]">
+      <div className="flex flex-col items-center bg-pure-white">
+        <div className="flex w-[100%] flex-col pl-8">
           <FilterForm
             category={{ page: "Feed" }}
             {...{ sortPlace, setSortPlace }}
@@ -123,8 +112,17 @@ function Feed() {
             currentCity={currentCity}
             currentCountry={currentCountry}
           />
-        </form>
-        <div className="bg-red-800 w-full ">
+        </div>
+
+        <div className="mt-4 flex items-center justify-center gap-4">
+          <span>Don't find what you are looking for?</span>
+          <Button
+            text={"ADD NEW PLACE"}
+            variant={"filled"}
+            onClick={undefined}
+          />
+        </div>
+        <div className="bg-red-800 flex w-full  justify-center">
           <Places
             profileUser={user.username}
             category={PLACE_CATEGORY.ALL_PLACES}
@@ -132,30 +130,8 @@ function Feed() {
             filter={filterPlace}
           />
         </div>
-        <div className="bg-red-400 flex flex-col items-center">
-          <p>Cant find your place?</p>
-          {inputs.map((inputElem) => {
-            return (
-              <React.Fragment key={inputElem.key}>
-                <input
-                  value={inputValues[inputElem.name]}
-                  {...inputElem}
-                  onChange={(e) =>
-                    setInputValues({
-                      ...inputValues,
-                      [inputElem.name]: e.target.value,
-                    })
-                  }
-                ></input>
-              </React.Fragment>
-            );
-          })}
-          <button className="btn w-[15%]" onClick={(e) => handleAddPlace(e)}>
-            Add new place
-          </button>
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -108,40 +108,46 @@ export default function Form(props: FormProps) {
   }
 
   return (
-    <div className="flex max-w-[90%] flex-col  justify-center rounded-lg bg-pure-white px-8 py-8 text-primary shadow-lg sm:px-10 lg:w-[40%] ">
-      <h2 className="py-4 text-center font-bold">{title}</h2>
+    <div className="relative mt-4 flex max-w-[90%] flex-col items-center justify-center rounded-lg bg-pure-white px-8 py-8 text-center text-primary shadow-lg sm:px-10 lg:w-[30%] ">
+      <div className="absolute left-0 top-0 flex w-full justify-around bg-primary py-4 font-bold text-white ">
+        <span>LOGIN</span>
+        <span className="absolute right-2">X</span>
+      </div>
 
-      <form
-        className="flex max-w-[100%] flex-col gap-4 font-semibold text-primary"
-        onSubmit={handleFormSubmit}
-      >
-        {inputs.map((inputData) => (
-          <FormInput
-            {...inputData}
-            value={inputValues[inputData.name]}
-            error={inputErrors[inputData.name]}
-            onChange={handleInputChange}
+      <div className="mt-4 w-[75%] ">
+        <h2 className="py-4  font-bold">{title}</h2>
+        <form
+          className="flex max-w-[100%] flex-col gap-4 font-semibold text-primary"
+          onSubmit={handleFormSubmit}
+        >
+          {inputs.map((inputData) => (
+            <FormInput
+              {...inputData}
+              value={inputValues[inputData.name]}
+              error={inputErrors[inputData.name]}
+              onChange={handleInputChange}
+            />
+          ))}
+          {textArea !== "" && (
+            <div className="flex w-[100%] flex-col gap-2">
+              <label htmlFor="textarea font">Message</label>
+
+              <textarea
+                {...textAreaData}
+                className="mb-2 max-w-[100%] resize-none rounded-md border-transparent bg-white p-2 outline-offset-0"
+              ></textarea>
+            </div>
+          )}
+
+          {renderTypeMessage()}
+          <Button
+            variant="filled"
+            text={submitMessage}
+            onClick={handleFormSubmit}
           />
-        ))}
-        {textArea !== "" && (
-          <div className="flex w-[100%] flex-col gap-2">
-            <label htmlFor="textarea font">Message</label>
-
-            <textarea
-              {...textAreaData}
-              className="mb-2 max-w-[100%] resize-none rounded-md border-transparent bg-white p-2 outline-offset-0"
-            ></textarea>
-          </div>
-        )}
-
-        {renderTypeMessage()}
-        <Button
-          variant="filled"
-          text={submitMessage}
-          onClick={handleFormSubmit}
-        />
-        <span className="flex justify-center text-red ">{error.err}</span>
-      </form>
+          <span className="flex justify-center text-red ">{error.err}</span>
+        </form>
+      </div>
     </div>
   );
 }

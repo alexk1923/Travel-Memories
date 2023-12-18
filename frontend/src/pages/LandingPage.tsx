@@ -86,8 +86,8 @@ export default function LandingPage() {
   return (
     <div className="h-screen w-full">
       <div
-        className="flex h-screen w-full flex-col justify-stretch bg-[url('./img/landing-bg.png')]
-		bg-cover bg-center text-white"
+        className="flex h-[50%] w-full flex-col justify-stretch bg-[url('./img/landing-bg.png')] bg-cover
+		bg-center text-white md:h-screen"
       >
         <Navbar variant={NAVBAR_VARIANT.TRANSPARENT} />
 
@@ -113,7 +113,7 @@ export default function LandingPage() {
         <h3 className=" font-semibold drop-shadow-lg">
           Find the perfect place for your next travel
         </h3>
-        <div className="flex max-w-full flex-wrap justify-center gap-5 overflow-hidden text-black md:flex-nowrap">
+        <div className="flex max-w-full flex-nowrap justify-center gap-5 overflow-auto  text-black md:flex-wrap">
           {demoPlaces.map((place) => (
             <Place {...place} />
           ))}

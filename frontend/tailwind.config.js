@@ -12,6 +12,7 @@ module.exports = {
         gray: "#555555",
         "light-gray": "#f7f7f7",
         red: "#c62525",
+        green: "#22c55e"
       },
       backgroundImage: {
         "hero-pattern": "url('/img/hero-pattern.svg')",

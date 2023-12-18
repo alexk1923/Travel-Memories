@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaSortAmountDown } from "react-icons/fa";
 
 export enum PLACE_CATEGORY {
   "ALL_PLACES",
@@ -42,10 +43,9 @@ type FilterPropsType = {
 
 export default function Filter(props: FilterPropsType) {
   const { sortPlace, setSortPlace, category } = props;
-
+  const [sorting, setSorting] = useState(false);
   return (
     <>
-      {" "}
       {category.page === "Profile" && (
         <div className="bg-red-300 text-slate-800">
           <select
@@ -69,45 +69,64 @@ export default function Filter(props: FilterPropsType) {
         </div>
       )}
       {/* Sort */}
-      <div className="flex flex-col justify-center ">
-        <div>
-          <p>Sort by:</p>
+      <div className="flex flex-col">
+        <div
+          className="flex w-fit items-center justify-center rounded-full bg-white p-2 text-primary"
+          onClick={() => setSorting((oldSorting) => !oldSorting)}
+        >
+          <FaSortAmountDown />
         </div>
-        <div>
-          <label htmlFor="huey">{PlaceSortMap[PLACE_SORT.RATINGS]}</label>
-          <input
-            type="radio"
-            id="huey"
-            name="drone"
-            value="huey"
-            checked={sortPlace === PLACE_SORT.RATINGS}
-            onChange={() => setSortPlace(PLACE_SORT.RATINGS)}
-          />
-        </div>
+        {sorting && (
+          <>
+            <span className="text-body-2 font-semibold">Sort by:</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="ratingSorting"
+                  name="ratingSorting"
+                  value="ratingSorting"
+                  checked={sortPlace === PLACE_SORT.RATINGS}
+                  onChange={() => setSortPlace(PLACE_SORT.RATINGS)}
+                  className="radio "
+                />
+                <label htmlFor="ratingSorting">
+                  {PlaceSortMap[PLACE_SORT.RATINGS]}
+                </label>
+              </div>
 
-        <div>
-          <label htmlFor="dewey">{PlaceSortMap[PLACE_SORT.LIKES]}</label>
-          <input
-            type="radio"
-            id="dewey"
-            name="drone"
-            value="dewey"
-            checked={sortPlace === PLACE_SORT.LIKES}
-            onChange={() => setSortPlace(PLACE_SORT.LIKES)}
-          />
-        </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="likeSorting"
+                  name="likeSorting"
+                  value="likeSorting"
+                  checked={sortPlace === PLACE_SORT.LIKES}
+                  onChange={() => setSortPlace(PLACE_SORT.LIKES)}
+                  className="radio"
+                />
+                <label htmlFor="likeSorting">
+                  {PlaceSortMap[PLACE_SORT.LIKES]}
+                </label>
+              </div>
 
-        <div>
-          <label htmlFor="louie">{PlaceSortMap[PLACE_SORT.VISITORS]}</label>
-          <input
-            type="radio"
-            id="louie"
-            name="drone"
-            value="louie"
-            checked={sortPlace === PLACE_SORT.VISITORS}
-            onChange={() => setSortPlace(PLACE_SORT.VISITORS)}
-          />
-        </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="visitorSorting"
+                  name="visitorSorting"
+                  value="visitorSorting"
+                  checked={sortPlace === PLACE_SORT.VISITORS}
+                  onChange={() => setSortPlace(PLACE_SORT.VISITORS)}
+                  className="radio"
+                />
+                <label htmlFor="visitorSorting">
+                  {PlaceSortMap[PLACE_SORT.VISITORS]}
+                </label>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

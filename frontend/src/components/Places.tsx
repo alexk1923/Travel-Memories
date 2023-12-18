@@ -100,7 +100,7 @@ export default function Places({
   console.log("Places rendered");
 
   return (
-    <div className="rounded-xlg grid grid-cols-3 items-center gap-2 text-black">
+    <div className="rounded-xlg grid justify-items-center gap-2 text-black lg:grid-cols-3">
       {state.places
         .filter(filterByLocation)
         .filter(filterByCategory)

@@ -138,10 +138,16 @@
 
   html {
     font-family: "Raleway", "Roboto", system-ui, sans-serif;
+    scroll-behavior: smooth;
+    scroll-snap-align: center;
   }
 
   * {
     box-sizing: border-box;
+  }
+
+  input[type="radio"] {
+    appearance: none;
   }
 }
 
@@ -179,6 +185,23 @@
 
   .text-place-card {
     @apply text-base sm:text-lg;
+  }
+
+  .text-star {
+    @apply text-base sm:text-sm md:text-lg lg:text-3xl;
+  }
+
+  .form-element {
+    @apply rounded-lg bg-light-gray p-2 text-primary outline-none
+       outline-offset-0;
+  }
+
+  .radio {
+    @apply left-0 top-0 h-4 w-4 rounded-lg border-2 border-black bg-white text-red;
+  }
+
+  .radio:checked {
+    @apply bg-primary;
   }
 }
 

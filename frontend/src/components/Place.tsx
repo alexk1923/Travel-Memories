@@ -3,7 +3,9 @@ import {
   FaMapMarkerAlt,
   FaRegStar,
   FaStar,
-  FaStarHalf,
+  FaStarHalfAlt,
+  FaCheckCircle,
+  FaTimesCircle,
 } from "react-icons/fa";
 import { MdBackpack, MdClose } from "react-icons/md";
 import { AiFillLike } from "react-icons/ai";
@@ -17,6 +19,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Rating from "./Rating";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CircleFlag } from "react-circle-flags";
+import Button from "./Button";
 
 export type PlaceType = {
   _id: string;
@@ -115,7 +118,7 @@ export default function Place(props: PlaceType) {
   console.log("Place rendered");
   console.log(likedBy);
 
-  function handleMarkAsVisited(e: React.MouseEvent) {
+  function handleMarkAsVisited() {
     if (!visitors.includes(user.id)) {
       visitors.push(user.id);
     } else {
@@ -133,7 +136,7 @@ export default function Place(props: PlaceType) {
     <div className="flex max-w-[80%] flex-col items-center rounded-lg bg-pure-white font-bold drop-shadow-lg md:my-5 md:flex-1 lg:pb-5">
       {addedBy === user.id && (
         <MdClose
-          className="text-red-700 absolute right-[5%] top-0 top-1 inline cursor-pointer self-start text-3xl"
+          className="text-red-700 absolute right-[5%] top-1 inline cursor-pointer self-start text-3xl"
           onClick={handleRemovePlace}
         />
       )}
@@ -159,30 +162,21 @@ export default function Place(props: PlaceType) {
           </div>
         </div>
 
-        <div className="absolute bottom-0 flex w-full justify-center bg-gradient-to-t from-black">
+        <div className="text-star absolute bottom-0 flex w-full  justify-center bg-gradient-to-t from-black">
           {[...coloredAvg].map((e, i) => (
             <span key={i}>
               {coloredAvg[i] ? (
-                <FaStar
-                  className="inline text-yellow-400 drop-shadow-2xl"
-                  fontSize={"1.75rem"}
-                />
+                <FaStar className="inline text-yellow-400 drop-shadow-2xl" />
               ) : Number(avg) - i >= 0.5 ? (
-                <FaStarHalf
-                  className="inline drop-shadow-2xl "
-                  fontSize={"1.75rem"}
-                />
+                <FaStarHalfAlt className="inline text-yellow-400 drop-shadow-2xl " />
               ) : (
-                <FaRegStar
-                  className="inline text-yellow-400 drop-shadow-2xl"
-                  fontSize={"1.75rem"}
-                />
+                <FaRegStar className="inline text-yellow-400 drop-shadow-2xl" />
               )}
             </span>
           ))}
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex max-w-full flex-col items-center justify-center">
         <span className="text-body-1">{name}</span>
 
         <span className="text-body-2 inline">
@@ -208,7 +202,7 @@ export default function Place(props: PlaceType) {
               user &&
               user.favoritePlaces &&
               user?.favoritePlaces.includes(props._id)
-                ? "text-red-700 px-3"
+                ? "px-3 text-red"
                 : "px-3"
             }
           >
@@ -226,17 +220,35 @@ export default function Place(props: PlaceType) {
             <MdBackpack className="inline" />
             {visitors.length}
           </span>
+        </div>
 
+        <div className="mt-4 flex flex-col gap-2">
           {user.id && addedBy !== user.id && (
-            <button
-              className="bg-red-400 border border-2"
-              onClick={handleMarkAsVisited}
-            >
-              {!visitors.includes(user.id)
-                ? "Mark as visited"
-                : "Remove from visited list"}
-            </button>
+            <div className="flex gap-2">
+              <span>
+                {visitors.includes(user.id)
+                  ? "Remove visit"
+                  : "Mark as visited"}
+              </span>
+
+              {visitors.includes(user.id) ? (
+                <FaTimesCircle
+                  className="hover:text-red"
+                  onClick={handleMarkAsVisited}
+                />
+              ) : (
+                <FaCheckCircle
+                  className="hover:text-green"
+                  onClick={handleMarkAsVisited}
+                />
+              )}
+            </div>
           )}
+          <Button
+            text="Details"
+            variant="filled"
+            onClick={() => navigate(`/place/${_id}`)}
+          />
         </div>
       </div>
 

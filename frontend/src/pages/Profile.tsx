@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 import { useLogout } from "../hooks/useLogout";
-import defaultUser from "../img/defaultUser.svg";
+import defaultUser from "../img/users/defaultUser.svg";
 import Places from "../components/Places";
 import SocialWrapper from "./SocialWrapper";
 import LocationForm from "../components/LocationForm";
@@ -33,7 +33,7 @@ function Profile() {
   }, [currentCity, currentCountry]);
 
   return (
-    <div className="text-white flex-column lg:transparent flex h-screen items-start justify-center bg-gradient-to-b lg:from-sky-700">
+    <div className="flex-column lg:transparent flex h-screen items-start justify-center bg-gradient-to-b text-white lg:from-sky-700">
       <div>
         <img alt="user profile" src={defaultUser} className="w-10" />
         <h1>{profileUser}</h1>

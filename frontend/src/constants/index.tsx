@@ -64,7 +64,7 @@ export type InputValuesRegister = {
   usernameInput: string;
   emailInput: string;
   passwordInput: string;
-  confirmPasswordInput: string;
+  cnfPasswordInput: string;
   [key: string]: string;
 };
 

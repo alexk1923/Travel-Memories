@@ -10,6 +10,9 @@ import Feed from "./pages/Feed";
 import { useLogout } from "./hooks/useLogout";
 import { PlaceProvider, usePlaceContext } from "./contexts/PlaceContext";
 import PlaceDetailsPage from "./pages/PlaceDetails";
+import FeedPage from "./pages/Feed";
+import About from "./pages/About";
+import AboutPage from "./pages/About";
 
 function App() {
   const { user, setUser } = useUserContext();
@@ -50,44 +53,44 @@ function App() {
   }, [user.username, user.token]);
 
   return (
-    <div className="h-screen bg-black">
-      <Routes>
-        <Route
-          path="/"
-          element={
-            user.username === undefined ? (
-              <LandingPage />
-            ) : (
-              <PlaceProvider>
-                <Feed />
-              </PlaceProvider>
-            )
-          }
-        />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          user.username === undefined ? (
+            <LandingPage />
+          ) : (
+            <PlaceProvider>
+              <FeedPage />
+            </PlaceProvider>
+          )
+        }
+      />
 
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/user/:profileUser"
-          element={
-            <PlaceProvider>
-              {" "}
-              <Profile />{" "}
-            </PlaceProvider>
-          }
-        />
-        <Route
-          path="/place/:placeId"
-          element={
-            <PlaceProvider>
-              {" "}
-              <PlaceDetailsPage />{" "}
-            </PlaceProvider>
-          }
-        />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/user/:profileUser"
+        element={
+          <PlaceProvider>
+            {" "}
+            <Profile />{" "}
+          </PlaceProvider>
+        }
+      />
+      <Route
+        path="/place/:placeId"
+        element={
+          <PlaceProvider>
+            {" "}
+            <PlaceDetailsPage />{" "}
+          </PlaceProvider>
+        }
+      />
+      <Route path="/register" element={<Register />} />
+      <Route path="/about" element={<AboutPage />} />
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
