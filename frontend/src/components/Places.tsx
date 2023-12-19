@@ -93,12 +93,6 @@ export default function Places({
     return filterByCountry && filterByCity;
   }
 
-  useEffect(() => {
-    console.log("state changed");
-  }, [state.places]);
-
-  console.log("Places rendered");
-
   return (
     <div className="rounded-xlg grid justify-items-center gap-2 text-black lg:grid-cols-3">
       {state.places

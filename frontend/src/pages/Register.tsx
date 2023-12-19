@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import FormInput from "../components/FormInput";
-import LoginCard from "../components/LoginCard";
 import useRegister from "../hooks/useRegister";
-import whiteLogo from "../img/logo/default-monochrome-white.svg";
+
 import {
   FormType,
   InputValuesContact,

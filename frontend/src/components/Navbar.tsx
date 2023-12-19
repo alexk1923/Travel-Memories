@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import navbarLogo from "../img/logo/default-monochrome.svg";
 import Button from "./Button";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaAlignJustify } from "react-icons/fa";
 import { NAVBAR_VARIANT } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
@@ -41,21 +41,30 @@ export default function Navbar(props: NavbarProps) {
         <img
           src={navbarLogo}
           alt="logo"
-          className="max-w-[50%] md:max-w-[25%] lg:max-w-[25%]"
+          className="max-w-[50%] cursor-pointer md:max-w-[25%] lg:max-w-[25%]"
           onClick={() => navigate("/")}
         />
 
         {isLargeScreen ? (
           <>
             {" "}
-            <ul className="justify-content text-body-1 mx-auto flex gap-5 font-semibold">
-              <li className="text-body-1 inline">
+            <ul className="justify-content text-body-1 mx-auto flex gap-5 font-semibold ">
+              <li
+                className="inline cursor-pointer"
+                onClick={() => navigate("/")}
+              >
                 <span className="text-body">HOME</span>
               </li>
-              <li className="inline">
+              <li
+                className="inline cursor-pointer"
+                onClick={() => navigate("/explore")}
+              >
                 <span className="text-body">EXPLORE</span>
               </li>
-              <li className="inline">
+              <li
+                className="inline cursor-pointer"
+                onClick={() => navigate("/about")}
+              >
                 <span className="text-body">ABOUT</span>
               </li>
             </ul>
@@ -84,6 +93,7 @@ export default function Navbar(props: NavbarProps) {
               <img
                 src={require(`../img/users/${user.profilePhoto}`)}
                 className="h-8 w-8"
+                alt="user profile"
               />
             )}
             <div className="flex flex-col">

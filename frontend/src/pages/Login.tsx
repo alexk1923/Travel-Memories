@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLogin } from "../hooks/useLogin";
-import wavesBg from "../img/waves-bg.png";
 import Navbar from "../components/Navbar";
 import Form from "../components/Form";
 import {

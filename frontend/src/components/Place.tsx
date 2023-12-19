@@ -1,13 +1,11 @@
 import {
   FaHeart,
   FaMapMarkerAlt,
-  FaRegStar,
-  FaStar,
-  FaStarHalfAlt,
   FaCheckCircle,
-  FaTimesCircle,
+  FaEdit,
+  FaTrashAlt,
 } from "react-icons/fa";
-import { MdBackpack, MdClose } from "react-icons/md";
+import { MdBackpack } from "react-icons/md";
 import { AiFillLike } from "react-icons/ai";
 import { useUserContext } from "../contexts/UserContext";
 import {
@@ -17,7 +15,7 @@ import {
 } from "../contexts/PlaceContext";
 import React, { useCallback, useEffect, useState } from "react";
 import Rating from "./Rating";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CircleFlag } from "react-circle-flags";
 import Button from "./Button";
 
@@ -52,16 +50,11 @@ export default function Place(props: PlaceType) {
     ratings,
   } = props;
 
-  const location = useLocation();
   const [avg, setAvg] = useState("0.00");
-  const [coloredAvg, setColoredAvg] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
-  const [colored, setColored] = useState([false, false, false, false, false]);
+  const [, setColoredAvg] = useState([false, false, false, false, false]);
+  const [colored] = useState([false, false, false, false, false]);
+  const [hoverPlace, setHoverPlace] = useState(false);
+  const { state } = usePlaceContext();
 
   useEffect(() => {
     const newAvg =
@@ -69,7 +62,7 @@ export default function Place(props: PlaceType) {
       ratings.length;
 
     setAvg(Number(newAvg).toFixed(2));
-  }, [ratings]);
+  }, [ratings, state]);
 
   const ratingToStars = useCallback(
     (rating: number) => {
@@ -115,9 +108,6 @@ export default function Place(props: PlaceType) {
     return likedBy.includes(user.username);
   }
 
-  console.log("Place rendered");
-  console.log(likedBy);
-
   function handleMarkAsVisited() {
     if (!visitors.includes(user.id)) {
       visitors.push(user.id);
@@ -133,25 +123,37 @@ export default function Place(props: PlaceType) {
   }
 
   return (
-    <div className="flex max-w-[80%] flex-col items-center rounded-lg bg-pure-white font-bold drop-shadow-lg md:my-5 md:flex-1 lg:pb-5">
-      {addedBy === user.id && (
-        <MdClose
-          className="text-red-700 absolute right-[5%] top-1 inline cursor-pointer self-start text-3xl"
-          onClick={handleRemovePlace}
-        />
-      )}
+    <div className="flex w-[80%] flex-col items-center rounded-lg bg-pure-white font-bold drop-shadow-lg md:my-5 md:flex-1 lg:pb-5">
+      <div
+        className="relative flex w-full justify-center self-center"
+        onMouseEnter={() => setHoverPlace(true)}
+        onMouseLeave={() => setHoverPlace(false)}
+      >
+        {addedBy === user.id && hoverPlace && (
+          <>
+            <div className="absolute bottom-0 left-0 right-0 top-0 bg-black opacity-75"></div>
 
-      <div className="relative flex justify-center self-center">
-        <img
-          src={imageURL ? imageURL : ""}
-          alt={name}
-          className="aspect-square w-full"
-          onClick={() => {
-            if (!location.pathname.includes(_id)) {
-              navigate(`/place/${_id}`);
-            }
-          }}
-        />
+            <div className="text-body-1 absolute bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center gap-8 text-gray">
+              <div className="flex items-center justify-center">
+                <FaEdit className="cursor-pointer hover:text-pure-white" />
+              </div>
+              <div className="flex items-center justify-center">
+                <FaTrashAlt
+                  className="cursor-pointer hover:text-pure-white"
+                  onClick={handleRemovePlace}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {imageURL === "" ? (
+          <div className="flex aspect-square w-full items-center justify-center bg-white ">
+            No image found
+          </div>
+        ) : (
+          <img src={imageURL} alt={name} className="aspect-square w-full" />
+        )}
 
         <div className="absolute flex w-full items-center justify-between">
           <div className="w-fit ps-2">
@@ -162,20 +164,11 @@ export default function Place(props: PlaceType) {
           </div>
         </div>
 
-        <div className="text-star absolute bottom-0 flex w-full  justify-center bg-gradient-to-t from-black">
-          {[...coloredAvg].map((e, i) => (
-            <span key={i}>
-              {coloredAvg[i] ? (
-                <FaStar className="inline text-yellow-400 drop-shadow-2xl" />
-              ) : Number(avg) - i >= 0.5 ? (
-                <FaStarHalfAlt className="inline text-yellow-400 drop-shadow-2xl " />
-              ) : (
-                <FaRegStar className="inline text-yellow-400 drop-shadow-2xl" />
-              )}
-            </span>
-          ))}
+        <div className="text-star absolute bottom-0 z-50 flex  w-full justify-center bg-gradient-to-t from-black">
+          <Rating ratings={ratings} placeId={_id} userId={user.id} />
         </div>
       </div>
+
       <div className="flex max-w-full flex-col items-center justify-center">
         <span className="text-body-1">{name}</span>
 
@@ -224,24 +217,20 @@ export default function Place(props: PlaceType) {
 
         <div className="mt-4 flex flex-col gap-2">
           {user.id && addedBy !== user.id && (
-            <div className="flex gap-2">
+            <div className="flex justify-center gap-2">
               <span>
-                {visitors.includes(user.id)
-                  ? "Remove visit"
-                  : "Mark as visited"}
+                {visitors.includes(user.id) ? "Visited" : "Not visited"}
               </span>
 
-              {visitors.includes(user.id) ? (
-                <FaTimesCircle
-                  className="hover:text-red"
-                  onClick={handleMarkAsVisited}
-                />
-              ) : (
-                <FaCheckCircle
-                  className="hover:text-green"
-                  onClick={handleMarkAsVisited}
-                />
-              )}
+              <FaCheckCircle
+                className={
+                  `cursor-pointer ` +
+                  (visitors.includes(user.id)
+                    ? "text-green hover:text-gray"
+                    : "hover:text-green")
+                }
+                onClick={handleMarkAsVisited}
+              />
             </div>
           )}
           <Button
@@ -251,8 +240,6 @@ export default function Place(props: PlaceType) {
           />
         </div>
       </div>
-
-      {/* <Rating ratings={ratings} placeId={_id} userId={user.id} /> */}
     </div>
   );
 }

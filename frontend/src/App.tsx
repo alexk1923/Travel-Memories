@@ -3,15 +3,13 @@ import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import UserProvider, { useUserContext } from "./contexts/UserContext";
+import { useUserContext } from "./contexts/UserContext";
 import Profile from "./pages/Profile";
 import { useEffect } from "react";
-import Feed from "./pages/Feed";
 import { useLogout } from "./hooks/useLogout";
-import { PlaceProvider, usePlaceContext } from "./contexts/PlaceContext";
+import { PlaceProvider } from "./contexts/PlaceContext";
 import PlaceDetailsPage from "./pages/PlaceDetails";
 import FeedPage from "./pages/Feed";
-import About from "./pages/About";
 import AboutPage from "./pages/About";
 
 function App() {

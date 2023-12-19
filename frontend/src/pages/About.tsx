@@ -106,4 +106,4 @@ const Testimonial: React.FC<TestimonialProps> = ({ author, text }) => {
 
 const AboutPage = () => SocialWrapper({ WrappedComponent: About });
 
-export default About;
+export default AboutPage;

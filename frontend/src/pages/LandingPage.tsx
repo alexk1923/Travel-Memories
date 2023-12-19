@@ -1,6 +1,4 @@
-import { FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../contexts/UserContext";
+import { useEffect, useRef, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import about1 from "../img/about1.png";
@@ -9,7 +7,6 @@ import about2 from "../img/about2.png";
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import Place, { PlaceType } from "../components/Place";
-import { usePlaceContext } from "../contexts/PlaceContext";
 import Divider from "../components/Divider";
 import Form from "../components/Form";
 import Footer from "../components/Footer";
@@ -22,10 +19,7 @@ import {
 } from "../constants";
 
 export default function LandingPage() {
-  const { user } = useUserContext();
-  const { state } = usePlaceContext();
   const [demoPlaces, setDemoPlaces] = useState<PlaceType[]>([] as PlaceType[]);
-  const navigate = useNavigate();
   const trendingRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     AOS.init();
@@ -123,12 +117,16 @@ export default function LandingPage() {
 
       <Divider />
 
-      <div className="flex flex-col items-center justify-center gap-4 text-center lg:mx-[20%]">
+      <section className="flex flex-col items-center justify-center gap-4 text-center lg:mx-[20%]">
         <h2 className="font-bold drop-shadow-lg">
           Different people, same passion
         </h2>
         <div className="flex items-start justify-between">
-          <img src={about1} className="max-w-[50%]" />
+          <img
+            src={about1}
+            className="max-w-[50%]"
+            alt="two people looking at a sunrise"
+          />
           <div className="ps-8 text-start">
             <h3 className="font-bold text-primary ">
               A network meant to connect
@@ -150,22 +148,26 @@ export default function LandingPage() {
               for you to easily track the places you've visited. Create a plan
               for your future adventures by exploring and saving desired
               experiences within your personal profile to access them whenever
-              you need.{" "}
+              you need.
             </p>
           </div>
           <div className="flex-1">
-            <img src={about2} className="h-full object-cover" />
+            <img
+              src={about2}
+              className="h-full object-cover"
+              alt="person holding a map"
+            />
           </div>
         </div>
 
         <span className="text-body-1 font-semibold italic text-primary">
-          Learn more {">"}{" "}
+          Learn more {">"}
         </span>
-      </div>
+      </section>
 
       <Divider />
 
-      <div className="flex flex-col items-center gap-4 bg-waves-bg bg-cover bg-center lg:h-screen lg:flex-row lg:px-[20%]">
+      <section className="flex flex-col items-center gap-4 bg-waves-bg bg-cover bg-center lg:h-screen lg:flex-row lg:px-[20%]">
         <div className="ms-8">
           <h3 className="mt-4 font-bold text-primary lg:mt-0">GET IN TOUCH</h3>
           <p className="text-body-1">
@@ -189,7 +191,7 @@ export default function LandingPage() {
           }
           handleFormSubmit={handleContactSubmit}
         />
-      </div>
+      </section>
 
       <Footer />
     </div>

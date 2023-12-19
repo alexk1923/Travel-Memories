@@ -21,7 +21,6 @@ export default function Location(props: LocationPropsType) {
 
   const [countries, setCountries] = useState<CountryType[]>([]);
   const [cities, setCities] = useState([]);
-  const [displayType, setDisplayType] = useState("Cards");
 
   // Get and set the countries
   useEffect(() => {
@@ -55,7 +54,7 @@ export default function Location(props: LocationPropsType) {
 
   return (
     <div className="flex w-[50%] flex-col gap-2 text-primary">
-      <div className="flex items-center justify-start gap-2">
+      <div className="flex flex-col justify-start gap-2">
         <select
           onChange={(e) => {
             setCurrentCountry(e.target.value);
@@ -82,7 +81,7 @@ export default function Location(props: LocationPropsType) {
           <select
             onChange={(e) => setCurrentCity(e.target.value)}
             value={currentCity}
-            className="form-element w-fit max-w-[40%]"
+            className="form-element w-fit max-w-[100%] overflow-hidden text-ellipsis"
           >
             <option value="">-</option>
             {cities.map((city: { name: string }) => (
@@ -93,16 +92,6 @@ export default function Location(props: LocationPropsType) {
           </select>
         )}
       </div>
-
-      <input placeholder="Search..." className="form-element" />
-      <select
-        value={displayType}
-        onChange={(e) => setDisplayType(e.target.value)}
-        className="form-element"
-      >
-        <option value="Cards">Cards</option>
-        <option value="Detailed">Detailed</option>
-      </select>
     </div>
   );
 }
