@@ -5,22 +5,28 @@ import mongoose from "mongoose";
 
 const getAllPlaces = async (req, res) => {
     try {
-        const places = await Place.aggregate([
-            {
-                $set: { noVisitors: { $size: { "$ifNull": ["$visitors", []] } } }
-            },
-            {
-                $sort: { "noVisitors": -1 }
-            },
-            {
-                "$limit": Number(req.query.limit)
-            },
-            {
-                $unset: ["noVisitors"]
-            }
-        ]);
+        if (req.query.limit) {
+            const places = await Place.aggregate([
+                {
+                    $set: { noVisitors: { $size: { "$ifNull": ["$visitors", []] } } }
+                },
+                {
+                    $sort: { "noVisitors": -1 }
+                },
+                {
+                    "$limit": Number(req.query.limit)
+                },
+                {
+                    $unset: ["noVisitors"]
+                }
+            ]);
 
-        return res.status(200).send(places);
+            return res.status(200).send(places);
+        } else {
+            const places = await Place.find({});
+            return res.status(200).send(places);
+        }
+
 
     } catch (err) {
         return res.status(500).send({ 'err': err });
@@ -52,6 +58,7 @@ const addNewPlace = async (req, res) => {
         }
 
         const { name, city, country, imageURL } = req.body;
+        console.log("my image url: " + imageURL);
 
         Place.create({
             name,
@@ -66,7 +73,7 @@ const addNewPlace = async (req, res) => {
             ratings: []
         }, (err, newPlace) => {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(500).send({ "err": err });
             }
 
             return res.status(201).send(newPlace);
