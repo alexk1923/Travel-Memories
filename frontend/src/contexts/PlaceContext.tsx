@@ -1,5 +1,4 @@
 import React, {
-  Dispatch,
   createContext,
   useContext,
   useEffect,
@@ -11,7 +10,16 @@ import { useUserContext } from "./UserContext";
 
 type ReducerType = {
   state: PlaceState;
-  dispatch: Dispatch<any>;
+  dispatch: React.Dispatch<
+    ActionInfo<
+      | string
+      | PlaceType
+      | PlaceType[]
+      | RatingPayloadType
+      | VisitPayloadType
+      | LikePayloadType
+    >
+  >;
 };
 
 type RatingPayloadType = {
@@ -64,7 +72,7 @@ const PlaceContext = createContext<ReducerType>({
   dispatch: () => {},
   state: {
     places: [],
-  },
+  } as PlaceState,
 });
 
 export function usePlaceContext() {
@@ -79,6 +87,113 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
   const [favoriteChange, setFavoriteChange] = useState<FavoriteChange>(
     {} as FavoriteChange,
   );
+
+  function reducer(
+    state: PlaceState,
+    action: ActionInfo<
+      PlaceType[] | PlaceType | RatingPayloadType | LikePayloadType | string
+    >,
+  ) {
+    switch (action.type) {
+      case PlaceActionType.GET:
+        return { ...state, places: action.payload as PlaceType[] };
+      case PlaceActionType.ADD:
+        fetch(`http://localhost:8000/api/places/`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(action.payload),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(`Added ${data} to the database`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        // state.places.push(action.payload as PlaceType);
+        return { ...state };
+      case PlaceActionType.DELETE:
+        return {
+          places: state.places.filter(
+            (place) => place._id !== (action.payload as string),
+          ),
+        };
+      case PlaceActionType.LIKE_TOGGLE:
+        const place = state.places.find(
+          (place) => place._id === (action.payload as LikePayloadType).placeId,
+        );
+        console.log("Found place:");
+        console.log(place);
+        if (place) {
+          if (!place.likedBy.includes(user.username)) {
+            place.likedBy.push(user.username);
+            console.log("Not liked yet");
+            setLikeChangeDb({ id: place._id, likedBy: place.likedBy });
+            return { ...state };
+          } else if (place.likedBy.includes(user.username)) {
+            place.likedBy = place.likedBy.filter(
+              (username) => username !== user.username,
+            );
+            console.log("Already liked");
+            console.log(place);
+
+            setLikeChangeDb({ id: place._id, likedBy: place.likedBy });
+            return { ...state };
+          }
+        }
+
+        return { ...state };
+
+      case PlaceActionType.FAVORITE_TOGGLE:
+        const newFavPlaceId = action.payload;
+        if (!user.favoritePlaces.includes(newFavPlaceId as string)) {
+          user.favoritePlaces.push(newFavPlaceId as string);
+        } else {
+          user.favoritePlaces = user.favoritePlaces.filter(
+            (favPlaceId) => favPlaceId !== newFavPlaceId,
+          );
+        }
+        setFavoriteChange({
+          userId: user.id,
+          favoritePlaces: user.favoritePlaces,
+        });
+        return { ...state };
+      case PlaceActionType.CHANGE_RATING:
+        state.places.map((place) => {
+          if (place._id === (action.payload as RatingPayloadType).placeId) {
+            const index = place.ratings.findIndex(
+              (rating) =>
+                rating.userId === (action.payload as RatingPayloadType).userId,
+            );
+            if (index !== -1) {
+              place.ratings[index].rating = (
+                action.payload as RatingPayloadType
+              ).newRating;
+            } else {
+              place.ratings.push({
+                userId: (action.payload as RatingPayloadType).userId,
+                rating: (action.payload as RatingPayloadType).newRating,
+              });
+            }
+            updatePlaceRatingDb(place._id, place.ratings);
+          }
+          return place;
+        });
+        return { ...state };
+      case PlaceActionType.VISIT:
+        const { placeId, newVisitors } = action.payload as VisitPayloadType;
+        console.log(newVisitors);
+        updateVisitNumber(placeId, newVisitors);
+        return { ...state };
+      default:
+        return { ...state };
+    }
+  }
+
   const [stateReducer, dispatchReducer] = useReducer(reducer, { places: [] });
 
   // Update database if like list changed
@@ -172,99 +287,6 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
         });
     }
   }, [user]);
-
-  function reducer(
-    state: PlaceState,
-    action: ActionInfo<
-      PlaceType[] | PlaceType | RatingPayloadType | VisitPayloadType | string
-    >,
-  ) {
-    console.log("ACTION:");
-
-    console.log(action);
-    switch (action.type) {
-      case PlaceActionType.GET:
-        return { ...state, places: action.payload as PlaceType[] };
-      case PlaceActionType.ADD:
-        state.places.push(action.payload as PlaceType);
-        return { ...state };
-      case PlaceActionType.DELETE:
-        return {
-          places: state.places.filter(
-            (place) => place._id !== (action.payload as string),
-          ),
-        };
-      case PlaceActionType.LIKE_TOGGLE:
-        const place = state.places.find(
-          (place) => place._id === (action.payload as LikePayloadType).placeId,
-        );
-        console.log("Found place:");
-        console.log(place);
-        if (place) {
-          if (!place.likedBy.includes(user.username)) {
-            place.likedBy.push(user.username);
-            console.log("Not liked yet");
-            setLikeChangeDb({ id: place._id, likedBy: place.likedBy });
-            return { ...state };
-          } else if (place.likedBy.includes(user.username)) {
-            place.likedBy = place.likedBy.filter(
-              (username) => username !== user.username,
-            );
-            console.log("Already liked");
-            console.log(place);
-
-            setLikeChangeDb({ id: place._id, likedBy: place.likedBy });
-            return { ...state };
-          }
-        }
-
-        return { ...state };
-
-      case PlaceActionType.FAVORITE_TOGGLE:
-        const newFavPlaceId = action.payload;
-        if (!user.favoritePlaces.includes(newFavPlaceId as string)) {
-          user.favoritePlaces.push(newFavPlaceId as string);
-        } else {
-          user.favoritePlaces = user.favoritePlaces.filter(
-            (favPlaceId) => favPlaceId !== newFavPlaceId,
-          );
-        }
-        setFavoriteChange({
-          userId: user.id,
-          favoritePlaces: user.favoritePlaces,
-        });
-        return { ...state };
-      case PlaceActionType.CHANGE_RATING:
-        state.places.map((place) => {
-          if (place._id === (action.payload as RatingPayloadType).placeId) {
-            const index = place.ratings.findIndex(
-              (rating) =>
-                rating.userId === (action.payload as RatingPayloadType).userId,
-            );
-            if (index !== -1) {
-              place.ratings[index].rating = (
-                action.payload as RatingPayloadType
-              ).newRating;
-            } else {
-              place.ratings.push({
-                userId: (action.payload as RatingPayloadType).userId,
-                rating: (action.payload as RatingPayloadType).newRating,
-              });
-            }
-            updatePlaceRatingDb(place._id, place.ratings);
-          }
-          return place;
-        });
-        return { ...state };
-      case PlaceActionType.VISIT:
-        const { placeId, newVisitors } = action.payload as VisitPayloadType;
-        console.log(newVisitors);
-        updateVisitNumber(placeId, newVisitors);
-        return { ...state };
-      default:
-        return { ...state };
-    }
-  }
 
   return (
     <PlaceContext.Provider
