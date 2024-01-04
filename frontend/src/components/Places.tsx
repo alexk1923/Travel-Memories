@@ -94,7 +94,7 @@ export default function Places({
   }
 
   return (
-    <div className="rounded-xlg grid justify-items-center gap-2 text-black lg:grid-cols-3">
+    <div className="rounded-xlg flex flex-col gap-2 text-black lg:grid lg:grid-cols-3">
       {state.places
         .filter(filterByLocation)
         .filter(filterByCategory)

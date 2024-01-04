@@ -100,7 +100,7 @@ export default function Register() {
     <>
       <div className="flex h-screen flex-col bg-[url(./img/waves-bg.png)] bg-cover bg-center">
         <Navbar variant={NAVBAR_VARIANT.SOLID} />
-        <div className="flex h-[100%] w-full items-center justify-center lg:items-stretch">
+        <div className="flex w-full items-center justify-center">
           <Form
             inputs={inputs}
             title={"Become a traveler"}

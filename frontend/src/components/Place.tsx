@@ -55,6 +55,7 @@ export default function Place(props: PlaceType) {
   const [colored] = useState([false, false, false, false, false]);
   const [hoverPlace, setHoverPlace] = useState(false);
   const { state } = usePlaceContext();
+  const [isoCode, setIsoCode] = useState("?");
 
   useEffect(() => {
     const newAvg =
@@ -82,6 +83,21 @@ export default function Place(props: PlaceType) {
     const stars = ratingToStars(Number(avg));
     setColoredAvg(stars);
   }, [avg, ratingToStars]);
+
+  useEffect(() => {
+    fetch("https://countriesnow.space/api/v0.1/countries/iso", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ country }),
+    })
+      .then((res) => res.json())
+      .then((data: { data: { Iso2: string } }) => {
+        console.log(data.data.Iso2);
+        setIsoCode(data.data.Iso2.toLowerCase());
+      });
+  }, []);
 
   function handleRemovePlace() {
     fetch(`http://localhost:8000/api/places/${_id}`, {
@@ -123,7 +139,7 @@ export default function Place(props: PlaceType) {
   }
 
   return (
-    <div className="flex w-[80%] flex-col items-center rounded-lg bg-pure-white font-bold drop-shadow-lg md:my-5 md:flex-1 lg:pb-5">
+    <div className="flex w-full flex-col items-center rounded-lg bg-pure-white font-bold drop-shadow-lg md:my-5 md:flex-1 lg:pb-5">
       <div
         className="relative flex w-full justify-center self-center"
         onMouseEnter={() => setHoverPlace(true)}
@@ -152,12 +168,12 @@ export default function Place(props: PlaceType) {
             No image found
           </div>
         ) : (
-          <img src={imageURL} alt={name} className="aspect-square w-full" />
+          <img src={imageURL} alt={name} className="aspect-square" />
         )}
 
         <div className="absolute flex w-full items-center justify-between">
           <div className="w-fit ps-2">
-            <CircleFlag countryCode="ro" width="40" />
+            <CircleFlag countryCode={isoCode} width="40" />
           </div>
           <div className="text-body-1 rounded-bl-lg bg-white px-4 py-2">
             {ratings.length > 0 ? avg : "0.00"}

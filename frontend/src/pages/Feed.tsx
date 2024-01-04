@@ -11,6 +11,7 @@ import FilterForm, {
 import { DEFAULT_COUNTRY } from "../constants";
 import Button from "../components/Button";
 import ModalComponent from "../components/AddPlaceModal";
+import Container from "../components/Container";
 
 function Feed() {
   const { user } = useUserContext();
@@ -29,7 +30,7 @@ function Feed() {
   }, [currentCity, currentCountry]);
 
   return (
-    <>
+    <Container>
       {openModal && (
         <ModalComponent
           onCloseFn={() => setOpenModal(false)}
@@ -41,7 +42,7 @@ function Feed() {
           <h1 className="font-bold text-primary">EXPLORE</h1>
         </div>
         <div className="flex flex-col items-center bg-pure-white">
-          <div className="flex w-[100%] flex-col pl-8">
+          <div className="flex w-full flex-col pl-8">
             <FilterForm
               category={{ page: "Feed" }}
               {...{ sortPlace, setSortPlace }}
@@ -63,7 +64,7 @@ function Feed() {
             />
           </div>
 
-          <div className="bg-red-800 flex w-full  justify-center">
+          <div className="flex w-full justify-center">
             <Places
               profileUser={user.username}
               category={PLACE_CATEGORY.ALL_PLACES}
@@ -73,7 +74,7 @@ function Feed() {
           </div>
         </div>
       </div>
-    </>
+    </Container>
   );
 }
 

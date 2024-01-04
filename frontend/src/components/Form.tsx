@@ -102,13 +102,13 @@ export default function Form(props: FormProps) {
   }
 
   return (
-    <div className="relative mt-4 flex max-w-[90%] flex-col items-center justify-center rounded-lg bg-pure-white px-8 py-8 text-center text-primary shadow-lg sm:px-10 lg:w-[30%] ">
+    <div className="relative mt-4 flex flex-col items-center justify-center rounded-lg bg-pure-white px-16 py-16 text-primary shadow-lg ">
       <div className="absolute left-0 top-0 flex w-full justify-around bg-primary py-4 font-bold text-white ">
         <span>LOGIN</span>
         <span className="absolute right-2">X</span>
       </div>
 
-      <div className="mt-4 w-[75%] ">
+      <div className="mt-4">
         <h2 className="py-4  font-bold">{title}</h2>
         <form
           className="flex max-w-[100%] flex-col gap-4 font-semibold text-primary"
@@ -123,7 +123,7 @@ export default function Form(props: FormProps) {
             />
           ))}
           {textArea !== "" && (
-            <div className="flex w-[100%] flex-col gap-2">
+            <div className="flex w-[100%] flex-col gap-2 ">
               <label htmlFor="textarea font">Message</label>
 
               <textarea

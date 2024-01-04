@@ -72,7 +72,7 @@ export default function Login() {
   return (
     <div className="flex h-screen flex-col items-center bg-[url(./img/waves-bg.png)] bg-cover bg-center">
       <Navbar variant={NAVBAR_VARIANT.SOLID} />
-      <div className="flex h-screen w-full flex-col items-center justify-center ">
+      <div className="flex w-full flex-col items-center justify-center ">
         <Form
           inputs={inputs}
           title={"Welcome back!"}

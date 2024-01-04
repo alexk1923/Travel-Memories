@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FaAlignJustify } from "react-icons/fa";
 import { NAVBAR_VARIANT } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
+import { useLogout } from "../hooks/useLogout";
 
 type NavbarProps = {
   variant: NAVBAR_VARIANT;
@@ -28,7 +29,7 @@ export default function Navbar(props: NavbarProps) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  const logout = useLogout();
   const navigate = useNavigate();
   const { variant } = props;
   const variantToStyle = {
@@ -37,7 +38,7 @@ export default function Navbar(props: NavbarProps) {
   };
   return (
     <nav className={"flex w-full text-white " + variantToStyle[variant]}>
-      <div className="flex w-screen items-center justify-between gap-4 px-8 py-4 lg:mx-[20%] lg:justify-between ">
+      <div className="flex w-screen items-center justify-between gap-4 px-8 py-4 lg:justify-between lg:px-[20%] ">
         <img
           src={navbarLogo}
           alt="logo"
@@ -47,7 +48,6 @@ export default function Navbar(props: NavbarProps) {
 
         {isLargeScreen ? (
           <>
-            {" "}
             <ul className="justify-content text-body-1 mx-auto flex gap-5 font-semibold ">
               <li
                 className="inline cursor-pointer"
@@ -87,6 +87,13 @@ export default function Navbar(props: NavbarProps) {
             <FaAlignJustify />
           </span>
         )}
+
+        {isLargeScreen && (
+          <div className="flex flex-col">
+            <span></span>
+          </div>
+        )}
+
         {user.username && (
           <div className="absolute right-10 flex items-center gap-2 self-start">
             {user.profilePhoto && (
@@ -98,8 +105,14 @@ export default function Navbar(props: NavbarProps) {
             )}
             <div className="flex flex-col">
               <span className="menu-text">Signed in as</span>
-              <span className="menu-text font-bold">{user.username}</span>
+              <span
+                className="menu-text font-bold"
+                onClick={() => navigate(`/user/${user.username}`)}
+              >
+                {user.username}
+              </span>
             </div>
+            <Button onClick={logout} variant="filled" text="Log out" />
           </div>
         )}
       </div>

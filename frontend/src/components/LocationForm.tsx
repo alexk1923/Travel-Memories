@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { DEFAULT_COUNTRY } from "../constants";
 
 type CountryType = {
-  iso3: string;
+  iso: string;
   country: string;
   cities: string[];
 };
@@ -28,7 +28,10 @@ export default function Location(props: LocationPropsType) {
       method: "GET",
     })
       .then((res) => res.json())
-      .then((data) => setCountries(data.data))
+      .then((data) => {
+        setCountries(data.data);
+        console.log(data);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -53,45 +56,43 @@ export default function Location(props: LocationPropsType) {
   }
 
   return (
-    <div className="flex w-[50%] flex-col gap-2 text-primary">
-      <div className="flex flex-col justify-start gap-2">
+    <div className="flex w-full flex-col gap-2 text-primary">
+      <select
+        onChange={(e) => {
+          setCurrentCountry(e.target.value);
+          fetchCities(e.target.value);
+        }}
+        value={currentCountry}
+        className="form-element w-full lg:w-fit lg:max-w-full"
+      >
+        <option value="Worldwide" className="form-element input-white">
+          🌏 Worldwide
+        </option>
+        {countries.map((country) => (
+          <React.Fragment key={uuid()}>
+            <option
+              value={country.country}
+              className="form-element input-white"
+            >
+              {country.country}
+            </option>
+          </React.Fragment>
+        ))}
+      </select>
+      {currentCountry !== DEFAULT_COUNTRY && (
         <select
-          onChange={(e) => {
-            setCurrentCountry(e.target.value);
-            fetchCities(e.target.value);
-          }}
-          value={currentCountry}
-          className="form-element w-fit max-w-[100%]"
+          onChange={(e) => setCurrentCity(e.target.value)}
+          value={currentCity}
+          className="form-element overflow-hidden text-ellipsis"
         >
-          <option value="Worldwide" className="form-element input-white">
-            🌏 Worldwide
-          </option>
-          {countries.map((country) => (
+          <option value="">-</option>
+          {cities.map((city: { name: string }) => (
             <React.Fragment key={uuid()}>
-              <option
-                value={country.country}
-                className="form-element input-white"
-              >
-                {country.country}
-              </option>
+              <option value={city.name}>{city.name}</option>
             </React.Fragment>
           ))}
         </select>
-        {currentCountry !== DEFAULT_COUNTRY && (
-          <select
-            onChange={(e) => setCurrentCity(e.target.value)}
-            value={currentCity}
-            className="form-element w-fit max-w-[100%] overflow-hidden text-ellipsis"
-          >
-            <option value="">-</option>
-            {cities.map((city: { name: string }) => (
-              <React.Fragment key={uuid()}>
-                <option value={city.name}>{city.name}</option>
-              </React.Fragment>
-            ))}
-          </select>
-        )}
-      </div>
+      )}
     </div>
   );
 }
