@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { PLACE_SORT } from "../constants";
 import { FaSortAmountDown } from "react-icons/fa";
+import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 
 type SortingFormProps = {
   sortPlace: PLACE_SORT;
@@ -16,6 +17,13 @@ const PlaceSortMap = {
 const SortingForm = ({ sortPlace, setSortPlace }: SortingFormProps) => {
   const [sorting, setSorting] = useState(false);
 
+  const handleChangeSorting = (
+    e: SyntheticEvent<Element, Event>,
+    checked: boolean,
+  ) => {
+    setSortPlace(parseInt((e.target as HTMLInputElement).value) as PLACE_SORT);
+  };
+
   return (
     <div className="flex flex-col">
       <div
@@ -27,52 +35,30 @@ const SortingForm = ({ sortPlace, setSortPlace }: SortingFormProps) => {
       {sorting && (
         <>
           <span className="text-body-2 font-semibold">Sort by:</span>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="ratingSorting"
-                name="ratingSorting"
-                value="ratingSorting"
-                checked={sortPlace === PLACE_SORT.RATINGS}
-                onChange={() => setSortPlace(PLACE_SORT.RATINGS)}
-                className="radio "
-              />
-              <label htmlFor="ratingSorting">
-                {PlaceSortMap[PLACE_SORT.RATINGS]}
-              </label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="likeSorting"
-                name="likeSorting"
-                value="likeSorting"
-                checked={sortPlace === PLACE_SORT.LIKES}
-                onChange={() => setSortPlace(PLACE_SORT.LIKES)}
-                className="radio"
-              />
-              <label htmlFor="likeSorting">
-                {PlaceSortMap[PLACE_SORT.LIKES]}
-              </label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="visitorSorting"
-                name="visitorSorting"
-                value="visitorSorting"
-                checked={sortPlace === PLACE_SORT.VISITORS}
-                onChange={() => setSortPlace(PLACE_SORT.VISITORS)}
-                className="radio"
-              />
-              <label htmlFor="visitorSorting">
-                {PlaceSortMap[PLACE_SORT.VISITORS]}
-              </label>
-            </div>
-          </div>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue={PLACE_SORT.RATINGS}
+            name="radio-buttons-group"
+          >
+            <FormControlLabel
+              value={PLACE_SORT.RATINGS}
+              control={<Radio />}
+              label={PlaceSortMap[PLACE_SORT.RATINGS]}
+              onChange={handleChangeSorting}
+            />
+            <FormControlLabel
+              value={PLACE_SORT.LIKES}
+              control={<Radio />}
+              label="Likes"
+              onChange={handleChangeSorting}
+            />
+            <FormControlLabel
+              value={PLACE_SORT.VISITORS}
+              control={<Radio />}
+              label="Number of visitors"
+              onChange={handleChangeSorting}
+            />
+          </RadioGroup>
         </>
       )}
     </div>

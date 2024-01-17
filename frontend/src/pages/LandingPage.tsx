@@ -5,9 +5,9 @@ import about1 from "../img/about1.png";
 import about2 from "../img/about2.png";
 
 import Navbar from "../components/Navbar";
-import Button from "../components/Button";
+import Button from "../components/CustomButton";
 import Place, { PlaceType } from "../components/Place";
-import Divider from "../components/Divider";
+import Divider from "../components/CustomDivider";
 import Form from "../components/Form";
 import Footer from "../components/Footer";
 import {

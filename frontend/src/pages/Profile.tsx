@@ -14,10 +14,11 @@ import FilterForm, {
 } from "../components/FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
 import { CircleFlag } from "react-circle-flags";
-import Container from "../components/Container";
 import CountryStats from "../components/CountryStats";
 import ProfileDetails from "../components/ProfileDetails";
 import SortingForm from "../components/SortingForm";
+import { useTheme } from "@mui/material/styles";
+import { Container, Grid, useMediaQuery } from "@mui/material";
 
 function Profile() {
   const { profileUser } = useParams();
@@ -32,6 +33,8 @@ function Profile() {
     country: DEFAULT_COUNTRY,
     city: "",
   });
+  const theme = useTheme();
+  const largeScreen = useMediaQuery(theme.breakpoints.up("sm"));
 
   useEffect(() => {
     setFilterPlace({ country: currentCountry, city: currentCity });
@@ -40,45 +43,51 @@ function Profile() {
   useEffect(() => {}, []);
 
   return (
-    <div className="flex max-w-full items-start justify-center bg-white text-black lg:gap-8">
-      <ProfileDetails
-        user={user}
-        category={{
-          page: "Profile",
-          placesCategory,
-          setPlacesCategory,
-        }}
-      />
+    <Grid container>
+      <Grid item xs={3}>
+        <ProfileDetails
+          user={user}
+          category={{
+            page: "Profile",
+            placesCategory,
+            setPlacesCategory,
+          }}
+        />
+      </Grid>
 
-      <Container>
-        <h2 className="text-center">{PlaceCategoryMap[placesCategory]}</h2>
+      <Grid item xs={6}>
+        <Container component="main">
+          <h1 className="text-center font-bold text-primary">
+            {PlaceCategoryMap[placesCategory]}
+          </h1>
 
-        <div className="flex w-full flex-col">
-          <div className="flex w-full flex-col lg:pl-16">
-            <SortingForm sortPlace={sortPlace} setSortPlace={setSortPlace} />
-            <LocationForm
-              {...{
-                currentCity,
-                setCurrentCity,
-                currentCountry,
-                setCurrentCountry,
-              }}
-            />
+          <div className="flex w-full flex-col">
+            <div className="flex w-full flex-col">
+              <SortingForm sortPlace={sortPlace} setSortPlace={setSortPlace} />
+              <LocationForm
+                {...{
+                  currentCity,
+                  setCurrentCity,
+                  currentCountry,
+                  setCurrentCountry,
+                }}
+              />
+            </div>
+
+            <div className="flex w-full justify-center">
+              <Places
+                profileUser={profileUser}
+                category={placesCategory as PLACE_CATEGORY}
+                sortPlace={sortPlace as PLACE_SORT}
+                filter={filterPlace}
+              />
+            </div>
           </div>
+        </Container>
+      </Grid>
 
-          <div className="flex w-full justify-center">
-            <Places
-              profileUser={profileUser}
-              category={placesCategory as PLACE_CATEGORY}
-              sortPlace={sortPlace as PLACE_SORT}
-              filter={filterPlace}
-            />
-          </div>
-        </div>
-      </Container>
-
-      <CountryStats />
-    </div>
+      <Grid item xs={3}></Grid>
+    </Grid>
   );
 }
 

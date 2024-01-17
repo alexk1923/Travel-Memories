@@ -5,16 +5,22 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import UserProvider from "./contexts/UserContext";
-import { PlaceProvider } from "./contexts/PlaceContext";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
+
 root.render(
   <React.StrictMode>
     <UserProvider>
       <BrowserRouter>
-        <App />
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </StyledEngineProvider>
       </BrowserRouter>
     </UserProvider>
   </React.StrictMode>,

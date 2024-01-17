@@ -2,12 +2,15 @@
 import React, { useState } from "react";
 import { FaWindowClose, FaUpload } from "react-icons/fa";
 import LocationForm from "./LocationForm";
-import FormInput from "./FormInput";
+import { styled } from "@mui/material/styles";
 import { DEFAULT_COUNTRY } from "../constants";
 import ModalWrapper from "./ModalWrapper";
-import Button from "./Button";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 import { PlaceType } from "./Place";
+import { Button, Fab, Input, TextField } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CustomButton from "./CustomButton";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface ModalProps {
   onCloseFn: () => void;
@@ -80,6 +83,18 @@ const AddPlaceModal: React.FC<ModalProps> = ({ onCloseFn }) => {
     onCloseFn();
   };
 
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
   return (
     <form className="flex flex-col gap-4 ">
       <label>Location</label>
@@ -90,43 +105,41 @@ const AddPlaceModal: React.FC<ModalProps> = ({ onCloseFn }) => {
         setCurrentCountry={setCurrentCountry}
       />
 
-      <FormInput
-        label={"Name"}
-        htmlFor={"placeName"}
-        type={"text"}
-        placeholder={"The place you have visited"}
-        name={"placeName"}
-        errorMessage={"The input cannot be empty"}
+      <TextField
+        id="standard-basic"
+        label="Place name"
+        variant="standard"
         value={name}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setName(e.target.value)
         }
       />
+
       <div className="mb-4">
-        <label
-          htmlFor="photo"
-          className="text-gray-700 mb-1 block text-sm font-medium"
-        >
-          Upload Photo
-        </label>
         <div className="flex items-center space-x-2">
-          <label htmlFor="upload" className="cursor-pointer">
-            <FaUpload className="text-primary" />
-          </label>
-          <input
-            type="file"
-            id="upload"
-            name="upload"
-            accept="image/*"
-            onChange={handleUploadPhoto}
-            className="hidden"
-          />
+          <Fab color="primary" className="bg-primary">
+            <label htmlFor="upload" className="cursor-pointer">
+              <CloudUploadIcon />
+            </label>
+            <input
+              type="file"
+              id="upload"
+              name="upload"
+              accept="image/*"
+              onChange={handleUploadPhoto}
+              className="hidden"
+            />
+          </Fab>
           {photo && <span className="text-gray-700">{photo.name}</span>}
         </div>
       </div>
       {error !== "" && <span className="text-red">{error}</span>}
       <div className="flex justify-end">
-        <Button variant="filled" onClick={handleSubmit} text="Save"></Button>
+        <CustomButton
+          variant="filled"
+          onClick={handleSubmit}
+          text="Save"
+        ></CustomButton>
       </div>
     </form>
   );

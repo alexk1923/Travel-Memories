@@ -9,9 +9,11 @@ import FilterForm, {
   PLACE_SORT,
 } from "../components/FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
-import Button from "../components/Button";
+import Button from "../components/CustomButton";
 import ModalComponent from "../components/AddPlaceModal";
-import Container from "../components/Container";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import NavSidebar from "../components/NavSidebar";
+import CountryStats from "../components/CountryStats";
 
 function Feed() {
   const { user } = useUserContext();
@@ -30,51 +32,63 @@ function Feed() {
   }, [currentCity, currentCountry]);
 
   return (
-    <Container>
-      {openModal && (
-        <ModalComponent
-          onCloseFn={() => setOpenModal(false)}
-          title="ADD A NEW PLACE"
-        />
-      )}
-      <div className="mt-4 max-h-[90%] overflow-y-scroll rounded-lg shadow-lg">
-        <div className="flex flex-col border-b-4 border-b-slate-200 bg-pure-white text-center">
-          <h1 className="font-bold text-primary">EXPLORE</h1>
-        </div>
-        <div className="flex flex-col items-center bg-pure-white">
-          <div className="flex w-full flex-col pl-8">
-            <FilterForm
-              category={{ page: "Feed" }}
-              {...{ sortPlace, setSortPlace }}
-            />
-            <LocationForm
-              setCurrentCountry={setCurrentCountry}
-              setCurrentCity={setCurrentCity}
-              currentCity={currentCity}
-              currentCountry={currentCountry}
-            />
+    <Stack flexDirection={"row"} alignItems="start">
+      <NavSidebar />
+      <Container maxWidth="lg" component="main">
+        {openModal && (
+          <ModalComponent
+            onCloseFn={() => setOpenModal(false)}
+            title="ADD A NEW PLACE"
+          />
+        )}
+
+        <Box bgcolor={"secondary.light"}>
+          <div className="flex flex-col border-b-4 border-b-slate-200  text-center">
+            <Typography variant="h1" color="primary">
+              EXPLORE
+            </Typography>
           </div>
 
-          <div className="mt-4 flex items-center justify-center gap-4">
-            <span>Don't find what you are looking for?</span>
-            <Button
-              text={"ADD NEW PLACE"}
-              variant={"filled"}
-              onClick={() => setOpenModal(true)}
-            />
-          </div>
+          <Stack alignItems="center">
+            <Stack width="100%">
+              <FilterForm
+                category={{ page: "Feed" }}
+                {...{ sortPlace, setSortPlace }}
+              />
+              <LocationForm
+                setCurrentCountry={setCurrentCountry}
+                setCurrentCity={setCurrentCity}
+                currentCity={currentCity}
+                currentCountry={currentCountry}
+              />
+            </Stack>
 
-          <div className="flex w-full justify-center">
+            <Stack
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography variant="body1">
+                Don't find what you are looking for?
+              </Typography>
+              <Button
+                text={"ADD NEW PLACE"}
+                variant={"filled"}
+                onClick={() => setOpenModal(true)}
+              />
+            </Stack>
+
             <Places
               profileUser={user.username}
               category={PLACE_CATEGORY.ALL_PLACES}
               sortPlace={sortPlace as PLACE_SORT}
               filter={filterPlace}
             />
-          </div>
-        </div>
-      </div>
-    </Container>
+          </Stack>
+        </Box>
+      </Container>
+      <CountryStats />
+    </Stack>
   );
 }
 

@@ -35,6 +35,7 @@ export default function FormInput(props: FormInputProps) {
           />
         )}
       </label>
+
       <input
         {...inputProps}
         required

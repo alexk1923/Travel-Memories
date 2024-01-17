@@ -3,7 +3,7 @@ import { CircleFlag } from "react-circle-flags";
 
 const Profile = () => {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-lg bg-pure-white p-4 font-bold shadow-md">
+    <div className="flex flex-1 flex-col items-center gap-2 rounded-lg bg-pure-white p-4 font-bold shadow-md">
       <CircleFlag countryCode="es" width="40" />
       <div className="text-body-2 flex flex-col gap-2">
         <div>

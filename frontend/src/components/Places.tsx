@@ -5,6 +5,8 @@ import { RatingType, usePlaceContext } from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
 import { PLACE_CATEGORY, PLACE_SORT, PLACE_FILTER } from "./FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
+import { Box, Stack } from "@mui/material";
+import SideComments from "./SideComments";
 
 type PlacesPropsType = {
   profileUser: string | undefined;
@@ -94,14 +96,24 @@ export default function Places({
   }
 
   return (
-    <div className="rounded-xlg flex flex-col gap-2 text-black lg:grid lg:grid-cols-3">
+    <Stack>
       {state.places
         .filter(filterByLocation)
         .filter(filterByCategory)
         .sort(applySort)
         .map((place) => {
-          return <MemoizedPlace {...place} key={place._id} />;
+          return (
+            <Stack
+              flexDirection="row"
+              justifyContent="center"
+              padding={4}
+              gap={{ xs: 4 }}
+            >
+              <MemoizedPlace {...place} key={place._id} />
+              <SideComments placeId={place._id} />
+            </Stack>
+          );
         })}
-    </div>
+    </Stack>
   );
 }

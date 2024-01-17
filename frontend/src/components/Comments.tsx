@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CommentaryType } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
+import { Stack } from "@mui/material";
 
 type CommentProps = {
   placeId: string;
@@ -81,7 +82,7 @@ export default function Comments(props: CommentProps) {
   }
 
   return (
-    <div className="flex flex-col">
+    <Stack>
       <textarea
         className="text-black"
         value={newComment}
@@ -111,6 +112,6 @@ export default function Comments(props: CommentProps) {
             </div>
           ))}
       </div>
-    </div>
+    </Stack>
   );
 }

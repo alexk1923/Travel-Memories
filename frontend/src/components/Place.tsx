@@ -17,7 +17,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import Rating from "./Rating";
 import { useNavigate } from "react-router-dom";
 import { CircleFlag } from "react-circle-flags";
-import Button from "./Button";
+import Button from "./CustomButton";
+import {
+  Avatar,
+  Box,
+  Container,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { Image } from "@mui/icons-material";
 
 export type PlaceType = {
   _id: string;
@@ -139,9 +148,14 @@ export default function Place(props: PlaceType) {
   }
 
   return (
-    <div className="flex w-full flex-col items-center rounded-lg bg-pure-white font-bold drop-shadow-lg md:my-5 md:flex-1 lg:pb-5">
+    <Stack flex={2} className="rounded-lg shadow-lg">
+      <Stack direction="row" alignItems="center" bgcolor="yellow">
+        <Avatar alt={addedBy} src={`/img/users/${addedBy}.jpg`} />
+        <Typography>{addedBy}</Typography>
+      </Stack>
+
       <div
-        className="relative flex w-full justify-center self-center"
+        className="relative flex w-full max-w-full justify-center self-center"
         onMouseEnter={() => setHoverPlace(true)}
         onMouseLeave={() => setHoverPlace(false)}
       >
@@ -168,12 +182,15 @@ export default function Place(props: PlaceType) {
             No image found
           </div>
         ) : (
-          <img src={imageURL} alt={name} className="aspect-square" />
+          <img src={imageURL} alt={name} className="aspect-square w-full" />
         )}
 
         <div className="absolute flex w-full items-center justify-between">
           <div className="w-fit ps-2">
-            <CircleFlag countryCode={isoCode} width="40" />
+            <CircleFlag
+              countryCode={isoCode}
+              className="w-[20px]  md:w-[40px]"
+            />
           </div>
           <div className="text-body-1 rounded-bl-lg bg-white px-4 py-2">
             {ratings.length > 0 ? avg : "0.00"}
@@ -186,6 +203,7 @@ export default function Place(props: PlaceType) {
       </div>
 
       <div className="flex max-w-full flex-col items-center justify-center">
+        <Divider light />
         <span className="text-body-1">{name}</span>
 
         <span className="text-body-2 inline">
@@ -256,7 +274,7 @@ export default function Place(props: PlaceType) {
           />
         </div>
       </div>
-    </div>
+    </Stack>
   );
 }
 

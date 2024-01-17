@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import FormInput from "./FormInput";
-import Button from "./Button";
+import Button from "./CustomButton";
 import { NavLink } from "react-router-dom";
 import {
   FormType,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { DEFAULT_COUNTRY } from "../constants";
+import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 
 type CountryType = {
   iso: string;
@@ -56,43 +57,43 @@ export default function Location(props: LocationPropsType) {
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 text-primary">
-      <select
+    <FormControl className="w-fit min-w-[25%] max-w-full gap-4">
+      <InputLabel id="country-label">Country</InputLabel>
+      <Select
+        label="Country"
+        labelId="country-label"
         onChange={(e) => {
           setCurrentCountry(e.target.value);
           fetchCities(e.target.value);
         }}
         value={currentCountry}
-        className="form-element w-full lg:w-fit lg:max-w-full"
       >
-        <option value="Worldwide" className="form-element input-white">
-          🌏 Worldwide
-        </option>
+        <MenuItem value={DEFAULT_COUNTRY}>🌏 Worldwide</MenuItem>
+
         {countries.map((country) => (
-          <React.Fragment key={uuid()}>
-            <option
-              value={country.country}
-              className="form-element input-white"
-            >
-              {country.country}
-            </option>
-          </React.Fragment>
+          <MenuItem key={uuid()} value={country.country}>
+            {country.country}
+          </MenuItem>
         ))}
-      </select>
+      </Select>
       {currentCountry !== DEFAULT_COUNTRY && (
-        <select
-          onChange={(e) => setCurrentCity(e.target.value)}
-          value={currentCity}
-          className="form-element overflow-hidden text-ellipsis"
-        >
-          <option value="">-</option>
-          {cities.map((city: { name: string }) => (
-            <React.Fragment key={uuid()}>
-              <option value={city.name}>{city.name}</option>
-            </React.Fragment>
-          ))}
-        </select>
+        <FormControl>
+          <InputLabel id="city-label">City</InputLabel>
+          <Select
+            label="City"
+            labelId="city-label"
+            onChange={(e) => setCurrentCity(e.target.value)}
+            value={currentCity}
+          >
+            <MenuItem value="">-</MenuItem>
+            {cities.map((city: { name: string }) => (
+              <MenuItem key={uuid()} value={city.name}>
+                {city.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       )}
-    </div>
+    </FormControl>
   );
 }

@@ -192,7 +192,7 @@
   }
 
   .form-element {
-    @apply rounded-lg bg-light-gray p-2 text-primary outline-none
+    @apply rounded-lg bg-light-gray text-primary outline-none
        outline-offset-0;
   }
 
