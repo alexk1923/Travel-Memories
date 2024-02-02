@@ -1,18 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
-import { PlaceType } from "../components/Place";
+import { UserType } from "../constants";
 
 type UserProps = {
   children: React.ReactNode;
-};
-
-export type UserType = {
-  id: string;
-  username: string;
-  email: string;
-  token: string;
-  profilePhoto: string;
-  places: PlaceType[];
-  favoritePlaces: string[];
 };
 
 type ContextValue = {

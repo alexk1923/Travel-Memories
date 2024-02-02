@@ -5,8 +5,8 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { PlaceType } from "../components/Place";
 import { useUserContext } from "./UserContext";
+import { PlaceType } from "../constants";
 
 type ReducerType = {
   state: PlaceState;

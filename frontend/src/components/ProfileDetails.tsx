@@ -1,7 +1,6 @@
 import React from "react";
-import { UserType } from "../contexts/UserContext";
 import defaultUser from "../img/users/defaultUser.svg";
-import { PLACE_CATEGORY } from "../constants";
+import { PLACE_CATEGORY, UserType } from "../constants";
 import {
   Accordion,
   AccordionSummary,

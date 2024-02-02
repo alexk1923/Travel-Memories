@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const PlaceDisplay = () => {
   const [displayType, setDisplayType] = useState<string>("Cards");
   return (
     <div>
-      {" "}
       <select
         value={displayType}
         onChange={(e) => setDisplayType(e.target.value)}

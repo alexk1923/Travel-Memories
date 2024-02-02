@@ -1,4 +1,5 @@
-import { UserType, useUserContext } from "../contexts/UserContext";
+import { UserType } from "../constants";
+import { useUserContext } from "../contexts/UserContext";
 
 export const useLogout = () => {
   const { setUser } = useUserContext();

@@ -5,8 +5,7 @@ import about1 from "../img/about1.png";
 import about2 from "../img/about2.png";
 
 import Navbar from "../components/Navbar";
-import Button from "../components/CustomButton";
-import Place, { PlaceType } from "../components/Place";
+import Place from "../components/Place";
 import Divider from "../components/CustomDivider";
 import Form from "../components/Form";
 import Footer from "../components/Footer";
@@ -16,7 +15,9 @@ import {
   InputValuesLogin,
   InputValuesRegister,
   NAVBAR_VARIANT,
+  PlaceType,
 } from "../constants";
+import { Button } from "@mui/material";
 
 export default function LandingPage() {
   const [demoPlaces, setDemoPlaces] = useState<PlaceType[]>([] as PlaceType[]);
@@ -93,7 +94,9 @@ export default function LandingPage() {
             Get new travel ideas and connect with people all over the world to
             take a look at their journey
           </h3>
-          <Button text="EXPLORE" variant="filled" onClick={handleExplore} />
+          <Button variant="contained" onClick={handleExplore}>
+            EXPLORE
+          </Button>
         </div>
       </div>
 
@@ -112,7 +115,9 @@ export default function LandingPage() {
             <Place {...place} />
           ))}
         </div>
-        <Button text={"DISCOVER MORE"} variant={"filled"} onClick={undefined} />
+        <Button variant="contained" onClick={undefined}>
+          DISCOVER MORE
+        </Button>
       </div>
 
       <Divider />

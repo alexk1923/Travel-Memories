@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import SocialWrapper from "./SocialWrapper";
-import Place, { PlaceType } from "../components/Place";
+import Place from "../components/Place";
 import { useParams } from "react-router-dom";
 import NotFound from "./NotFound";
 import Comments from "../components/Comments";
 import { usePlaceContext } from "../contexts/PlaceContext";
+import { PlaceType } from "../constants";
 
 type PlaceDetailsProps = {
   placeId: string;

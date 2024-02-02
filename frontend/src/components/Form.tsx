@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
 import FormInput from "./FormInput";
-import Button from "./CustomButton";
 import { NavLink } from "react-router-dom";
 import {
   FormType,
@@ -9,6 +8,7 @@ import {
   InputValuesRegister,
 } from "../constants";
 import { useLogin } from "../hooks/useLogin";
+import { Button } from "@mui/material";
 
 interface InputErrorInterface {
   emailInput: boolean;
@@ -134,11 +134,7 @@ export default function Form(props: FormProps) {
           )}
 
           {renderTypeMessage()}
-          <Button
-            variant="filled"
-            text={submitMessage}
-            onClick={handleFormSubmit}
-          />
+          <Button variant="contained">{submitMessage}</Button>
           <span className="flex justify-center text-red ">{error.err}</span>
         </form>
       </div>

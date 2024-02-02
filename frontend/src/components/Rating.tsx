@@ -50,7 +50,7 @@ export default function Rating(props: RatingProps) {
   }
 
   return (
-    <div className="rating" onMouseLeave={() => setColored(defaultRating)}>
+    <div className="w-fit" onMouseLeave={() => setColored(defaultRating)}>
       {[...colored].map((e, i) => (
         <span
           key={i}
@@ -69,8 +69,6 @@ export default function Rating(props: RatingProps) {
           )}
         </span>
       ))}
-
-      <br></br>
     </div>
   );
 }

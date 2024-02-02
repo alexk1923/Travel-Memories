@@ -17,30 +17,17 @@ import React, { useCallback, useEffect, useState } from "react";
 import Rating from "./Rating";
 import { useNavigate } from "react-router-dom";
 import { CircleFlag } from "react-circle-flags";
-import Button from "./CustomButton";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Divider,
   Stack,
   Typography,
 } from "@mui/material";
-import { Image } from "@mui/icons-material";
-
-export type PlaceType = {
-  _id: string;
-  name: string;
-  country: string;
-  city: string;
-  imageURL: string;
-  likes: number;
-  favorite: number;
-  visitors: string[];
-  addedBy: string;
-  likedBy: string[];
-  ratings: RatingType[];
-};
+import StarIcon from "@mui/icons-material/Star";
+import { PlaceType, UserType } from "../constants";
 
 export default function Place(props: PlaceType) {
   const { user } = useUserContext();
@@ -65,6 +52,7 @@ export default function Place(props: PlaceType) {
   const [hoverPlace, setHoverPlace] = useState(false);
   const { state } = usePlaceContext();
   const [isoCode, setIsoCode] = useState("?");
+  const [addedByUsername, setAddedByUsername] = useState<string>("");
 
   useEffect(() => {
     const newAvg =
@@ -147,11 +135,40 @@ export default function Place(props: PlaceType) {
     });
   }
 
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/user/${addedBy}`, {
+      method: "GET",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return {} as UserType;
+        }
+      })
+      .then((data: UserType) => {
+        console.log(data);
+        setAddedByUsername(data.username);
+      });
+  }, []);
+
   return (
-    <Stack flex={2} className="rounded-lg shadow-lg">
-      <Stack direction="row" alignItems="center" bgcolor="yellow">
+    <Stack flex={1} className="rounded-lg shadow-lg">
+      <Stack
+        direction="row"
+        alignItems="center"
+        bgcolor="primary.dark"
+        color="secondary.main"
+        spacing={2}
+        paddingX={1}
+        paddingY={2}
+        className="rounded-t-lg shadow-lg"
+        onClick={() => navigate(`/user/${addedBy}`)}
+      >
         <Avatar alt={addedBy} src={`/img/users/${addedBy}.jpg`} />
-        <Typography>{addedBy}</Typography>
+        <Typography variant="body1" fontWeight="bold">
+          {addedBy}
+        </Typography>
       </Stack>
 
       <div
@@ -185,24 +202,45 @@ export default function Place(props: PlaceType) {
           <img src={imageURL} alt={name} className="aspect-square w-full" />
         )}
 
-        <div className="absolute flex w-full items-center justify-between">
-          <div className="w-fit ps-2">
+        <Stack
+          flexDirection="row"
+          position="absolute"
+          justifyContent="space-between"
+          className="w-full"
+          alignItems="center"
+        >
+          <Box paddingLeft={2} width="fit-content">
             <CircleFlag
               countryCode={isoCode}
-              className="w-[20px]  md:w-[40px]"
+              className="h-[20px] w-[20px] md:h-[50px] md:w-[50px]"
             />
-          </div>
-          <div className="text-body-1 rounded-bl-lg bg-white px-4 py-2">
-            {ratings.length > 0 ? avg : "0.00"}
-          </div>
-        </div>
+          </Box>
+          <Box className="rounded-bl-lg" bgcolor={"secondary.main"} padding={2}>
+            <Stack direction="row">
+              <Typography fontWeight="bold" variant="h5" color="primary.dark">
+                {ratings.length > 0 ? avg : "0.00"}
+                <StarIcon />
+              </Typography>
+            </Stack>
+          </Box>
+        </Stack>
 
-        <div className="text-star absolute bottom-0 z-50 flex  w-full justify-center bg-gradient-to-t from-black">
-          <Rating ratings={ratings} placeId={_id} userId={user.id} />
-        </div>
+        <Stack
+          flexDirection="row"
+          justifyContent="center"
+          position="absolute"
+          bottom={0}
+          zIndex={2}
+          className="bg-gradient-to-t from-black"
+          width="100%"
+        >
+          <Typography variant="h4" component="div">
+            <Rating ratings={ratings} placeId={_id} userId={user.id} />
+          </Typography>
+        </Stack>
       </div>
 
-      <div className="flex max-w-full flex-col items-center justify-center">
+      <Stack maxWidth="100%" alignItems="center" justifyContent="center">
         <Divider light />
         <span className="text-body-1">{name}</span>
 
@@ -249,7 +287,7 @@ export default function Place(props: PlaceType) {
           </span>
         </div>
 
-        <div className="mt-4 flex flex-col gap-2">
+        <Stack gap={2} padding={2}>
           {user.id && addedBy !== user.id && (
             <div className="flex justify-center gap-2">
               <span>
@@ -267,13 +305,11 @@ export default function Place(props: PlaceType) {
               />
             </div>
           )}
-          <Button
-            text="Details"
-            variant="filled"
-            onClick={() => navigate(`/place/${_id}`)}
-          />
-        </div>
-      </div>
+          <Button variant="contained" onClick={() => navigate(`/place/${_id}`)}>
+            Details
+          </Button>
+        </Stack>
+      </Stack>
     </Stack>
   );
 }

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { MemoizedPlace, PlaceType } from "./Place";
+import { MemoizedPlace } from "./Place";
 import { useUserContext } from "../contexts/UserContext";
 import { RatingType, usePlaceContext } from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
 import { PLACE_CATEGORY, PLACE_SORT, PLACE_FILTER } from "./FilterForm";
-import { DEFAULT_COUNTRY } from "../constants";
-import { Box, Stack } from "@mui/material";
+import { DEFAULT_COUNTRY, PlaceType } from "../constants";
+import { Box, Divider, Stack } from "@mui/material";
 import SideComments from "./SideComments";
 
 type PlacesPropsType = {
@@ -110,6 +110,7 @@ export default function Places({
               gap={{ xs: 4 }}
             >
               <MemoizedPlace {...place} key={place._id} />
+              <Divider orientation="vertical" variant="middle" flexItem />
               <SideComments placeId={place._id} />
             </Stack>
           );

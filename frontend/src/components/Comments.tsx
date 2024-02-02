@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { CommentaryType } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
-import { Stack } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Stack,
+  TextareaAutosize,
+  Typography,
+  createTheme,
+} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import { lime, purple } from "@mui/material/colors";
 
 type CommentProps = {
   placeId: string;
@@ -81,37 +91,69 @@ export default function Comments(props: CommentProps) {
     return `${date.getDate()}-${date.getMonth()} ${date.getFullYear()}, ${date.getHours()}:${date.getMinutes()}`;
   }
 
+  const theme = createTheme({
+    palette: {
+      primary: lime,
+      secondary: purple,
+    },
+  });
+
   return (
-    <Stack>
-      <textarea
-        className="text-black"
-        value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
-        placeholder="Write a review or a question about the place"
-      ></textarea>
-      <button className="bg-blue-500" onClick={handlePostNewComment}>
-        Post
-      </button>
-      <div className="text-red-900">
-        {commentaries
-          .sort(
-            (commentPostA, commentPostB) =>
-              Number(commentPostB.datePosted) - Number(commentPostA.datePosted),
-          )
-          .map((commentPost) => (
-            <div className="mb-5 bg-slate-300" key={commentPost._id}>
-              <img
-                alt="user"
-                src={require(`../img/users/${commentPost.user.profilePhoto}`)}
-                width={50}
-                height={50}
-              />
-              <p>{commentPost.user.username}</p>
-              <p>{commentPost.commentMsg}</p>
-              <p>{`Posted at: ${formatDate(commentPost.datePosted)}`}</p>
-            </div>
-          ))}
-      </div>
+    <Stack spacing={4} padding={2}>
+      {commentaries
+        .sort(
+          (commentPostA, commentPostB) =>
+            Number(commentPostB.datePosted) - Number(commentPostA.datePosted),
+        )
+        .map((commentPost) => (
+          <Box key={commentPost._id}>
+            <Stack flexDirection="row" gap={4} alignItems="center">
+              <Stack>
+                <Avatar
+                  alt={commentPost.user.username}
+                  src={`../img/users/${commentPost.user.profilePhoto}`}
+                />
+                <Typography variant="body1">
+                  {commentPost.user.username}
+                </Typography>
+              </Stack>
+              <Stack
+                bgcolor="secondary.main"
+                className="rounded-lg"
+                padding={2}
+              >
+                <Typography>{commentPost.commentMsg}</Typography>
+                <Typography>{`Posted at: ${formatDate(
+                  commentPost.datePosted,
+                )}`}</Typography>
+              </Stack>
+            </Stack>
+          </Box>
+        ))}
+
+      <Stack flexDirection="row" position="relative" gap={1}>
+        <Avatar alt={user.username} src={`../img/users/${user.profilePhoto}`} />
+        <Stack width="100%">
+          <textarea
+            aria-label="empty textarea"
+            className=" rounded-lg p-4 text-black"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add your comment."
+            rows={4}
+          />
+          <Box alignSelf="flex-end" position="absolute" bottom="0">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handlePostNewComment}
+              className="m-2"
+            >
+              Post
+            </Button>
+          </Box>
+        </Stack>
+      </Stack>
     </Stack>
   );
 }

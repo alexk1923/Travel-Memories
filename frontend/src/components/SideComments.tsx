@@ -5,7 +5,7 @@ import { Stack, Typography } from "@mui/material";
 
 const SideComments = (props: { placeId: string }) => {
   return (
-    <Stack bgcolor={"red"} flex={1}>
+    <Stack flex={1}>
       <Typography variant="h4">Latest comments</Typography>
       <Comments placeId={props.placeId} />
     </Stack>

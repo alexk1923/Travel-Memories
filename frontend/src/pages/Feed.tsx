@@ -9,9 +9,8 @@ import FilterForm, {
   PLACE_SORT,
 } from "../components/FilterForm";
 import { DEFAULT_COUNTRY } from "../constants";
-import Button from "../components/CustomButton";
 import ModalComponent from "../components/AddPlaceModal";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import NavSidebar from "../components/NavSidebar";
 import CountryStats from "../components/CountryStats";
 
@@ -71,11 +70,9 @@ function Feed() {
               <Typography variant="body1">
                 Don't find what you are looking for?
               </Typography>
-              <Button
-                text={"ADD NEW PLACE"}
-                variant={"filled"}
-                onClick={() => setOpenModal(true)}
-              />
+              <Button variant="contained" onClick={() => setOpenModal(true)}>
+                ADD NEW PLACE
+              </Button>
             </Stack>
 
             <Places

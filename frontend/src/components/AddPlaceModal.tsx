@@ -1,16 +1,12 @@
 // Modal.tsx
 import React, { useState } from "react";
-import { FaWindowClose, FaUpload } from "react-icons/fa";
 import LocationForm from "./LocationForm";
 import { styled } from "@mui/material/styles";
-import { DEFAULT_COUNTRY } from "../constants";
+import { DEFAULT_COUNTRY, PlaceType } from "../constants";
 import ModalWrapper from "./ModalWrapper";
 import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
-import { PlaceType } from "./Place";
 import { Button, Fab, Input, TextField } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CustomButton from "./CustomButton";
-import EditIcon from "@mui/icons-material/Edit";
 
 interface ModalProps {
   onCloseFn: () => void;
@@ -135,11 +131,9 @@ const AddPlaceModal: React.FC<ModalProps> = ({ onCloseFn }) => {
       </div>
       {error !== "" && <span className="text-red">{error}</span>}
       <div className="flex justify-end">
-        <CustomButton
-          variant="filled"
-          onClick={handleSubmit}
-          text="Save"
-        ></CustomButton>
+        <Button variant="contained" onClick={handleSubmit}>
+          Save
+        </Button>
       </div>
     </form>
   );
