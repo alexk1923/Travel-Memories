@@ -20,7 +20,7 @@ const ModalWrapper: React.FC<ModalProps> = ({ children, title, onCloseFn }) => {
         <div className="flex w-full items-center justify-between bg-primary px-4 py-4 text-center font-semibold text-white">
           <span className="flex-grow">{title}</span>{" "}
           <span onClick={onCloseFn} className="cursor-pointer">
-            X
+            Xaa
           </span>
         </div>
         <div className="p-8 text-black">{children}</div>

@@ -99,7 +99,11 @@ export default function Register() {
   return (
     <>
       <div className="flex h-screen flex-col bg-[url(./img/waves-bg.png)] bg-cover bg-center">
-        <Navbar variant={NAVBAR_VARIANT.SOLID} />
+        <Navbar
+          itemsRef={null}
+          variant={NAVBAR_VARIANT.SOLID}
+          handleMenuSelect={null}
+        />
         <div className="flex w-full items-center justify-center">
           <Form
             inputs={inputs}

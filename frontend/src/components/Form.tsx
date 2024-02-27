@@ -102,16 +102,16 @@ export default function Form(props: FormProps) {
   }
 
   return (
-    <div className="relative mt-4 flex flex-col items-center justify-center rounded-lg bg-pure-white px-16 py-16 text-primary shadow-lg ">
+    <div className="relative mx-4 my-4 flex max-w-full flex-col items-center justify-center rounded-lg bg-pure-white px-16 py-16 text-primary shadow-lg">
       <div className="absolute left-0 top-0 flex w-full justify-around bg-primary py-4 font-bold text-white ">
         <span>LOGIN</span>
-        <span className="absolute right-2">X</span>
+        <span className="absolute right-4">X</span>
       </div>
 
-      <div className="mt-4">
-        <h2 className="py-4  font-bold">{title}</h2>
+      <div className="w-full">
+        <h2 className="py-4 font-bold">{title}</h2>
         <form
-          className="flex max-w-[100%] flex-col gap-4 font-semibold text-primary"
+          className="flex w-full flex-col gap-4 font-semibold text-primary"
           onSubmit={handleFormSubmit}
         >
           {inputs.map((inputData) => (
@@ -123,12 +123,12 @@ export default function Form(props: FormProps) {
             />
           ))}
           {textArea !== "" && (
-            <div className="flex w-[100%] flex-col gap-2 ">
+            <div className="flex w-full flex-col gap-2 ">
               <label htmlFor="textarea font">Message</label>
 
               <textarea
                 {...textAreaData}
-                className="mb-2 max-w-[100%] resize-none rounded-md border-transparent bg-white p-2 outline-offset-0"
+                className="mb-2 max-w-full resize-none rounded-md border-transparent bg-white p-2 outline-offset-0"
               ></textarea>
             </div>
           )}

@@ -21,7 +21,7 @@ export default function FormInput(props: FormInputProps) {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
-    <div className="mb-2 flex flex-col justify-center gap-2 text-left lg:w-[100%]">
+    <div className="mb-2 flex flex-col justify-center gap-2 text-left lg:w-[100%] ">
       <label htmlFor={htmlFor} className="relative">
         {label}
         {inputProps.name === "passwordInput" && (
@@ -47,7 +47,7 @@ export default function FormInput(props: FormInputProps) {
             : inputProps.type
         }
         className={
-          `form-element peer w-full  placeholder:text-slate-500 focus-visible:outline ` +
+          `form-element peer w-full border-transparent p-2 placeholder:text-slate-500 ` +
           (props.value !== "" && error
             ? "outline outline-rose-600"
             : "focus-visible:outline-primary ")

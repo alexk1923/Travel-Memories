@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import about1 from "../img/about1.png";
-import about2 from "../img/about2.png";
 
 import Navbar from "../components/Navbar";
 import Place from "../components/Place";
@@ -17,7 +15,8 @@ import {
   NAVBAR_VARIANT,
   PlaceType,
 } from "../constants";
-import { Button } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import Description from "../components/Description";
 
 export default function LandingPage() {
   const [demoPlaces, setDemoPlaces] = useState<PlaceType[]>([] as PlaceType[]);
@@ -68,15 +67,26 @@ export default function LandingPage() {
     },
   ];
 
-  const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(inputs);
-  };
-
   const [inputValues, setInputValues] = useState<InputValuesContact>({
     nameInput: "",
     emailInput: "",
     textAreaInput: "",
   });
+
+  const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(inputs);
+  };
+
+  const itemsRef = useRef<{ [key: string]: HTMLElement } | null>({});
+
+  const handleMenuSelect = (page: string) => {
+    console.log("page is: " + page);
+
+    if (itemsRef && itemsRef.current) {
+      console.log(itemsRef.current);
+      itemsRef.current[page].scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="h-screen w-full">
@@ -84,17 +94,26 @@ export default function LandingPage() {
         className="flex h-[50%] w-full flex-col justify-stretch bg-[url('./img/landing-bg.png')] bg-cover
 		bg-center text-white md:h-screen"
       >
-        <Navbar variant={NAVBAR_VARIANT.TRANSPARENT} />
+        <Navbar
+          itemsRef={itemsRef}
+          handleMenuSelect={handleMenuSelect}
+          variant={NAVBAR_VARIANT.TRANSPARENT}
+        />
 
         <div className="mx-auto my-auto flex flex-col items-center justify-center gap-4 text-center md:max-w-[50%]">
-          <h1 className="font-bold drop-shadow-lg">
+          <Typography component="h1" variant="h4">
             MOST EXCITING PLACES TO VISIT
-          </h1>
-          <h3 className="font-semibold drop-shadow-lg">
+          </Typography>
+          <Typography component="h3" variant="h6">
             Get new travel ideas and connect with people all over the world to
             take a look at their journey
-          </h3>
-          <Button variant="contained" onClick={handleExplore}>
+          </Typography>
+          <Button
+            variant="outlined"
+            size="large"
+            color="secondary"
+            onClick={handleExplore}
+          >
             EXPLORE
           </Button>
         </div>
@@ -110,9 +129,9 @@ export default function LandingPage() {
         <h3 className=" font-semibold drop-shadow-lg">
           Find the perfect place for your next travel
         </h3>
-        <div className="flex max-w-full flex-nowrap justify-center gap-5 overflow-auto  text-black md:flex-wrap">
+        <div className="flex max-w-full flex-nowrap gap-4 overflow-auto text-black">
           {demoPlaces.map((place) => (
-            <Place {...place} />
+            <Place key={place._id} {...place} />
           ))}
         </div>
         <Button variant="contained" onClick={undefined}>
@@ -122,63 +141,37 @@ export default function LandingPage() {
 
       <Divider />
 
-      <section className="flex flex-col items-center justify-center gap-4 text-center lg:mx-[20%]">
-        <h2 className="font-bold drop-shadow-lg">
-          Different people, same passion
-        </h2>
-        <div className="flex items-start justify-between">
-          <img
-            src={about1}
-            className="max-w-[50%]"
-            alt="two people looking at a sunrise"
-          />
-          <div className="ps-8 text-start">
-            <h3 className="font-bold text-primary ">
-              A network meant to connect
-            </h3>
-            <p className="text-body-1">
-              To gether, we'll explore new horizons, learn from one another, and
-              build bridges that connect us across the continents. Because no
-              matter where you're from, the desire to explore and connect with
-              the world is a universal language we all share.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start justify-between">
-          <div className="flex-1 pe-8 ps-2 text-start lg:ps-0">
-            <h3 className="font-bold text-primary ">Track your journey</h3>
-            <p className="text-body-1">
-              Our platform is designed to offer an intuitive and organized way
-              for you to easily track the places you've visited. Create a plan
-              for your future adventures by exploring and saving desired
-              experiences within your personal profile to access them whenever
-              you need.
-            </p>
-          </div>
-          <div className="flex-1">
-            <img
-              src={about2}
-              className="h-full object-cover"
-              alt="person holding a map"
-            />
-          </div>
-        </div>
-
-        <span className="text-body-1 font-semibold italic text-primary">
-          Learn more {">"}
-        </span>
-      </section>
+      <Box
+        component="section"
+        ref={(el: HTMLElement) => {
+          itemsRef.current = { ...itemsRef.current, about: el };
+        }}
+      >
+        <Stack
+          alignItems="center"
+          justifyContent="center"
+          maxWidth="1280px"
+          component="section"
+          marginX="auto"
+        >
+          <Description />
+        </Stack>
+      </Box>
 
       <Divider />
 
-      <section className="flex flex-col items-center gap-4 bg-waves-bg bg-cover bg-center lg:h-screen lg:flex-row lg:px-[20%]">
+      <section
+        className="flex flex-col items-center gap-4 bg-waves-bg bg-cover bg-center lg:h-screen lg:flex-row lg:px-[20%]"
+        ref={(el: HTMLElement) => {
+          itemsRef.current = { ...itemsRef.current, contact: el };
+        }}
+      >
         <div className="ms-8">
           <h3 className="mt-4 font-bold text-primary lg:mt-0">GET IN TOUCH</h3>
-          <p className="text-body-1">
+          <Typography variant="body1">
             Still have questions? Send us a message and our response will come
             as quickly as possible
-          </p>
+          </Typography>
         </div>
         <Form
           inputs={inputs}

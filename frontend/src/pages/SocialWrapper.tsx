@@ -10,7 +10,11 @@ interface SocialWrapperProps {
 export default function SocialWrapper(props: SocialWrapperProps) {
   return (
     <div className="flex flex-col">
-      <Navbar variant={NAVBAR_VARIANT.SOLID} />
+      <Navbar
+        itemsRef={null}
+        variant={NAVBAR_VARIANT.SOLID}
+        handleMenuSelect={null}
+      />
       <div className="min-h-screen w-full bg-[url(./img/waves-bg.png)] bg-cover bg-center">
         <props.WrappedComponent></props.WrappedComponent>
       </div>

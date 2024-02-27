@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import navbarLogo from "../img/logo/default-monochrome.svg";
 import { useNavigate } from "react-router-dom";
 import { FaAlignJustify } from "react-icons/fa";
@@ -27,23 +27,20 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import ProfileDropdown from "./ProfileDropdown";
 
 type NavbarProps = {
   variant: NAVBAR_VARIANT;
+  itemsRef: React.MutableRefObject<{
+    [key: string]: HTMLElement;
+  } | null> | null;
+  handleMenuSelect: ((page: string) => void) | null;
 };
 
 export default function Navbar(props: NavbarProps) {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1024);
 
   const { user } = useUserContext();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,9 +55,10 @@ export default function Navbar(props: NavbarProps) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   const logout = useLogout();
   const navigate = useNavigate();
-  const { variant } = props;
+  const { variant, itemsRef, handleMenuSelect } = props;
   const variantToStyle = {
     [NAVBAR_VARIANT.TRANSPARENT]: "bg-black/[.1]  backdrop-blur",
     [NAVBAR_VARIANT.SOLID]: "bg-primary",
@@ -88,7 +86,7 @@ export default function Navbar(props: NavbarProps) {
     setAnchorElUser(null);
   };
 
-  const pages = ["Products", "Pricing", "Blog"];
+  const pages = ["About", "Contact"];
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -149,8 +147,16 @@ export default function Navbar(props: NavbarProps) {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                {pages.map((page, idx) => (
+                  <MenuItem
+                    key={page}
+                    onClick={() => {
+                      if (handleMenuSelect !== null) {
+                        handleMenuSelect(page.toLowerCase());
+                        handleCloseNavMenu();
+                      }
+                    }}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
@@ -167,170 +173,30 @@ export default function Navbar(props: NavbarProps) {
             </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
+              {pages.map((page, idx) => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => {
+                    if (handleMenuSelect !== null) {
+                      handleMenuSelect(page.toLowerCase());
+                    }
+                  }}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {page}
                 </Button>
               ))}
             </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-              }}
-            >
-              <Tooltip title="Account settings">
-                <>
-                  <IconButton
-                    onClick={handleClick}
-                    size="small"
-                    sx={{ ml: 2 }}
-                    aria-controls={open ? "account-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                  >
-                    <Avatar
-                      alt={user.username}
-                      src={`/img/users/${user.profilePhoto}.jpg`}
-                    />
-                  </IconButton>
-                  <Typography className="text-pure-white">
-                    {user.username}
-                  </Typography>
-                </>
-              </Tooltip>
-            </Box>
-            <Menu
-              anchorEl={anchorEl}
-              id="account-menu"
-              open={open}
-              onClose={handleClose}
-              onClick={handleClose}
-              transformOrigin={{ horizontal: "right", vertical: "top" }}
-              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            >
-              <MenuItem onClick={() => navigate(`/user/${user.username}`)}>
-                <Avatar /> My profile
-              </MenuItem>
-              <Divider />
-              <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                  <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
-              <MenuItem onClick={logout}>
-                <ListItemIcon>
-                  <Logout fontSize="small" />
-                </ListItemIcon>
-                Logout
-              </MenuItem>
-            </Menu>
+            {user.username ? (
+              <ProfileDropdown />
+            ) : (
+              <Button color="inherit" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
     </>
-
-    // <nav className={"flex w-full text-white " + variantToStyle[variant]}>
-    //   <div className="flex w-screen items-center justify-between gap-4 px-8 py-4 lg:justify-between lg:px-[20%] ">
-    // <img
-    //   src={navbarLogo}
-    //   alt="logo"
-    //   className="max-w-[50%] cursor-pointer md:max-w-[25%] lg:max-w-[25%]"
-    //   onClick={() => navigate("/")}
-    // />
-
-    //     {user.username && (
-    //       <React.Fragment>
-    //         <Box
-    //           sx={{
-    //             display: "flex",
-    //             alignItems: "center",
-    //             textAlign: "center",
-    //           }}
-    //         >
-    //           <Tooltip title="Account settings">
-    //             <>
-    //               <IconButton
-    //                 onClick={handleClick}
-    //                 size="small"
-    //                 sx={{ ml: 2 }}
-    //                 aria-controls={open ? "account-menu" : undefined}
-    //                 aria-haspopup="true"
-    //                 aria-expanded={open ? "true" : undefined}
-    //               >
-    //                 <Avatar
-    //                   alt={user.username}
-    //                   src={`/img/users/${user.profilePhoto}.jpg`}
-    //                 />
-    //               </IconButton>
-    //               <Typography className="text-pure-white">
-    //                 {user.username}
-    //               </Typography>
-    //             </>
-    //           </Tooltip>
-    //         </Box>
-    //         <Menu
-    //           anchorEl={anchorEl}
-    //           id="account-menu"
-    //           open={open}
-    //           onClose={handleClose}
-    //           onClick={handleClose}
-    //           PaperProps={{
-    //             elevation: 0,
-    //             sx: {
-    //               overflow: "visible",
-    //               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-    //               mt: 1.5,
-    //               "& .MuiAvatar-root": {
-    //                 width: 32,
-    //                 height: 32,
-    //                 ml: -0.5,
-    //                 mr: 1,
-    //               },
-    //               "&::before": {
-    //                 content: '""',
-    //                 display: "block",
-    //                 position: "absolute",
-    //                 top: 0,
-    //                 right: 14,
-    //                 width: 10,
-    //                 height: 10,
-    //                 bgcolor: "background.paper",
-    //                 transform: "translateY(-50%) rotate(45deg)",
-    //                 zIndex: 0,
-    //               },
-    //             },
-    //           }}
-    //           transformOrigin={{ horizontal: "right", vertical: "top" }}
-    //           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-    //         >
-    //           <MenuItem onClick={() => navigate(`/user/${user.username}`)}>
-    //             <Avatar /> My profile
-    //           </MenuItem>
-    //           <Divider />
-    //           <MenuItem onClick={handleClose}>
-    //             <ListItemIcon>
-    //               <Settings fontSize="small" />
-    //             </ListItemIcon>
-    //             Settings
-    //           </MenuItem>
-    //           <MenuItem onClick={logout}>
-    //             <ListItemIcon>
-    //               <Logout fontSize="small" />
-    //             </ListItemIcon>
-    //             Logout
-    //           </MenuItem>
-    //         </Menu>
-    //       </React.Fragment>
-    //     )}
-    //   </div>
-    // </nav>
   );
 }

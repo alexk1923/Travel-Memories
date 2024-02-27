@@ -103,12 +103,7 @@ export default function Places({
         .sort(applySort)
         .map((place) => {
           return (
-            <Stack
-              flexDirection="row"
-              justifyContent="center"
-              padding={4}
-              gap={{ xs: 4 }}
-            >
+            <Stack flexDirection="row" gap={{ xs: 4 }}>
               <MemoizedPlace {...place} key={place._id} />
               <Divider orientation="vertical" variant="middle" flexItem />
               <SideComments placeId={place._id} />

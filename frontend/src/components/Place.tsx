@@ -135,25 +135,28 @@ export default function Place(props: PlaceType) {
     });
   }
 
-  useEffect(() => {
-    fetch(`http://localhost:8000/api/user/${addedBy}`, {
-      method: "GET",
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          return {} as UserType;
-        }
-      })
-      .then((data: UserType) => {
-        console.log(data);
-        setAddedByUsername(data.username);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:8000/api/user/${addedBy}`, {
+  //     method: "GET",
+  //   })
+  //     .then((res) => {
+  //       if (res.ok) {
+  //         return res.json();
+  //       } else {
+  //         return {} as UserType;
+  //       }
+  //     })
+  //     .then((data: UserType) => {
+  //       console.log(data);
+  //       setAddedByUsername(data.username);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   return (
-    <Stack flex={1} className="rounded-lg shadow-lg">
+    <Stack className="mb-4 min-w-[300px] flex-1 rounded-lg bg-yellow-400">
       <Stack
         direction="row"
         alignItems="center"
@@ -162,7 +165,7 @@ export default function Place(props: PlaceType) {
         spacing={2}
         paddingX={1}
         paddingY={2}
-        className="rounded-t-lg shadow-lg"
+        className="rounded-t-lg shadow-lg "
         onClick={() => navigate(`/user/${addedBy}`)}
       >
         <Avatar alt={addedBy} src={`/img/users/${addedBy}.jpg`} />
@@ -199,7 +202,7 @@ export default function Place(props: PlaceType) {
             No image found
           </div>
         ) : (
-          <img src={imageURL} alt={name} className="aspect-square w-full" />
+          <img src={imageURL} alt={name} className="aspect-square w-full " />
         )}
 
         <Stack
