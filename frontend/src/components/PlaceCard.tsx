@@ -156,11 +156,16 @@ export default function Place(props: PlaceType) {
   // }, []);
 
   return (
-    <Stack className="mb-4 min-w-[300px] flex-1 rounded-lg bg-yellow-400">
+    <Stack
+      mb={4}
+      flex={1}
+      className="rounded-lg  lg:min-w-[300px]"
+      bgcolor="secondary.dark"
+    >
       <Stack
         direction="row"
         alignItems="center"
-        bgcolor="primary.dark"
+        bgcolor="primary.main"
         color="secondary.main"
         spacing={2}
         paddingX={1}

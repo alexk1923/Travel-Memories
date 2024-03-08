@@ -9,7 +9,16 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import {
+  Bookmark,
+  ExpandLess,
+  ExpandMore,
+  FolderSpecial,
+  Forum,
+  Notifications,
+  People,
+  StarBorder,
+} from "@mui/icons-material";
 
 const NavSidebar = () => {
   const [open, setOpen] = React.useState(true);
@@ -33,22 +42,21 @@ const NavSidebar = () => {
       >
         <ListItemButton>
           <ListItemIcon>
-            <HomeIcon />
+            <People />
           </ListItemIcon>
-          <ListItemText primary="Sent mail" />
+          <ListItemText primary="Friends" />
         </ListItemButton>
         <ListItemButton>
           <ListItemIcon>
-            <HomeIcon />
+            <Bookmark />
           </ListItemIcon>
-          <ListItemText primary="Drafts" />
+          <ListItemText primary="Saved" />
         </ListItemButton>
         <ListItemButton onClick={handleClick}>
           <ListItemIcon>
-            <HomeIcon />
+            <Forum />
           </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          <ListItemText primary="Messages" />
         </ListItemButton>
       </List>
     </Box>

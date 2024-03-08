@@ -8,7 +8,7 @@ import {
   InputValuesRegister,
 } from "../constants";
 import { useLogin } from "../hooks/useLogin";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 interface InputErrorInterface {
   emailInput: boolean;
@@ -29,7 +29,7 @@ interface FormProps {
       InputValuesLogin | InputValuesRegister | InputValuesContact
     >
   >;
-  handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => any;
+  handleFormSubmit: (e: React.FormEvent<any>) => any;
 }
 
 export default function Form(props: FormProps) {
@@ -103,10 +103,13 @@ export default function Form(props: FormProps) {
 
   return (
     <div className="relative mx-4 my-4 flex max-w-full flex-col items-center justify-center rounded-lg bg-pure-white px-16 py-16 text-primary shadow-lg">
-      <div className="absolute left-0 top-0 flex w-full justify-around bg-primary py-4 font-bold text-white ">
+      <Box
+        className="absolute left-0 top-0 flex w-full justify-around py-4 font-bold text-white"
+        bgcolor="primary.main"
+      >
         <span>LOGIN</span>
         <span className="absolute right-4">X</span>
-      </div>
+      </Box>
 
       <div className="w-full">
         <h2 className="py-4 font-bold">{title}</h2>
@@ -134,7 +137,9 @@ export default function Form(props: FormProps) {
           )}
 
           {renderTypeMessage()}
-          <Button variant="contained">{submitMessage}</Button>
+          <Button onClick={handleFormSubmit} variant="contained">
+            {submitMessage}
+          </Button>
           <span className="flex justify-center text-red ">{error.err}</span>
         </form>
       </div>

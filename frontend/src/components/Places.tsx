@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { MemoizedPlace } from "./Place";
+import { MemoizedPlace } from "./PlaceCard";
 import { useUserContext } from "../contexts/UserContext";
 import { RatingType, usePlaceContext } from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
@@ -96,20 +96,24 @@ export default function Places({
   }
 
   return (
-    <Stack>
+    <>
       {state.places
         .filter(filterByLocation)
         .filter(filterByCategory)
         .sort(applySort)
         .map((place) => {
           return (
-            <Stack flexDirection="row" gap={{ xs: 4 }}>
+            <Stack
+              gap={{ md: 4 }}
+              className="md:flex-row"
+              justifyContent="center"
+            >
               <MemoizedPlace {...place} key={place._id} />
               <Divider orientation="vertical" variant="middle" flexItem />
               <SideComments placeId={place._id} />
             </Stack>
           );
         })}
-    </Stack>
+    </>
   );
 }

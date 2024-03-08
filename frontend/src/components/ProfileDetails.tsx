@@ -11,8 +11,21 @@ import {
   ListItemButton,
   ListItemText,
   Box,
+  Stack,
+  ListItemIcon,
+  ListSubheader,
+  Divider,
+  Avatar,
+  IconButton,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { People, Bookmark, Forum } from "@mui/icons-material";
+import MapIcon from "@mui/icons-material/Map";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import PlaceIcon from "@mui/icons-material/Place";
+
 type ProfileDetailsType = {
   user: UserType;
   category: {
@@ -24,68 +37,148 @@ type ProfileDetailsType = {
 
 const ProfileDetails = ({ user, category }: ProfileDetailsType) => {
   const menuTitles = [
-    { title: "NETWORK", itemList: [{ name: "Friends Posts" }] },
+    { title: "NETWORK", itemList: [{ name: "FRIENDS POSTS" }] },
     {
       title: "MY PLACES",
       itemList: [
-        { name: "Posted", value: PLACE_CATEGORY.MY_PLACES },
-        { name: "Liked", value: PLACE_CATEGORY.LIKED_PLACES },
-        { name: "Favorites", value: PLACE_CATEGORY.FAVORITE_PLACES },
+        { name: "POSTED", value: PLACE_CATEGORY.MY_PLACES },
+        { name: "LIKED", value: PLACE_CATEGORY.LIKED_PLACES },
+        { name: "FAVORITES", value: PLACE_CATEGORY.FAVORITE_PLACES },
       ],
     },
-    { title: "MY JOURNEY", itemList: [{ name: "Map" }, { name: "Journey" }] },
+    { title: "MY JOURNEY", itemList: [{ name: "MAP" }, { name: "JOURNEY" }] },
   ];
+
+  const selectCategory = (newCategory: PLACE_CATEGORY) => {
+    if (newCategory && category && category.setPlacesCategory)
+      category.setPlacesCategory(newCategory);
+  };
+
   return (
-    <div className="text-body-2 mt-4 flex flex-1 flex-col ">
-      {menuTitles.map((menuTitle) => (
-        <>
-          <Accordion className="text-white">
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-              className="bg-primary text-white"
-            >
-              <Typography>{menuTitle.title}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <List>
-                <Box
-                  sx={{
-                    width: "100%",
-                    maxWidth: 360,
-                    bgcolor: "background.paper",
-                  }}
-                >
-                  {menuTitle.itemList.map((item) => (
-                    <ListItem disablePadding>
-                      <ListItemButton
-                        onClick={() => {
-                          if (
-                            item &&
-                            "value" in item &&
-                            item?.value &&
-                            category &&
-                            category.setPlacesCategory
-                          )
-                            category.setPlacesCategory(item.value);
-                        }}
-                      >
-                        <ListItemText className=" text-primary">
-                          <Typography className="font-semibold">
-                            {item.name}
-                          </Typography>
-                        </ListItemText>
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </Box>
-              </List>
-            </AccordionDetails>
-          </Accordion>
-        </>
-      ))}
-    </div>
+    <Box component="aside">
+      <Stack direction="row" alignItems="center">
+        <IconButton size="medium">
+          <Avatar
+            alt={user.username}
+            src={`/img/users/${user.profilePhoto}.jpg`}
+          />
+        </IconButton>
+        <Stack>
+          <Typography color="primary.dark" fontWeight="bold">
+            {user.username}
+          </Typography>
+          <Typography color="primary.light">@{user.username}</Typography>
+        </Stack>
+      </Stack>
+
+      <List
+        sx={{
+          marginTop: 2,
+        }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader
+            component="div"
+            id="nested-list-subheader"
+          ></ListSubheader>
+        }
+      >
+        <ListItemButton>
+          <ListItemIcon>
+            <People />
+          </ListItemIcon>
+          <ListItemText primary="Friends Posts" />
+        </ListItemButton>
+
+        <Divider />
+
+        <ListItemButton
+          onClick={() => selectCategory(PLACE_CATEGORY.MY_PLACES)}
+        >
+          <ListItemIcon>
+            <PlaceIcon />
+          </ListItemIcon>
+          <ListItemText primary="Posted" />
+        </ListItemButton>
+
+        <ListItemButton
+          onClick={() => selectCategory(PLACE_CATEGORY.LIKED_PLACES)}
+        >
+          <ListItemIcon>
+            <ThumbUpIcon />
+          </ListItemIcon>
+          <ListItemText primary="Liked" />
+        </ListItemButton>
+
+        <ListItemButton
+          onClick={() => selectCategory(PLACE_CATEGORY.FAVORITE_PLACES)}
+        >
+          <ListItemIcon>
+            <FavoriteIcon />
+          </ListItemIcon>
+          <ListItemText primary="Favorites" />
+        </ListItemButton>
+
+        <Divider />
+
+        <ListItemButton onClick={() => {}}>
+          <ListItemIcon>
+            <MapIcon />
+          </ListItemIcon>
+          <ListItemText primary="Map" />
+        </ListItemButton>
+
+        <ListItemButton onClick={() => {}}>
+          <ListItemIcon>
+            <TravelExploreIcon />
+          </ListItemIcon>
+          <ListItemText primary="Journey" />
+        </ListItemButton>
+      </List>
+    </Box>
+
+    // <Stack mt={2} spacing={2} ml={2}>
+    //   {menuTitles.map((menuTitle) => (
+    //     <Stack spacing={2}>
+    //       <Stack>
+    //         <Typography color="primary.main" className="font-semibold">
+    //           {menuTitle.title}
+    //         </Typography>
+
+    //         <List>
+    //           <Box
+    //             sx={{
+    //               width: "100%",
+    //               maxWidth: 360,
+    //             }}
+    //           >
+    //             {menuTitle.itemList.map((item) => (
+    //               <ListItem disablePadding>
+    //                 <ListItemButton
+    //                   onClick={() => {
+    //                     if (
+    //                       item &&
+    //                       "value" in item &&
+    //                       item?.value &&
+    //                       category &&
+    //                       category.setPlacesCategory
+    //                     )
+    //                       category.setPlacesCategory(item.value);
+    //                   }}
+    //                 >
+    //                   <ListItemText className="text-primary">
+    //                     <Typography>{item.name}</Typography>
+    //                   </ListItemText>
+    //                 </ListItemButton>
+    //               </ListItem>
+    //             ))}
+    //           </Box>
+    //         </List>
+    //       </Stack>
+    //     </Stack>
+    //   ))}
+    // </Stack>
   );
 };
 

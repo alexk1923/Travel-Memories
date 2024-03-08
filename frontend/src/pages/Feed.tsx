@@ -31,7 +31,7 @@ function Feed() {
   }, [currentCity, currentCountry]);
 
   return (
-    <Stack flexDirection={"row"} alignItems="start">
+    <Stack flexDirection={"row"} alignItems="start" marginTop="2rem">
       <NavSidebar />
       <Container maxWidth="lg" component="main">
         {openModal && (
@@ -41,48 +41,43 @@ function Feed() {
           />
         )}
 
-        <Box bgcolor={"secondary.light"}>
-          <div className="flex flex-col border-b-4 border-b-slate-200  text-center">
-            <Typography variant="h1" color="primary">
-              EXPLORE
-            </Typography>
-          </div>
-
-          <Stack alignItems="center">
-            <Stack width="100%">
-              <FilterForm
-                category={{ page: "Feed" }}
-                {...{ sortPlace, setSortPlace }}
-              />
-              <LocationForm
-                setCurrentCountry={setCurrentCountry}
-                setCurrentCity={setCurrentCity}
-                currentCity={currentCity}
-                currentCountry={currentCountry}
-              />
-            </Stack>
-
-            <Stack
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Typography variant="body1">
-                Don't find what you are looking for?
-              </Typography>
-              <Button variant="contained" onClick={() => setOpenModal(true)}>
-                ADD NEW PLACE
-              </Button>
-            </Stack>
-
-            <Places
-              profileUser={user.username}
-              category={PLACE_CATEGORY.ALL_PLACES}
-              sortPlace={sortPlace as PLACE_SORT}
-              filter={filterPlace}
+        <Stack
+          alignItems="center"
+          gap="2rem"
+          padding="2rem"
+          bgcolor={"secondary.light"}
+          width="100%"
+          className="shadow-md"
+        >
+          <Stack width="100%" marginTop="2rem">
+            <FilterForm
+              category={{ page: "Feed" }}
+              {...{ sortPlace, setSortPlace }}
+            />
+            <LocationForm
+              setCurrentCountry={setCurrentCountry}
+              setCurrentCity={setCurrentCity}
+              currentCity={currentCity}
+              currentCountry={currentCountry}
             />
           </Stack>
-        </Box>
+
+          <Stack alignSelf="flex-start">
+            <Typography variant="body1">
+              Don't find what you are looking for?
+            </Typography>
+            <Button variant="contained" onClick={() => setOpenModal(true)}>
+              ADD NEW PLACE
+            </Button>
+          </Stack>
+
+          <Places
+            profileUser={user.username}
+            category={PLACE_CATEGORY.ALL_PLACES}
+            sortPlace={sortPlace as PLACE_SORT}
+            filter={filterPlace}
+          />
+        </Stack>
       </Container>
       <CountryStats />
     </Stack>

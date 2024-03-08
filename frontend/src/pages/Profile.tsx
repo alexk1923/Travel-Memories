@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
-import { useLogout } from "../hooks/useLogout";
 
 import Places from "../components/Places";
 import SocialWrapper from "./SocialWrapper";
@@ -18,7 +17,15 @@ import CountryStats from "../components/CountryStats";
 import ProfileDetails from "../components/ProfileDetails";
 import SortingForm from "../components/SortingForm";
 import { useTheme } from "@mui/material/styles";
-import { Container, Grid, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import RecommendedFriends from "../components/RecommendedFriends";
 
 function Profile() {
   const { profileUser } = useParams();
@@ -42,52 +49,63 @@ function Profile() {
 
   useEffect(() => {}, []);
 
+  // const window = () => Window();
+
   return (
-    <Grid container>
-      <Grid item xs={3}>
-        <ProfileDetails
-          user={user}
-          category={{
-            page: "Profile",
-            placesCategory,
-            setPlacesCategory,
-          }}
-        />
-      </Grid>
+    <Stack direction="row" justifyContent="space-between" mt={2}>
+      <ProfileDetails
+        user={user}
+        category={{
+          page: "Profile",
+          placesCategory,
+          setPlacesCategory,
+        }}
+      />
 
-      <Grid item xs={6}>
-        <Container component="main">
-          <h1 className="text-center font-bold text-primary">
-            {PlaceCategoryMap[placesCategory]}
-          </h1>
+      <Box component="main">
+        <Container>
+          <Stack justifyContent="center" alignItems="center">
+            <Stack width="80%" gap={4}>
+              <Typography
+                component="h1"
+                className="font-bold "
+                color="primary.main"
+                variant="h5"
+              >
+                {PlaceCategoryMap[placesCategory]}
+              </Typography>
+              <Stack gap={4}>
+                <SortingForm
+                  sortPlace={sortPlace}
+                  setSortPlace={setSortPlace}
+                />
+                <LocationForm
+                  {...{
+                    currentCity,
+                    setCurrentCity,
+                    currentCountry,
+                    setCurrentCountry,
+                  }}
+                />
+              </Stack>
 
-          <div className="flex w-full flex-col">
-            <div className="flex w-full flex-col">
-              <SortingForm sortPlace={sortPlace} setSortPlace={setSortPlace} />
-              <LocationForm
-                {...{
-                  currentCity,
-                  setCurrentCity,
-                  currentCountry,
-                  setCurrentCountry,
-                }}
-              />
-            </div>
-
-            <div className="flex w-full justify-center">
-              <Places
-                profileUser={profileUser}
-                category={placesCategory as PLACE_CATEGORY}
-                sortPlace={sortPlace as PLACE_SORT}
-                filter={filterPlace}
-              />
-            </div>
-          </div>
+              <Stack justifyContent="center">
+                <Places
+                  profileUser={profileUser}
+                  category={placesCategory as PLACE_CATEGORY}
+                  sortPlace={sortPlace as PLACE_SORT}
+                  filter={filterPlace}
+                />
+              </Stack>
+            </Stack>
+          </Stack>
         </Container>
-      </Grid>
+      </Box>
 
-      <Grid item xs={3}></Grid>
-    </Grid>
+      <Box component="aside" maxWidth="20%">
+        <RecommendedFriends />
+      </Box>
+    </Stack>
   );
 }
 

@@ -47,9 +47,6 @@ export default function Login() {
 
   useEffect(() => {
     // This effect runs when the error state changes
-    console.log("Am avut o eroare bai");
-    console.log(error);
-
     if (error) {
       // reset form fields
       setInputValues((prevInputValues) => ({
@@ -59,9 +56,7 @@ export default function Login() {
     }
   }, [error]); // This effect depends on the error state
 
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  async function handleLogin() {
     console.log(inputValues);
     await login({
       email: inputValues.emailInput,

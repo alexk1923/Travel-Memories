@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import Navbar from "../components/Navbar";
-import Place from "../components/Place";
+import Place from "../components/PlaceCard";
 import Divider from "../components/CustomDivider";
 import Form from "../components/Form";
 import Footer from "../components/Footer";

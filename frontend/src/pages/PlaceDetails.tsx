@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SocialWrapper from "./SocialWrapper";
-import Place from "../components/Place";
+import Place from "../components/PlaceCard";
 import { useParams } from "react-router-dom";
 import NotFound from "./NotFound";
 import Comments from "../components/Comments";
