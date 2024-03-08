@@ -5,7 +5,7 @@ import express from "express"
 const router = express.Router();
 
 router.get("/user/:username", auth, getUserData);
-router.get("/user/id/:userId", auth, getUserDataById);
+router.get("/user/:userId", auth, getUserDataById);
 router.patch("/user/:userId", auth, updateUser);
 
 
