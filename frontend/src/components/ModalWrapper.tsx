@@ -1,4 +1,5 @@
 // Modal.tsx
+import { Box } from "@mui/material";
 import React, { ReactNode } from "react";
 import { FaWindowClose } from "react-icons/fa";
 
@@ -23,7 +24,9 @@ const ModalWrapper: React.FC<ModalProps> = ({ children, title, onCloseFn }) => {
             X
           </span>
         </div>
-        <div className="p-8 text-black">{children}</div>
+        <Box px={8} py={4}>
+          {children}
+        </Box>
       </div>
     </div>
   );

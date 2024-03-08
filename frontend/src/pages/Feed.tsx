@@ -32,15 +32,7 @@ function Feed() {
 
   return (
     <Stack flexDirection={"row"} alignItems="start" marginTop="2rem">
-      <NavSidebar />
       <Container maxWidth="lg" component="main">
-        {openModal && (
-          <ModalComponent
-            onCloseFn={() => setOpenModal(false)}
-            title="ADD A NEW PLACE"
-          />
-        )}
-
         <Stack
           alignItems="center"
           gap="2rem"
@@ -62,15 +54,6 @@ function Feed() {
             />
           </Stack>
 
-          <Stack alignSelf="flex-start">
-            <Typography variant="body1">
-              Don't find what you are looking for?
-            </Typography>
-            <Button variant="contained" onClick={() => setOpenModal(true)}>
-              ADD NEW PLACE
-            </Button>
-          </Stack>
-
           <Places
             profileUser={user.username}
             category={PLACE_CATEGORY.ALL_PLACES}
@@ -79,7 +62,6 @@ function Feed() {
           />
         </Stack>
       </Container>
-      <CountryStats />
     </Stack>
   );
 }

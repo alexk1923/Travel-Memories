@@ -172,9 +172,17 @@ export default function Place(props: PlaceType) {
         paddingY={2}
         className="rounded-t-lg shadow-lg "
         onClick={() => navigate(`/user/${addedBy}`)}
+        textOverflow="ellipsis"
+        overflow="hidden"
+        white-space="nowrap"
       >
         <Avatar alt={addedBy} src={`/img/users/${addedBy}.jpg`} />
-        <Typography variant="body1" fontWeight="bold">
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          textOverflow="ellipsis"
+          overflow="hidden"
+        >
           {addedBy}
         </Typography>
       </Stack>

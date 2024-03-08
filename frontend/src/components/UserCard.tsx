@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, Paper, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 type UserCardPropsType = {
@@ -17,26 +17,28 @@ const UserCard = (props: UserCardPropsType) => {
   };
 
   return (
-    <Stack
-      alignItems="center"
-      overflow="hidden"
-      textOverflow="ellipsis"
-      paddingY={4}
-      bgcolor="primary.light"
-      whiteSpace="nowrap"
-      className="rounded-lg"
-    >
-      <Avatar src={imageStr} sizes="medium"></Avatar>
-
-      <Typography variant="body2">{username}</Typography>
-
-      <Button
-        onClick={handleAddFriend}
-        variant={addedSuccess ? "outlined" : "contained"}
+    <Paper elevation={3}>
+      <Stack
+        alignItems="center"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        paddingY={4}
+        bgcolor="secondary.main"
+        whiteSpace="nowrap"
+        className="rounded-lg shadow-md"
       >
-        {addedSuccess ? "Request Sent" : "Add Friend"}
-      </Button>
-    </Stack>
+        <Avatar src={imageStr} sizes="medium"></Avatar>
+
+        <Typography variant="body2">{username}</Typography>
+
+        <Button
+          onClick={handleAddFriend}
+          variant={addedSuccess ? "outlined" : "contained"}
+        >
+          {addedSuccess ? "Request Sent" : "Add Friend"}
+        </Button>
+      </Stack>
+    </Paper>
   );
 };
 

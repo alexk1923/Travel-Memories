@@ -109,7 +109,12 @@ export default function Places({
               justifyContent="center"
             >
               <MemoizedPlace {...place} key={place._id} />
-              <Divider orientation="vertical" variant="middle" flexItem />
+              <Divider
+                orientation="vertical"
+                variant="middle"
+                flexItem
+                sx={{ display: { xs: "none", md: "block" } }}
+              />
               <SideComments placeId={place._id} />
             </Stack>
           );

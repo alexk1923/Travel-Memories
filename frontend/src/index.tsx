@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import UserProvider from "./contexts/UserContext";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material";
 import { theme } from "./theme";
+import PlaceCategoryProvider from "./contexts/PlaceCategoryContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -18,7 +19,9 @@ root.render(
       <BrowserRouter>
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
-            <App />
+            <PlaceCategoryProvider>
+              <App />
+            </PlaceCategoryProvider>
           </ThemeProvider>
         </StyledEngineProvider>
       </BrowserRouter>

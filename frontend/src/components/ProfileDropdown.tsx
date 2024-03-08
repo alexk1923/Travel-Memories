@@ -49,8 +49,9 @@ const ProfileDropdown = () => {
         alignItems: "center",
         textAlign: "center",
       }}
+      pr={2}
     >
-      <Tooltip title="Account settings">
+      <Tooltip title="Account">
         <>
           <IconButton
             onClick={handleClick}

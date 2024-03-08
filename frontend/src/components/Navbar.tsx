@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import navbarLogo from "../img/logo/default-monochrome.svg";
 import { useNavigate } from "react-router-dom";
 import { FaAlignJustify } from "react-icons/fa";
-import { NAVBAR_VARIANT } from "../constants";
+import { NAVBAR_VARIANT, PLACE_CATEGORY } from "../constants";
 import { useUserContext } from "../contexts/UserContext";
 import { useLogout } from "../hooks/useLogout";
 import React from "react";
@@ -22,12 +22,16 @@ import {
   Toolbar,
   Button,
   Stack,
+  Drawer,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import ProfileDropdown from "./ProfileDropdown";
+import NavSidebar from "./NavSidebar";
+import ProfileDetails from "./ProfileDetails";
+import { usePlaceCategoryContext } from "../contexts/PlaceCategoryContext";
 
 type NavbarProps = {
   variant: NAVBAR_VARIANT;
@@ -39,8 +43,14 @@ type NavbarProps = {
 
 export default function Navbar(props: NavbarProps) {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1024);
+  const { placesCategory, setPlacesCategory } = usePlaceCategoryContext();
 
   const { user } = useUserContext();
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpenDrawer(newOpen);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -87,7 +97,6 @@ export default function Navbar(props: NavbarProps) {
   };
 
   const pages = ["About", "Contact"];
-  const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor:
@@ -99,103 +108,114 @@ export default function Navbar(props: NavbarProps) {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }));
-
   return (
     <>
       <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Stack sx={{ display: { xs: "none", md: "block" } }}>
-              <Item>
-                <img
-                  width={200}
-                  src={navbarLogo}
-                  alt="logo"
-                  className="mr-2 cursor-pointer"
-                  onClick={() => navigate("/")}
-                />
-              </Item>
-            </Stack>
-            <Box></Box>
+        <Toolbar
+          disableGutters
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "space-between" },
+            marginX: { lg: 2 },
+          }}
+        >
+          {/* Small screen drawer menu */}
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={toggleDrawer(true)}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
+            <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
+              <ProfileDetails
+                user={user}
+                category={{
+                  page: "Profile",
+                  placesCategory,
+                  setPlacesCategory,
                 }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
+                closeDrawer={() => {
+                  setOpenDrawer(false);
                 }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                }}
-              >
-                {pages.map((page, idx) => (
-                  <MenuItem
-                    key={page}
-                    onClick={() => {
-                      if (handleMenuSelect !== null) {
-                        handleMenuSelect(page.toLowerCase());
-                        handleCloseNavMenu();
-                      }
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <Box sx={{ display: { xs: "block", md: "none" } }}>
+              />
+            </Drawer>
+
+            {/* <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: "block", md: "none" },
+              }}
+            >
+              {pages.map((page, idx) => (
+                <MenuItem
+                  key={page}
+                  onClick={() => {
+                    if (handleMenuSelect !== null) {
+                      handleMenuSelect(page.toLowerCase());
+                      handleCloseNavMenu();
+                    }
+                  }}
+                >
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu> */}
+          </Box>
+
+          <Box sx={{ flex: { xs: 1, lg: "0 1 auto" } }}>
+            <Item>
               <img
-                width={200}
+                width={150}
                 src={navbarLogo}
                 alt="logo"
                 className="mr-2 cursor-pointer"
                 onClick={() => navigate("/")}
               />
-            </Box>
-
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page, idx) => (
-                <Button
-                  key={page}
-                  onClick={() => {
-                    if (handleMenuSelect !== null) {
-                      handleMenuSelect(page.toLowerCase());
-                    }
-                  }}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
-            {user.username ? (
-              <ProfileDropdown />
-            ) : (
-              <Button color="inherit" onClick={() => navigate("/login")}>
-                Login
+            </Item>
+          </Box>
+          {/* Large screen size menu */}
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((page, idx) => (
+              <Button
+                key={page}
+                onClick={() => {
+                  if (handleMenuSelect !== null) {
+                    handleMenuSelect(page.toLowerCase());
+                  }
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                {page}
               </Button>
-            )}
-          </Toolbar>
-        </Container>
+            ))}
+          </Box>
+
+          {user.username ? (
+            <ProfileDropdown />
+          ) : (
+            <Button color="inherit" onClick={() => navigate("/login")}>
+              Login
+            </Button>
+          )}
+        </Toolbar>
       </AppBar>
     </>
   );

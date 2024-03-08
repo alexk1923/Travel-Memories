@@ -17,9 +17,11 @@ import {
 } from "../constants";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Description from "../components/Description";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const [demoPlaces, setDemoPlaces] = useState<PlaceType[]>([] as PlaceType[]);
+  const navigate = useNavigate();
   const trendingRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     AOS.init();
@@ -134,7 +136,7 @@ export default function LandingPage() {
             <Place key={place._id} {...place} />
           ))}
         </div>
-        <Button variant="contained" onClick={undefined}>
+        <Button variant="contained" onClick={() => navigate("/register")}>
           DISCOVER MORE
         </Button>
       </div>
