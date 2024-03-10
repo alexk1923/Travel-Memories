@@ -1,37 +1,23 @@
-import { useEffect, useRef, useState } from "react";
-import navbarLogo from "../img/logo/default-monochrome.svg";
-import { useNavigate } from "react-router-dom";
-import { FaAlignJustify } from "react-icons/fa";
-import { NAVBAR_VARIANT, PLACE_CATEGORY } from "../constants";
-import { useUserContext } from "../contexts/UserContext";
-import { useLogout } from "../hooks/useLogout";
-import React from "react";
-import { PersonAdd, Settings, Logout } from "@mui/icons-material";
-import {
-  Box,
-  Typography,
-  Tooltip,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  Divider,
-  AppBar,
-  Container,
-  Toolbar,
-  Button,
-  Stack,
-  Drawer,
-} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import AdbIcon from "@mui/icons-material/Adb";
+import {
+  AppBar,
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  Toolbar,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import ProfileDropdown from "./ProfileDropdown";
-import NavSidebar from "./NavSidebar";
-import ProfileDetails from "./ProfileDetails";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { NAVBAR_VARIANT, PLACE_CATEGORY } from "../constants";
 import { usePlaceCategoryContext } from "../contexts/PlaceCategoryContext";
+import { useUserContext } from "../contexts/UserContext";
+import { useLogout } from "../hooks/useLogout";
+import navbarLogo from "../img/logo/default-monochrome.svg";
+import ProfileDetails from "./ProfileDetails";
+import ProfileDropdown from "./ProfileDropdown";
 
 type NavbarProps = {
   variant: NAVBAR_VARIANT;
@@ -135,11 +121,6 @@ export default function Navbar(props: NavbarProps) {
             <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
               <ProfileDetails
                 user={user}
-                category={{
-                  page: "Profile",
-                  placesCategory,
-                  setPlacesCategory,
-                }}
                 closeDrawer={() => {
                   setOpenDrawer(false);
                 }}
@@ -187,7 +168,10 @@ export default function Navbar(props: NavbarProps) {
                 src={navbarLogo}
                 alt="logo"
                 className="mr-2 cursor-pointer"
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  setPlacesCategory(PLACE_CATEGORY.ALL_PLACES);
+                  navigate("/");
+                }}
               />
             </Item>
           </Box>

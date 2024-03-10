@@ -18,7 +18,16 @@ interface InputErrorInterface {
 }
 
 interface FormProps {
-  inputs: any[];
+  inputs: {
+    key: number;
+    label: string;
+    htmlFor: string;
+    type: string;
+    name: string;
+    autoComplete?: string;
+    placeholder: string;
+    errorMessage: string;
+  }[];
   title: string;
   submitMessage: string;
   textArea: string;
@@ -79,7 +88,7 @@ export default function Form(props: FormProps) {
       case FormType.LOGIN:
         return (
           <p className="text-slate-600">
-            Don't have an account?{" "}
+            Don&apost have an account?{" "}
             <NavLink to="/register" className="text-primary hover:text-sky-500">
               Register
             </NavLink>
@@ -120,6 +129,7 @@ export default function Form(props: FormProps) {
           {inputs.map((inputData) => (
             <FormInput
               {...inputData}
+              key={inputData.key}
               value={inputValues[inputData.name]}
               error={inputErrors[inputData.name]}
               onChange={handleInputChange}

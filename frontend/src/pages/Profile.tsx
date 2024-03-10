@@ -41,26 +41,17 @@ function Profile() {
     country: DEFAULT_COUNTRY,
     city: "",
   });
-  const theme = useTheme();
+
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     setFilterPlace({ country: currentCountry, city: currentCity });
   }, [currentCity, currentCountry]);
 
-  useEffect(() => {}, []);
-
   return (
     <Stack direction="row" justifyContent="space-between" mt={2}>
       <Box sx={{ display: { xs: "none", md: "block" } }}>
-        <ProfileDetails
-          user={user}
-          category={{
-            page: "Profile",
-            placesCategory,
-            setPlacesCategory,
-          }}
-        />
+        <ProfileDetails user={user} />
       </Box>
 
       <Box component="main">

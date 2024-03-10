@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import defaultUser from "../img/users/defaultUser.svg";
 import { PLACE_CATEGORY, UserType } from "../constants";
 import {
@@ -17,6 +17,7 @@ import {
   Divider,
   Avatar,
   IconButton,
+  MenuItem,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { People, Bookmark, Forum, TravelExplore } from "@mui/icons-material";
@@ -25,49 +26,87 @@ import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import PlaceIcon from "@mui/icons-material/Place";
+import { usePlaceCategoryContext } from "../contexts/PlaceCategoryContext";
+import { PlaceCategoryMap } from "./FilterForm";
 
 type ProfileDetailsType = {
   user: UserType;
-  category: {
-    page: string;
-    placesCategory?: PLACE_CATEGORY;
-    setPlacesCategory?: React.Dispatch<React.SetStateAction<PLACE_CATEGORY>>;
-  };
   closeDrawer?: () => void;
 };
 
-const ProfileDetails = ({
-  user,
-  category,
-  closeDrawer,
-}: ProfileDetailsType) => {
-  const menuTitles = [
-    { title: "NETWORK", itemList: [{ name: "FRIENDS POSTS" }] },
-    {
-      title: "MY PLACES",
-      itemList: [
-        { name: "POSTED", value: PLACE_CATEGORY.MY_PLACES },
-        { name: "LIKED", value: PLACE_CATEGORY.LIKED_PLACES },
-        { name: "FAVORITES", value: PLACE_CATEGORY.FAVORITE_PLACES },
-      ],
-    },
-    { title: "MY JOURNEY", itemList: [{ name: "MAP" }, { name: "JOURNEY" }] },
-  ];
+const ProfileDetails = ({ user, closeDrawer }: ProfileDetailsType) => {
+  enum MenuTitle {
+    "EXPLORE",
+    "FRIENDS POSTS",
+    "POSTED",
+    "LIKED",
+    "FAVORITES",
+    "MAP",
+    "JOURNEY",
+  }
+
+  const { placesCategory, setPlacesCategory } = usePlaceCategoryContext();
+  const [selectedMenuItem, setSelectedMenuItem] = useState<MenuTitle>(
+    MenuTitle.EXPLORE,
+  );
 
   const selectCategory = (newCategory: PLACE_CATEGORY) => {
-    console.log("new Category");
-    console.log(newCategory);
-    console.log(newCategory >= 0);
-
-    if (newCategory >= 0 && category && category.setPlacesCategory) {
-      console.log("Entered if");
-      category.setPlacesCategory(newCategory);
+    if (newCategory >= 0) {
+      setPlacesCategory(newCategory);
     }
 
     if (closeDrawer) {
       closeDrawer();
     }
   };
+
+  const selectedCategoryStyle = {
+    borderRadius: "0 999em 999em 0",
+    transition: "all 0.5s",
+
+    backgroundColor: "primary.main",
+    color: "secondary.main",
+
+    "& .menuText": {
+      color: "secondary.main",
+      backgroundColor: "transparent",
+    },
+
+    "&:hover": {
+      backgroundColor: "primary.dark",
+      color: "secondary.main",
+    },
+    "&:hover .menuText": {
+      color: "secondary.main",
+    },
+  };
+
+  const getStyleIfItemSelected = (menuItem: MenuTitle) => {
+    if (selectedMenuItem === menuItem) {
+      return selectedCategoryStyle;
+    }
+
+    return {};
+  };
+
+  useEffect(() => {
+    switch (placesCategory) {
+      case PLACE_CATEGORY.ALL_PLACES:
+        setSelectedMenuItem(MenuTitle.EXPLORE);
+        break;
+      case PLACE_CATEGORY.MY_PLACES:
+        setSelectedMenuItem(MenuTitle.POSTED);
+        break;
+      case PLACE_CATEGORY.FAVORITE_PLACES:
+        setSelectedMenuItem(MenuTitle.FAVORITES);
+        break;
+      case PLACE_CATEGORY.LIKED_PLACES:
+        setSelectedMenuItem(MenuTitle.LIKED);
+        break;
+      default:
+        break;
+    }
+  }, [placesCategory]);
 
   return (
     <Box component="aside">
@@ -102,9 +141,11 @@ const ProfileDetails = ({
         <ListItemButton
           onClick={() => {
             selectCategory(PLACE_CATEGORY.ALL_PLACES);
+            setSelectedMenuItem(MenuTitle.EXPLORE);
           }}
+          sx={getStyleIfItemSelected(MenuTitle.EXPLORE)}
         >
-          <ListItemIcon>
+          <ListItemIcon className="menuText">
             <TravelExplore />
           </ListItemIcon>
           <ListItemText primary="Explore" />
@@ -112,8 +153,13 @@ const ProfileDetails = ({
 
         <Divider />
 
-        <ListItemButton>
-          <ListItemIcon>
+        <ListItemButton
+          onClick={() => {
+            setSelectedMenuItem(MenuTitle["FRIENDS POSTS"]);
+          }}
+          sx={getStyleIfItemSelected(MenuTitle["FRIENDS POSTS"])}
+        >
+          <ListItemIcon className="menuText">
             <People />
           </ListItemIcon>
           <ListItemText primary="Friends Posts" />
@@ -122,27 +168,39 @@ const ProfileDetails = ({
         <Divider />
 
         <ListItemButton
-          onClick={() => selectCategory(PLACE_CATEGORY.MY_PLACES)}
+          onClick={() => {
+            selectCategory(PLACE_CATEGORY.MY_PLACES);
+            setSelectedMenuItem(MenuTitle.POSTED);
+          }}
+          sx={getStyleIfItemSelected(MenuTitle.POSTED)}
         >
-          <ListItemIcon>
+          <ListItemIcon className="menuText">
             <PlaceIcon />
           </ListItemIcon>
           <ListItemText primary="Posted" />
         </ListItemButton>
 
         <ListItemButton
-          onClick={() => selectCategory(PLACE_CATEGORY.LIKED_PLACES)}
+          onClick={() => {
+            selectCategory(PLACE_CATEGORY.LIKED_PLACES);
+            setSelectedMenuItem(MenuTitle.LIKED);
+          }}
+          sx={getStyleIfItemSelected(MenuTitle.LIKED)}
         >
-          <ListItemIcon>
+          <ListItemIcon className="menuText">
             <ThumbUpIcon />
           </ListItemIcon>
           <ListItemText primary="Liked" />
         </ListItemButton>
 
         <ListItemButton
-          onClick={() => selectCategory(PLACE_CATEGORY.FAVORITE_PLACES)}
+          onClick={() => {
+            selectCategory(PLACE_CATEGORY.FAVORITE_PLACES);
+            setSelectedMenuItem(MenuTitle.FAVORITES);
+          }}
+          sx={getStyleIfItemSelected(MenuTitle.FAVORITES)}
         >
-          <ListItemIcon>
+          <ListItemIcon className="menuText">
             <FavoriteIcon />
           </ListItemIcon>
           <ListItemText primary="Favorites" />
@@ -150,15 +208,25 @@ const ProfileDetails = ({
 
         <Divider />
 
-        <ListItemButton onClick={() => {}}>
-          <ListItemIcon>
+        <ListItemButton
+          onClick={() => {
+            setSelectedMenuItem(MenuTitle.MAP);
+          }}
+          sx={getStyleIfItemSelected(MenuTitle.MAP)}
+        >
+          <ListItemIcon className="menuText">
             <MapIcon />
           </ListItemIcon>
           <ListItemText primary="Map" />
         </ListItemButton>
 
-        <ListItemButton onClick={() => {}}>
-          <ListItemIcon>
+        <ListItemButton
+          onClick={() => {
+            setSelectedMenuItem(MenuTitle.JOURNEY);
+          }}
+          sx={getStyleIfItemSelected(MenuTitle.JOURNEY)}
+        >
+          <ListItemIcon className="menuText">
             <TravelExploreIcon />
           </ListItemIcon>
           <ListItemText primary="Journey" />

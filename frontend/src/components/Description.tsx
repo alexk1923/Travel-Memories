@@ -33,10 +33,11 @@ const Description = () => {
                 A network meant to connect
               </Typography>
               <Typography variant="body1" paragraph>
-                To gether, we'll explore new horizons, learn from one another,
-                and build bridges that connect us across the continents. Because
-                no matter where you're from, the desire to explore and connect
-                with the world is a universal language we all share.
+                To gether, we&aposll explore new horizons, learn from one
+                another, and build bridges that connect us across the
+                continents. Because no matter where you&aposre from, the desire
+                to explore and connect with the world is a universal language we
+                all share.
               </Typography>
             </Box>
           </Box>
@@ -57,10 +58,10 @@ const Description = () => {
               </Typography>
               <Typography variant="body1" paragraph>
                 Our platform is designed to offer an intuitive and organized way
-                for you to easily track the places you've visited. Create a plan
-                for your future adventures by exploring and saving desired
-                experiences within your personal profile to access them whenever
-                you need.
+                for you to easily track the places you &apos ve visited. Create
+                a plan for your future adventures by exploring and saving
+                desired experiences within your personal profile to access them
+                whenever you need.
               </Typography>
             </Box>
 

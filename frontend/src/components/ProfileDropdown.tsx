@@ -14,10 +14,14 @@ import { useUserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { PersonAdd, Settings, Logout } from "@mui/icons-material";
 import { useLogout } from "../hooks/useLogout";
+import { usePlaceCategoryContext } from "../contexts/PlaceCategoryContext";
+import { PLACE_CATEGORY } from "../constants";
+import { PlaceCategoryMap } from "./FilterForm";
 
 const ProfileDropdown = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
+  const { setPlacesCategory } = usePlaceCategoryContext();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -39,6 +43,7 @@ const ProfileDropdown = () => {
 
   function handleProfileClick(): void {
     handleClose();
+    setPlacesCategory(PLACE_CATEGORY.MY_PLACES);
     navigate(`/user/${user.username}`);
   }
 

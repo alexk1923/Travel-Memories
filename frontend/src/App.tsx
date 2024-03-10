@@ -59,7 +59,7 @@ function App() {
             <LandingPage />
           ) : (
             <PlaceProvider>
-              <FeedPage />
+              <Profile />
             </PlaceProvider>
           )
         }

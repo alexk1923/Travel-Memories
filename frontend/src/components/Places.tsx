@@ -107,6 +107,7 @@ export default function Places({
               gap={{ md: 4 }}
               className="md:flex-row"
               justifyContent="center"
+              key={place._id}
             >
               <MemoizedPlace {...place} key={place._id} />
               <Divider

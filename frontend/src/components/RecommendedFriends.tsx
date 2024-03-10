@@ -58,7 +58,13 @@ const RecommendedFriends = () => {
   return (
     <Grid container spacing={2}>
       {potentialFriends.map((profile) => (
-        <Grid item lg={6} className="rounded-lg" textOverflow="ellipsis">
+        <Grid
+          item
+          lg={6}
+          className="rounded-lg"
+          textOverflow="ellipsis"
+          key={profile.username}
+        >
           <UserCard username={profile.username} imageStr={profile.image} />{" "}
         </Grid>
       ))}
