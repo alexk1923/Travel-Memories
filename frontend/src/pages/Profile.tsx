@@ -29,10 +29,12 @@ import {
 import RecommendedFriends from "../components/RecommendedFriends";
 import { usePlaceCategoryContext } from "../contexts/PlaceCategoryContext";
 import ModalComponent from "../components/AddPlaceModal";
+import { PlaceActionType, usePlaceContext } from "../contexts/PlaceContext";
 
 function Profile() {
   const { profileUser } = useParams();
   const { user } = useUserContext();
+  const { dispatch } = usePlaceContext();
   const [currentCity, setCurrentCity] = useState("");
   const [currentCountry, setCurrentCountry] = useState(DEFAULT_COUNTRY);
   const { placesCategory, setPlacesCategory } = usePlaceCategoryContext();
@@ -47,6 +49,12 @@ function Profile() {
   useEffect(() => {
     setFilterPlace({ country: currentCountry, city: currentCity });
   }, [currentCity, currentCountry]);
+
+  useEffect(() => {
+    console.log("places category changed, places is []");
+
+    dispatch({ type: PlaceActionType.RESET, payload: "" });
+  }, [placesCategory]);
 
   return (
     <Stack direction="row" justifyContent="space-between" mt={2}>

@@ -28,26 +28,7 @@ const RecommendedFriends = () => {
       image:
         "https://b.fssta.com/uploads/application/soccer/headshots/885.vresize.350.350.medium.14.png",
     },
-    {
-      username: "Cristiano Ronaldo",
-      image:
-        "https://b.fssta.com/uploads/application/soccer/headshots/885.vresize.350.350.medium.14.png",
-    },
-    {
-      username: "Cristiano Ronaldo",
-      image:
-        "https://b.fssta.com/uploads/application/soccer/headshots/885.vresize.350.350.medium.14.png",
-    },
-    {
-      username: "Cristiano Ronaldo",
-      image:
-        "https://b.fssta.com/uploads/application/soccer/headshots/885.vresize.350.350.medium.14.png",
-    },
-    {
-      username: "Cristiano Ronaldo",
-      image:
-        "https://b.fssta.com/uploads/application/soccer/headshots/885.vresize.350.350.medium.14.png",
-    },
+
     {
       username: "Cristiano Ronaldooooo",
       image:

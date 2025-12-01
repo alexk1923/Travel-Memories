@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import Navbar from "../components/Navbar";
-import Place from "../components/PlaceCard";
+import { MemoizedPlace } from "../components/PlaceCard";
 import Divider from "../components/CustomDivider";
 import Form from "../components/Form";
 import Footer from "../components/Footer";
@@ -133,7 +133,7 @@ export default function LandingPage() {
         </h3>
         <div className="flex max-w-full flex-nowrap gap-4 overflow-auto text-black">
           {demoPlaces.map((place) => (
-            <Place key={place._id} {...place} />
+            <MemoizedPlace key={place._id} {...place} />
           ))}
         </div>
         <Button variant="contained" onClick={() => navigate("/register")}>

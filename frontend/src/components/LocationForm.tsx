@@ -31,7 +31,6 @@ export default function Location(props: LocationPropsType) {
       .then((res) => res.json())
       .then((data) => {
         setCountries(data.data);
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);

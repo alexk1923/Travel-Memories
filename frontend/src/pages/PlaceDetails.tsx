@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SocialWrapper from "./SocialWrapper";
-import Place from "../components/PlaceCard";
+import { MemoizedPlace } from "../components/PlaceCard";
 import { useParams } from "react-router-dom";
 import NotFound from "./NotFound";
 import Comments from "../components/Comments";
@@ -28,7 +28,7 @@ function PlaceDetails(props: PlaceDetailsProps) {
     <div className="flex flex-row">
       {placeData && placeData._id && (
         <>
-          <Place {...placeData} />
+          <MemoizedPlace {...placeData} />
           <div className="text-white">
             <Comments placeId={placeData._id} />
           </div>

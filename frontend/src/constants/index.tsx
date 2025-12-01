@@ -1,3 +1,4 @@
+import React from "react";
 import { RatingType } from "../contexts/PlaceContext";
 
 export const DEFAULT_COUNTRY = "Worldwide";
@@ -14,6 +15,7 @@ export type PlaceType = {
   addedBy: string;
   likedBy: string[];
   ratings: RatingType[];
+  ref?: React.Ref<any>;
 };
 
 export type UserType = {

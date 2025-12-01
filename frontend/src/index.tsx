@@ -14,19 +14,19 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
-    <UserProvider>
-      <BrowserRouter>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <PlaceCategoryProvider>
-              <App />
-            </PlaceCategoryProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </BrowserRouter>
-    </UserProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <UserProvider>
+    <BrowserRouter>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <PlaceCategoryProvider>
+            <App />
+          </PlaceCategoryProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </BrowserRouter>
+  </UserProvider>,
+  // </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

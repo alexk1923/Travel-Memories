@@ -91,7 +91,6 @@ export default function Place(props: PlaceType) {
     })
       .then((res) => res.json())
       .then((data: { data: { Iso2: string } }) => {
-        console.log(data.data.Iso2);
         setIsoCode(data.data.Iso2.toLowerCase());
       });
   }, []);

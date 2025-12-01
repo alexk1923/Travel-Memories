@@ -34,7 +34,6 @@ export default function Comments(props: CommentProps) {
       })
         .then((res) => res.json())
         .then((data: CommentaryType[]) => {
-          console.log(data);
           setCommentaries(
             data.map((comment) => ({
               ...comment,
@@ -76,7 +75,6 @@ export default function Comments(props: CommentProps) {
     })
       .then((res) => res.json())
       .then((data: CommentaryType) => {
-        console.log(data);
         setCommentaries([...commentaries, { _id: data._id, ...newCommentObj }]);
       })
       .catch((err) => {

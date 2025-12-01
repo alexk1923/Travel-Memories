@@ -8,7 +8,7 @@ import React, {
 import { useUserContext } from "./UserContext";
 import { PlaceType } from "../constants";
 
-type ReducerType = {
+type PlaceProviderType = {
   state: PlaceState;
   dispatch: React.Dispatch<
     ActionInfo<
@@ -47,6 +47,7 @@ export enum PlaceActionType {
   FAVORITE_TOGGLE = "FAVORITE_TOGGLE",
   CHANGE_RATING = "CHANGE_RATING",
   VISIT = "VISIT",
+  RESET = "RESET",
 }
 
 type LikeChangeType = {
@@ -68,7 +69,7 @@ interface PlaceState {
   places: PlaceType[];
 }
 
-const PlaceContext = createContext<ReducerType>({
+const PlaceContext = createContext<PlaceProviderType>({
   dispatch: () => {},
   state: {
     places: [],
@@ -88,6 +89,37 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
     {} as FavoriteChange,
   );
 
+  // function getAllPlacesByPage(page: number, paginationSize: number) {
+  //   if (user === undefined) {
+  //     return;
+  //   }
+  //   if (user && user.username) {
+  //     fetch(
+  //       `http://localhost:8000/api/places/all?page=${page}&paginationSize=${paginationSize}`,
+  //       {
+  //         method: "GET",
+  //         headers: { Authorization: `Bearer ${user.token}` },
+  //       },
+  //     )
+  //       .then((res) => {
+  //         if (res.ok) {
+  //           return res.json();
+  //         }
+  //         return Promise.reject(res);
+  //       })
+  //       .then((data) => {
+  //         dispatchReducer({ type: PlaceActionType.GET, payload: data });
+  //         console.log(data);
+  //       })
+  //       .catch((err) => {
+  //         console.log("Error in getting all places:");
+  //         console.log(err);
+  //       });
+  //   }
+  // }
+
+  // useEffect(() => getAllPlacesByPage(1, 8), [user]);
+
   function reducer(
     state: PlaceState,
     action: ActionInfo<
@@ -95,8 +127,18 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
     >,
   ) {
     switch (action.type) {
+      case PlaceActionType.RESET:
+        return { ...state, places: [] };
       case PlaceActionType.GET:
-        return { ...state, places: action.payload as PlaceType[] };
+        console.log("Current places:");
+        console.log(state.places);
+
+        console.log("Action Payload:");
+        console.log(action.payload);
+
+        return {
+          places: [...state.places, ...(action.payload as PlaceType[])],
+        };
       case PlaceActionType.ADD:
         fetch(`http://localhost:8000/api/places/`, {
           method: "POST",
@@ -261,36 +303,12 @@ export function PlaceProvider({ children }: { children: React.ReactNode }) {
     });
   }
 
-  useEffect(() => {
-    if (user === undefined) {
-      return;
-    }
-
-    if (user && user.username) {
-      fetch(`http://localhost:8000/api/places/all`, {
-        method: "GET",
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-          return Promise.reject(res);
-        })
-        .then((data) => {
-          dispatchReducer({ type: PlaceActionType.GET, payload: data });
-          console.log(data);
-        })
-        .catch((err) => {
-          console.log("Error in getting all places:");
-          console.log(err);
-        });
-    }
-  }, [user]);
-
   return (
     <PlaceContext.Provider
-      value={{ state: stateReducer, dispatch: dispatchReducer }}
+      value={{
+        state: stateReducer,
+        dispatch: dispatchReducer,
+      }}
     >
       {children}
     </PlaceContext.Provider>

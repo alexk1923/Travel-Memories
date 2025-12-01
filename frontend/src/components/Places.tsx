@@ -1,12 +1,19 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MemoizedPlace } from "./PlaceCard";
 import { useUserContext } from "../contexts/UserContext";
-import { RatingType, usePlaceContext } from "../contexts/PlaceContext";
+import {
+  PlaceActionType,
+  RatingType,
+  usePlaceContext,
+} from "../contexts/PlaceContext";
 import { useLogout } from "../hooks/useLogout";
 import { PLACE_CATEGORY, PLACE_SORT, PLACE_FILTER } from "./FilterForm";
 import { DEFAULT_COUNTRY, PlaceType } from "../constants";
-import { Box, Divider, Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import SideComments from "./SideComments";
+import { SyncLoader } from "react-spinners";
+import { useTheme } from "@mui/material/styles";
+import useFetchPlaces from "../hooks/useFetchPlaces";
 
 type PlacesPropsType = {
   profileUser: string | undefined;
@@ -21,9 +28,52 @@ export default function Places({
   sortPlace,
   filter,
 }: PlacesPropsType) {
-  const { state } = usePlaceContext();
+  const { dispatch, state } = usePlaceContext();
   const { user, setUser } = useUserContext();
+
   const logout = useLogout();
+  const [count, setCount] = useState<number>(0);
+
+  const [page, setPage] = useState<number>(0);
+  const { loading, error } = useFetchPlaces(page, category);
+  const theme = useTheme();
+
+  useEffect(() => {
+    console.log("category s-a schimbat si este acum=" + category);
+
+    setPage(0);
+  }, [category]);
+
+  const handleInfiniteScrolling = () => {
+    console.log("Handling scrolling");
+    if (!loading) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const lastPlaceRef = useCallback(
+    (node: HTMLDivElement) => {
+      console.log("my node " + node);
+
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            handleInfiniteScrolling();
+          }
+        },
+        { threshold: 1.0 },
+      );
+
+      if (node) {
+        observer.current.observe(node);
+      }
+    },
+    [count],
+  );
 
   useEffect(() => {
     const storageUser = localStorage.getItem("user");
@@ -45,6 +95,8 @@ export default function Places({
       });
     }
   }, [user.token, user.username, setUser, logout]);
+
+  const observer = useRef<IntersectionObserver>();
 
   function filterByCategory(place: PlaceType) {
     switch (category) {
@@ -96,12 +148,20 @@ export default function Places({
   }
 
   return (
-    <>
+    <Stack marginBottom={2} justifyContent="center">
+      <button
+        onClick={() => {
+          setCount((prev) => prev + 1);
+        }}
+      >
+        Ar trebui sa apara primele {5 * (page + 1)}
+      </button>
+
       {state.places
         .filter(filterByLocation)
-        .filter(filterByCategory)
+        // .filter(filterByCategory)
         .sort(applySort)
-        .map((place) => {
+        .map((place, idx) => {
           return (
             <Stack
               gap={{ md: 4 }}
@@ -109,7 +169,15 @@ export default function Places({
               justifyContent="center"
               key={place._id}
             >
-              <MemoizedPlace {...place} key={place._id} />
+              {idx === state.places.length - 1 ? (
+                <>
+                  <div ref={lastPlaceRef}>
+                    <MemoizedPlace {...place} key={place._id} />
+                  </div>
+                </>
+              ) : (
+                <MemoizedPlace {...place} key={place._id} />
+              )}
               <Divider
                 orientation="vertical"
                 variant="middle"
@@ -120,6 +188,8 @@ export default function Places({
             </Stack>
           );
         })}
-    </>
+
+      {loading && <SyncLoader color={theme.palette.secondary.main} />}
+    </Stack>
   );
 }
